@@ -52,10 +52,12 @@ LOCAL_SRC_FILES	:= \
 	vhdl.c \
 	vim.c \
 	yacc.c \
-	vstring.c
+	vstring.c \
+	ndk-wrapper.c
 
 LOCAL_MODULE	:= ctags
 LOCAL_CFLAGS	:= -DHAVE_CONFIG_H
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/.
 
-include $(BUILD_EXECUTABLE)
+include $(BUILD_SHARED_LIBRARY)
+#include $(BUILD_EXECUTABLE)

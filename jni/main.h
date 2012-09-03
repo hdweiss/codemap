@@ -24,8 +24,11 @@
 *   FUNCTION PROTOTYPES
 */
 extern void addTotals (const unsigned int files, const long unsigned int lines, const long unsigned int bytes);
-extern boolean isDestinationStdout (void);
+extern boolean isDestinationStdouto (void);
 extern int main (int argc, char **argv);
+
+typedef struct sCookedArgs cookedArgs;
+extern void makeTags (cookedArgs *args);
 
 #endif  /* _MAIN_H */
 
