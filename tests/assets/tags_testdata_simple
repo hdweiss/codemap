@@ -1,0 +1,40 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+ANCHOR_BUF_SIZE	/sdcard/ctags/main.c	47;"	d	file:
+ANCHOR_SIZE	/sdcard/ctags/main.c	48;"	d	file:
+CLOCKS_PER_SEC	/sdcard/ctags/main.c	404;"	d	file:
+CLOCKS_PER_SEC	/sdcard/ctags/main.c	408;"	d	file:
+CLOCK_AVAILABLE	/sdcard/ctags/main.c	402;"	d	file:
+CLOCK_AVAILABLE	/sdcard/ctags/main.c	407;"	d	file:
+Totals	/sdcard/ctags/main.c	/^static struct { long files, lines, bytes; } Totals = { 0, 0, 0 };$/;"	v	typeref:struct:__anon1	file:
+VERsion	/sdcard/ctags/main.c	/^  static const char *VERsion = "$VER: "PROGRAM_NAME" "PROGRAM_VERSION" "$/;"	v	file:
+addTotals	/sdcard/ctags/main.c	/^extern void addTotals ($/;"	f
+boolean	/sdcard/ctags/main.c	57;"	d	file:
+boolean	/sdcard/ctags/main.c	63;"	d	file:
+bytes	/sdcard/ctags/main.c	/^static struct { long files, lines, bytes; } Totals = { 0, 0, 0 };$/;"	m	struct:__anon1	file:
+clock	/sdcard/ctags/main.c	/^static clock_t clock (void)$/;"	f	file:
+clock	/sdcard/ctags/main.c	417;"	d	file:
+createTagsForAmigaWildcard	/sdcard/ctags/main.c	/^static boolean createTagsForAmigaWildcard (const char *const pattern)$/;"	f	file:
+createTagsForArgs	/sdcard/ctags/main.c	/^static boolean createTagsForArgs (cookedArgs *const args)$/;"	f	file:
+createTagsForEntry	/sdcard/ctags/main.c	/^static boolean createTagsForEntry (const char *const entryName)$/;"	f	file:
+createTagsForWildcardArg	/sdcard/ctags/main.c	/^static boolean createTagsForWildcardArg (const char *const arg)$/;"	f	file:
+createTagsForWildcardEntry	/sdcard/ctags/main.c	/^static boolean createTagsForWildcardEntry ($/;"	f	file:
+createTagsForWildcardUsingFindfirst	/sdcard/ctags/main.c	/^static boolean createTagsForWildcardUsingFindfirst (const char *const pattern)$/;"	f	file:
+createTagsFromFileInput	/sdcard/ctags/main.c	/^static boolean createTagsFromFileInput (FILE *const fp, const boolean filter)$/;"	f	file:
+createTagsFromListFile	/sdcard/ctags/main.c	/^static boolean createTagsFromListFile (const char *const fileName)$/;"	f	file:
+etagsInclude	/sdcard/ctags/main.c	/^static boolean etagsInclude (void)$/;"	f	file:
+files	/sdcard/ctags/main.c	/^static struct { long files, lines, bytes; } Totals = { 0, 0, 0 };$/;"	m	struct:__anon1	file:
+isDestinationStdout	/sdcard/ctags/main.c	/^extern boolean isDestinationStdout (void)$/;"	f
+lines	/sdcard/ctags/main.c	/^static struct { long files, lines, bytes; } Totals = { 0, 0, 0 };$/;"	m	struct:__anon1	file:
+main	/sdcard/ctags/main.c	/^extern int main (int __unused__ argc, char **argv)$/;"	f
+makeTags	/sdcard/ctags/main.c	/^static void makeTags (cookedArgs *args)$/;"	f	file:
+plural	/sdcard/ctags/main.c	89;"	d	file:
+printTotals	/sdcard/ctags/main.c	/^static void printTotals (const clock_t *const timeStamps)$/;"	f	file:
+recurseIntoDirectory	/sdcard/ctags/main.c	/^static boolean recurseIntoDirectory (const char *const dirName)$/;"	f	file:
+recurseUsingOpendir	/sdcard/ctags/main.c	/^static boolean recurseUsingOpendir (const char *const dirName)$/;"	f	file:
+timeStamp	/sdcard/ctags/main.c	485;"	d	file:
+timeStamp	/sdcard/ctags/main.c	518;"	d	file:

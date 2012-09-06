@@ -2,6 +2,7 @@ package com.hdweiss.codemap.util;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import android.util.Log;
 
@@ -41,5 +42,9 @@ public class Utils {
 		}
 
 		return builder.toString();
+	}
+	
+	public static String inputStreamToString(InputStream inputStream) {
+		return new java.util.Scanner(inputStream).useDelimiter("\\A").next();
 	}
 }
