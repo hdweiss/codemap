@@ -5,6 +5,7 @@ import java.io.InputStream;
 import android.test.InstrumentationTestCase;
 
 import com.hdweiss.codemap.CtagsReader;
+import com.hdweiss.codemap.TagsEntry;
 
 public class CtagsReaderTest extends InstrumentationTestCase {
 	
@@ -26,7 +27,10 @@ public class CtagsReaderTest extends InstrumentationTestCase {
 	public void testGetSymbol() {
 		final String tagSymbol = "createTagsForEntry";
 		final String tagFile = "/sdcard/ctags/main.c";
-		String symbolFile = ctagsReader.getSymbolFile(tagSymbol);
-		assertEquals(tagFile, symbolFile);
+		final String tagRegex = "/^static boolean createTagsForEntry (const char *const entryName)$/;\"";
+		TagsEntry tagsEntry = ctagsReader.getTagEntry(tagSymbol);
+		assertEquals(tagSymbol, tagsEntry.symbol);
+		assertEquals(tagFile, tagsEntry.filename);
+		assertEquals(tagRegex, tagsEntry.regex);
 	}
 }
