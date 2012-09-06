@@ -466,7 +466,7 @@ static boolean etagsInclude (void)
 	return (boolean)(Option.etags && Option.etagsInclude != NULL);
 }
 
-extern void makeTags (cookedArgs *args)
+static void makeTags (cookedArgs *args)
 {
 	clock_t timeStamps [3];
 	boolean resize = FALSE;

@@ -10,6 +10,9 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        Ctags ctags = new Ctags(this);
+        ctags.run();
     }
 
     @Override
