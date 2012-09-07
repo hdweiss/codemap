@@ -10,6 +10,16 @@ import com.hdweiss.codemap.TagsEntry;
 public class CtagsReaderTest extends InstrumentationTestCase {
 	
 	private final String TAGS_TESTDATA_SIMPLE = "tags_testdata_simple";
+
+	private final String tagSymbol = "createTagsForEntry";
+	private final String tagFile = "/sdcard/ctags/main.c";
+	private final String tagRegex = "/^static boolean createTagsForEntry (const char *const entryName)$/;\"";
+	private final String javaTagRegex = "\\^\\s*static boolean createTagsForEntry (const char \\*const entryName)\\s*\\$";
+	private final String tagSource = new StringBuilder().append("static boolean createTagsForEntry (const char *const entryName)")
+			.append("\n{")
+			.append("\n        boolean resize = FALSE;")
+			.append("\n        fileStatus *status = eStat (entryName);").toString();
+
 	
 	private CtagsReader ctagsReader;
 	
@@ -24,13 +34,22 @@ public class CtagsReaderTest extends InstrumentationTestCase {
 	protected void tearDown() {
 	}
 	
+	public void testTagsEntryGetJavaRegex() {
+		TagsEntry tagsEntry = new TagsEntry();
+		tagsEntry.regex = tagRegex;
+		assertEquals(javaTagRegex, tagsEntry.getJavaRegex());
+	}
+	
 	public void testGetSymbol() {
-		final String tagSymbol = "createTagsForEntry";
-		final String tagFile = "/sdcard/ctags/main.c";
-		final String tagRegex = "/^static boolean createTagsForEntry (const char *const entryName)$/;\"";
 		TagsEntry tagsEntry = ctagsReader.getTagEntry(tagSymbol);
 		assertEquals(tagSymbol, tagsEntry.symbol);
 		assertEquals(tagFile, tagsEntry.filename);
 		assertEquals(tagRegex, tagsEntry.regex);
+	}
+	
+	public void testGetSource() {
+		TagsEntry tagsEntry = ctagsReader.getTagEntry(tagSymbol);
+		String source = ctagsReader.getSource(tagsEntry);
+		assertTrue(source.contains(tagSource));
 	}
 }
