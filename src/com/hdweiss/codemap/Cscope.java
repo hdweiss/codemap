@@ -7,10 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.hdweiss.codemap.util.Utils;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.hdweiss.codemap.util.Utils;
 
 public class Cscope {
 	private final static String EXE_FILENAME = "cscope";
@@ -58,6 +58,32 @@ public class Cscope {
 		}
 	}
 	
+	public String runCommand(String projectName, String projectPath, String options) {
+		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
+			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
+			return "";
+		}
+		
+		String command = getCscopeCommand(projectName, projectPath, options);
+		
+		File tmpdir = context.getFilesDir();
+		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
+		String output = Utils.runCommand(command, environment);
+		return output;
+	}
+	
+	private String getCscopeCommand(String projectName, String projectPath, String options) {
+		StringBuilder builder = new StringBuilder();
+		builder.append(this.cscopeExecPath).append(" ");
+		builder.append("-i ").append(getNamefilePath(projectName)).append(" ");
+		builder.append("-f ").append(getReffilePath(projectName)).append(" ");
+		builder.append("-P ").append(projectPath).append(" ");
+		builder.append(options);
+		return builder.toString();
+	}
+	
+	/***************/
+	
 	public String generateNamefile(String projectName, String path) {
 		String command = "find " + path + " " + SEARCH_PATTERN
 				+ ">" + getNamefilePath(projectName);
@@ -84,35 +110,14 @@ public class Cscope {
 	/******************/
 
 	public String generateReffile(String projectName, String projectPath) {
-		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
-			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
-			return "";
-		}
-		
-		String command = getCscopeCommand(projectName, projectPath, BUILDINDEX_OPTIONS);
-		
-		File tmpdir = context.getFilesDir();
-		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
-		String output = Utils.runCommand(command, environment);
-		
-		return output;
+		return runCommand(projectName, projectPath, BUILDINDEX_OPTIONS);
 	}
 
 	public void deleteReffile(String projectName) {
 		File file = new File(getReffilePath(projectName));
 		file.delete();
 	}
-	
-	private String getCscopeCommand(String projectName, String projectPath, String options) {
-		StringBuilder builder = new StringBuilder();
-		builder.append(this.cscopeExecPath).append(" ");
-		builder.append("-i ").append(getNamefilePath(projectName)).append(" ");
-		builder.append("-f ").append(getReffilePath(projectName)).append(" ");
-		builder.append("-P ").append(projectPath).append(" ");
-		builder.append(options);
-		return builder.toString();
-	}
-	
+
 	private String getReffileName(String projectName) {
 		return projectName + ".out";
 	}
@@ -123,5 +128,16 @@ public class Cscope {
 	
 	public FileInputStream getReffileStream(String projectName) throws FileNotFoundException {
 		return context.openFileInput(getReffileName(projectName));
+	}
+	
+	/******************/
+	
+	public String getFunction (String projectName, String projectPath, String functionName) {
+		String output = runCommand(projectName, projectPath, "-L -1 " + functionName);
+		String[] entries = output.trim().split("\n");
+		
+		CscopeEntry cscopeEntry = new CscopeEntry(entries[1]);
+		Log.d("CodeMap", cscopeEntry.toString());
+		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, cscopeEntry.lineNumber+10);
 	}
 }
