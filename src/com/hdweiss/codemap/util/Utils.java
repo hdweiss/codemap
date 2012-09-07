@@ -9,10 +9,19 @@ import android.util.Log;
 public class Utils {
 
 	public static String runCommand(String command) {
+		return runCommand(command, null);
+	}
+	
+	public static String runCommand(String command, String[] environment) {
 		try {
 			final String[] shellCommand = { "/system/bin/sh", "-c", command };
-			Process process = Runtime.getRuntime().exec(shellCommand);
 
+			Process process;
+			if(environment != null)
+				process = Runtime.getRuntime().exec(shellCommand, environment);
+			else
+				process = Runtime.getRuntime().exec(shellCommand);
+			
 			try {
 				process.waitFor();
 			} catch (InterruptedException e) {
@@ -31,9 +40,6 @@ public class Utils {
 	@SuppressWarnings("deprecation")
 	private static String getProcessOutput(Process process) throws IOException {
 		DataInputStream dis = new DataInputStream(process.getInputStream());
-
-		Log.d("CodeMap", "Terminated with: " + process.exitValue() + " and "
-				+ dis.available() + " bytes output");
 
 		StringBuilder builder = new StringBuilder();
 		String output;
