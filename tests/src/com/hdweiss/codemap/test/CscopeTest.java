@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.test;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -33,6 +34,15 @@ public class CscopeTest extends AndroidTestCase {
 //		cscope.deleteReffile(PROJECT_NAME);
 	}
 
+	@Override
+	public void testAndroidTestCaseSetupProperly() {
+		super.testAndroidTestCaseSetupProperly();
+		
+		File ctagsDir = new File(PROJECT_PATH);
+		if(ctagsDir.exists() == false)
+			fail("Didn't find source directory");
+	};
+	
 	public void testGenerateNamefile() {
 		cscope.generateNamefile(PROJECT_NAME, PROJECT_PATH);
 		
@@ -61,7 +71,7 @@ public class CscopeTest extends AndroidTestCase {
 	public void testGetFunction() {
 		cscope.generateNamefile(PROJECT_NAME, PROJECT_PATH);
 		cscope.generateReffile(PROJECT_NAME, PROJECT_PATH);
-		String contents = cscope.getFunction(PROJECT_NAME, PROJECT_PATH, "main");
+		String contents = cscope.getFunction(PROJECT_NAME, PROJECT_PATH, "addTotals");
 		assertTrue(contents.contains(MAIN_FIRSTLINE));
 	}
 }

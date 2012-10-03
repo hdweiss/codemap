@@ -136,7 +136,13 @@ public class Cscope {
 		String output = runCommand(projectName, projectPath, "-L -1 " + functionName);
 		String[] entries = output.trim().split("\n");
 		
-		CscopeEntry cscopeEntry = new CscopeEntry(entries[1]);
+		CscopeEntry cscopeEntry = new CscopeEntry(entries[0]);
+		
+		String options = "-L -1 '.*' \\| head" ; //| grep \'" + cscopeEntry.file
+				//+ "\' | grep -A 1 \'" + cscopeEntry.name + "\'";
+		String symbols = runCommand(projectName, projectPath, options);
+		Log.d("CodeMap", "Got :" + symbols);
+		
 		Log.d("CodeMap", cscopeEntry.toString());
 		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, cscopeEntry.lineNumber+10);
 	}
