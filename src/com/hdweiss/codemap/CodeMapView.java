@@ -92,7 +92,12 @@ public class CodeMapView extends SurfaceView implements
 		super.onTouchEvent(event);
 		synchronized (mSurfaceHolder) {
 	        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-	        	current = new FunctionDrawable(getContext(), "test");
+	        	FunctionDrawable draw = getDrawableFromPoint(event.getX(), event.getY());
+	        	
+	        	if(draw != null) {
+	        		current = draw;
+	        	} else
+	        		current = new FunctionDrawable(getContext(), "test");
 	        	current.setXY(event.getX(), event.getY());
 	        	
 	        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -105,6 +110,13 @@ public class CodeMapView extends SurfaceView implements
 		return true;
 	}
 
+	public FunctionDrawable getDrawableFromPoint(float x, float y) {
+		for (FunctionDrawable drawable : drawables) {
+			if (drawable.getBounds().contains((int) x, (int) y))
+				return drawable;
+		}
+		return null;
+	}
 
 	public CodeMapThread getThread() {
 		return this.thread;
