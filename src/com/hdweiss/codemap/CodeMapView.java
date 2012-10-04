@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,81 +15,48 @@ import com.hdweiss.codemap.drawables.FunctionDrawable;
 public class CodeMapView extends SurfaceView implements
 		SurfaceHolder.Callback {
 
-	class CodeMapThread extends Thread {
-		private SurfaceHolder mSurfaceHolder;
-		
-		private boolean mRunning;
-
-		public CodeMapThread(SurfaceHolder surfaceHolder, Context context,
-				Handler handler) {
-			mSurfaceHolder = surfaceHolder;
-		}
-
-		@Override
-		public void run() {
-			Canvas c = null;
-			while (mRunning) {
-				try {
-					c = mSurfaceHolder.lockCanvas(null);
-					synchronized (mSurfaceHolder) {
-						doDraw(c);
-					}
-				} finally {
-					if (c != null) {
-						mSurfaceHolder.unlockCanvasAndPost(c);
-					}
-				}
-			}
-		}
-		
-		public void setRunning(boolean enabled) {
-			mRunning = enabled;
-		}
-		
-		private void doDraw(Canvas canvas) {
-			canvas.drawColor(Color.WHITE);
-			
-			for(FunctionDrawable drawable: drawables) {
-				drawable.draw(canvas);
-			}
-			
-			if(current != null)
-				current.draw(canvas);
-		}
-		
-        public void setSurfaceSize(int width, int height) {
-            synchronized (mSurfaceHolder) {
-            	
-//                mCanvasWidth = width;
-//                mCanvasHeight = height;
-            }
-        }
-	}
-
-	private CodeMapThread thread;
-	private SurfaceHolder mSurfaceHolder;
-
+	private ArrayList<FunctionDrawable> drawables = new ArrayList<FunctionDrawable>();
+	private FunctionDrawable current;
+	
 	public CodeMapView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-        mSurfaceHolder = getHolder();
-        mSurfaceHolder.addCallback(this);
-
-        thread = new CodeMapThread(mSurfaceHolder, context, null);
+		super(context, attrs);	
+        getHolder().addCallback(this);
         
         drawables.add(new FunctionDrawable(getContext(), "initial"));
-        
-        setFocusable(true);
+	}
+	
+	public void updatePanel() {
+		Canvas canvas = null;
+		try {
+			canvas = getHolder().lockCanvas(null);
+			synchronized (getHolder()) {
+				doDraw(canvas);
+			}
+		} finally {
+			if (canvas != null) {
+				getHolder().unlockCanvasAndPost(canvas);
+			}
+		}
+	}
+    
+	private void doDraw(Canvas canvas) {
+		if(canvas == null)
+			return;
+		
+		canvas.drawColor(Color.WHITE);
+		
+		for(FunctionDrawable drawable: drawables)
+			drawable.draw(canvas);
+		
+		if(current != null)
+			current.draw(canvas);
 	}
 
-	
-	ArrayList<FunctionDrawable> drawables = new ArrayList<FunctionDrawable>();
-	FunctionDrawable current;
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-		synchronized (mSurfaceHolder) {
+		synchronized (getHolder()) {
 	        if (event.getAction() == MotionEvent.ACTION_DOWN) {
 	        	FunctionDrawable draw = getDrawableFromPoint(event.getX(), event.getY());
 	        	
@@ -107,6 +73,7 @@ public class CodeMapView extends SurfaceView implements
 	        	current = null;
 	        }
 		}
+		updatePanel();
 		return true;
 	}
 
@@ -117,31 +84,18 @@ public class CodeMapView extends SurfaceView implements
 		}
 		return null;
 	}
-
-	public CodeMapThread getThread() {
-		return this.thread;
-	}
 	
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-        thread.setSurfaceSize(width, height);
+		updatePanel();
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-        thread.setRunning(true);
-        thread.start();
-    }
+		updatePanel();
+	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        thread.setRunning(false);
-        while (retry) {
-            try {
-                thread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-            }
-        }
+		updatePanel();
 	}
 
 }

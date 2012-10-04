@@ -5,9 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
-import android.view.DragEvent;
-import android.view.MotionEvent;
-import android.view.View;
 
 public class FunctionDrawable extends ShapeDrawable {
 
@@ -27,8 +24,6 @@ public class FunctionDrawable extends ShapeDrawable {
 	public void setText(String message) {
 		mTitle = message;
 	}
-	
-	
 	
 	@Override
 	public void draw(Canvas canvas) {
