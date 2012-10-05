@@ -6,7 +6,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,11 +23,10 @@ public class CodeMapView extends SurfaceView implements
 	private MultiTouchSupport multiTouchSupport;
 	private GestureDetector gestureDetector;
 	private Scroller scroller;
-	private int scrollPosX = 0;
-	private int scrollPosY = 0;
+	
+	private float zoom = 1;
 	
 	private ArrayList<FunctionDrawable> drawables = new ArrayList<FunctionDrawable>();
-	private float zoom = 3;
 
 	public CodeMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
@@ -43,7 +41,7 @@ public class CodeMapView extends SurfaceView implements
 	}
 	
 	
-	public void updatePanel() {
+	public void refresh() {
 		Canvas canvas = null;
 		try {
 			canvas = getHolder().lockCanvas(null);
@@ -67,7 +65,7 @@ public class CodeMapView extends SurfaceView implements
 		canvas.drawColor(Color.WHITE);
 		
 		for (FunctionDrawable drawable : drawables)
-			drawable.drawWithOffset(canvas, scrollPosX, scrollPosY);
+			drawable.drawWithOffset(canvas, getScrollX(), getScrollY());
 		
 	    if(scroller.computeScrollOffset())
 	    	scroll(scroller);
@@ -82,38 +80,14 @@ public class CodeMapView extends SurfaceView implements
 		scrollBy((int)dx, (int)dy);
 	}
 	
-	@Override
-	public void scrollBy(int x, int y) {
-		super.scrollBy(x, y);
-		this.scrollPosX += x;
-		this.scrollPosY += y;
-	}
-
-	@Override
-	public void scrollTo(int x, int y) {
-		super.scrollTo(x, y);
-		this.scrollPosX = x;
-		this.scrollPosY = y;
-	}
-	
-
 	public float getZoom() {
 		return this.zoom;
 	}
 	
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
-		updatePanel();
+		refresh();
 	}
-	
-	public int getScrollPosX () {
-		return this.scrollPosX;
-	}
-	
-	public int getScrollPosY () {
-		return this.scrollPosY;
-	}
-	
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -122,7 +96,7 @@ public class CodeMapView extends SurfaceView implements
 		if (!multiTouchSupport.onTouchEvent(event))
 			gestureDetector.onTouchEvent(event);
 		
-		updatePanel();
+		refresh();
 		return true;
 	}
 
@@ -137,15 +111,15 @@ public class CodeMapView extends SurfaceView implements
 	
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		updatePanel();
+		refresh();
 	}
 
 	public void surfaceCreated(SurfaceHolder holder) {
-		updatePanel();
+		refresh();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
-		updatePanel();
+		refresh();
 	}
 
 }

@@ -12,18 +12,19 @@ public class CodeMapListeners {
 	
 	public static class CodeMapGestureListener implements OnGestureListener {
 		FunctionDrawable selectedDrawable = null;
-		private CodeMapView view;
+		private CodeMapView codeMapView;
 		private Scroller scroller;
 		
-		public CodeMapGestureListener(CodeMapView view, Scroller scroller) {
-			this.view = view;
+		public CodeMapGestureListener(CodeMapView codeMapView, Scroller scroller) {
+			this.codeMapView = codeMapView;
 			this.scroller = scroller;
 		}
 		
 		public boolean onDown(MotionEvent event) {
 			if (!scroller.isFinished())
 				scroller.forceFinished(true);
-			selectedDrawable = view.getDrawableFromPoint(event.getX(), event.getY());
+			selectedDrawable = codeMapView.getDrawableFromPoint(event.getX(),
+					event.getY());
 			return true;
 		}
 		
@@ -43,7 +44,8 @@ public class CodeMapListeners {
 			int startY = (int) (e2.getY() + distanceY);
 			
 			if(selectedDrawable != null)
-				selectedDrawable.setXY(startX - view.getScrollPosX(), startY - view.getScrollPosY());
+				selectedDrawable.setXY(startX - codeMapView.getScrollX(),
+						startY - codeMapView.getScrollY());
 			else
 				scroller.startScroll(startX, startY, (int) distanceX,
 					(int) distanceY);
@@ -59,21 +61,21 @@ public class CodeMapListeners {
 	public static class CodeMapMultiTouchListener implements MultiTouchZoomListener {
 
 		private float initialMultiTouchZoom;
-		private CodeMapView view;
+		private CodeMapView codeMapView;
 
-		public CodeMapMultiTouchListener(CodeMapView view) {
-			this.view = view;
+		public CodeMapMultiTouchListener(CodeMapView codeMapView) {
+			this.codeMapView = codeMapView;
 		}
 		
 		public void onZoomStarted(float distance, PointF centerPoint) {
-			initialMultiTouchZoom = view.getZoom();
+			initialMultiTouchZoom = codeMapView.getScaleX();
 		}
 
 		public void onZooming(float distance, float relativeToStart) {
 			float dz = (float) (Math.log(relativeToStart) / Math.log(2) * 1.5);
 			float calcZoom = initialMultiTouchZoom + dz;
-			if (Math.abs(calcZoom - view.getZoom()) > 0.05) {
-				view.setZoom(calcZoom);
+			if (Math.abs(calcZoom - codeMapView.getScaleX()) > 0.05) {
+				codeMapView.setZoom(calcZoom);
 				//zoomPositionChanged(calcZoom);
 			}
 		}
