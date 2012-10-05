@@ -2,6 +2,7 @@ package com.hdweiss.codemap.drawables;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
@@ -30,6 +31,28 @@ public class FunctionDrawable extends ShapeDrawable {
 		super.draw(canvas);
 		canvas.drawText(mTitle, getBounds().left + 10,
 				getBounds().top + 15, getPaint());
+	}
+	
+	public void drawWithOffset(Canvas canvas, int x, int y) {
+		Rect bounds = getBounds();
+		bounds.left += x;
+		bounds.right += x;
+		bounds.top += y;
+		bounds.bottom += y;
+		
+		setBounds(bounds);
+		draw(canvas);
+	}
+	
+	public void drawAt(Canvas canvas, int x, int y) {
+		Rect bounds = getBounds();
+		bounds.left = x;
+		bounds.right = x + 100;
+		bounds.top = y;
+		bounds.bottom = y + 100;
+		
+		setBounds(bounds);
+		draw(canvas);
 	}
 
 	public void setXY(float x, float y) {
