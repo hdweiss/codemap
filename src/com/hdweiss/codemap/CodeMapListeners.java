@@ -60,23 +60,28 @@ public class CodeMapListeners {
 	
 	public static class CodeMapMultiTouchListener implements MultiTouchZoomListener {
 
-		private float initialMultiTouchZoom;
+		private float minZoom = 0.5f;
+		private float maxZoom = 5;
+		
 		private CodeMapView codeMapView;
+		private float initialMultiTouchZoom;
 
 		public CodeMapMultiTouchListener(CodeMapView codeMapView) {
 			this.codeMapView = codeMapView;
 		}
 		
 		public void onZoomStarted(float distance, PointF centerPoint) {
-			initialMultiTouchZoom = codeMapView.getScaleX();
+			initialMultiTouchZoom = codeMapView.getZoom();
 		}
 
 		public void onZooming(float distance, float relativeToStart) {
 			float dz = (float) (Math.log(relativeToStart) / Math.log(2) * 1.5);
 			float calcZoom = initialMultiTouchZoom + dz;
-			if (Math.abs(calcZoom - codeMapView.getScaleX()) > 0.05) {
-				codeMapView.setZoom(calcZoom);
-				//zoomPositionChanged(calcZoom);
+			if (Math.abs(calcZoom - codeMapView.getZoom()) > 0.05) {
+				if(calcZoom >= minZoom && calcZoom <= maxZoom) {
+					codeMapView.setZoom(calcZoom);
+					//zoomPositionChanged(calcZoom);
+				}
 			}
 		}
 

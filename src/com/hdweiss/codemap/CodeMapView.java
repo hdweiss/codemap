@@ -73,6 +73,17 @@ public class CodeMapView extends SurfaceView implements
 	    canvas.restore();
 	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		super.onTouchEvent(event);
+
+		if (!multiTouchSupport.onTouchEvent(event))
+			gestureDetector.onTouchEvent(event);
+		
+		refresh();
+		return true;
+	}
+	
 	
 	private void scroll(Scroller scroller) {
 		float dx = (scroller.getStartX() - scroller.getFinalX());
@@ -87,17 +98,6 @@ public class CodeMapView extends SurfaceView implements
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
 		refresh();
-	}
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		super.onTouchEvent(event);
-
-		if (!multiTouchSupport.onTouchEvent(event))
-			gestureDetector.onTouchEvent(event);
-		
-		refresh();
-		return true;
 	}
 
 	
