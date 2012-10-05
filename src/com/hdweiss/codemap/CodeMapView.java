@@ -5,16 +5,12 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PointF;
-import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.GestureDetector.OnGestureListener;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.drawables.FunctionDrawable;
@@ -36,7 +32,8 @@ public class CodeMapView extends SurfaceView implements
 		this.gestureDetector = new GestureDetector(getContext(), new CodeMapGestureListener());
 		this.scroller = new Scroller(getContext());
         
-        drawables.add(new FunctionDrawable(getContext(), "initial"));        
+        drawables.add(new FunctionDrawable(getContext(), "initial", 100, 100));
+        drawables.add(new FunctionDrawable(getContext(), "test", 400, 400));
 	}
 	
 	
@@ -61,17 +58,19 @@ public class CodeMapView extends SurfaceView implements
 		canvas.drawColor(Color.WHITE);
 		
 		for (FunctionDrawable drawable : drawables)
-			drawable.drawAt(canvas, scrollPosX, scrollPosY);
+			drawable.drawWithOffset(canvas, scrollPosX, scrollPosY);
 		
-	    if(scroller.computeScrollOffset()) {
+	    if(scroller.computeScrollOffset())
 	    	scroll(scroller);
-//	    	Log.d("CodeMap",
-//					"computeScrollOffset! " + scroller.getCurrVelocity() + "@"
-//							+ scroller.getCurrX() + ":" + scroller.getCurrY());
-	    }
 	}
 
-
+	
+	private void scroll(Scroller scroller) {
+		float dx = (scroller.getStartX() - scroller.getFinalX());
+		float dy = (scroller.getStartY() - scroller.getFinalY());
+		scrollBy((int)dx, (int)dy);
+	}
+	
 	@Override
 	public void scrollBy(int x, int y) {
 		super.scrollBy(x, y);
@@ -85,38 +84,35 @@ public class CodeMapView extends SurfaceView implements
 		this.scrollPosX = x;
 		this.scrollPosY = y;
 	}
-
-
-	@Override
-	protected void onScrollChanged(int l, int t, int oldl, int oldt) {
-		super.onScrollChanged(l, t, oldl, oldt);
-//		Log.d("CodeMap", "Scroll changed!" + l + ":" + t + " " + oldl + ":" + oldt);
-//		this.ScrollPosX += oldl - l;
-//		this.ScrollPosY += oldt - t;
-		//updatePanel();
-	}
-
 	
-	
-	private void scroll(Scroller scroller) {
-		float dx = (scroller.getStartX() - scroller.getFinalX());
-		float dy = (scroller.getStartY() - scroller.getFinalY());
-		Log.d("CodeMap", "scroll! " + dx + ":" + dy);
-		scrollBy((int)dx, (int)dy);
+
+	private final static int DEFAULT_SLEEP_TO_REDRAW = 55;
+	public void startAnimateDrag() {
+		Thread thread = new Thread(new Runnable() {
+			public void run() {
+				while (scroller.isFinished() == false) {
+					updatePanel();
+					
+					try {
+						Thread.sleep(DEFAULT_SLEEP_TO_REDRAW);
+					} catch (InterruptedException e) {
+					}
+				}
+			}
+		});
+		thread.run();
 	}
 	
 	private class CodeMapGestureListener implements OnGestureListener {
-		float mMaxScrollX = 50;
-		float mMaxScrollY = 50;
-
-		public boolean onDown(MotionEvent e) {
+		
+		public boolean onDown(MotionEvent event) {
 			if (!scroller.isFinished())
 				scroller.forceFinished(true);
+			selectedDrawable = getDrawableFromPoint(event.getX(), event.getY());
 			return true;
 		}
 		
 		public boolean onSingleTapUp(MotionEvent e) {
-			//PointF point = new PointF(e.getX(), e.getY());
 			return false;
 		}
 		
@@ -128,99 +124,35 @@ public class CodeMapView extends SurfaceView implements
 		
 		
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-			scroller.startScroll((int) (e2.getX() + distanceX),
-					(int) (e2.getY() + distanceY), (int) distanceX,
+			int startX = (int) (e2.getX() + distanceX);
+			int startY = (int) (e2.getY() + distanceY);
+			
+			if(selectedDrawable != null)
+				selectedDrawable.setXY(startX - scrollPosX, startY - scrollPosY);
+			else
+				scroller.startScroll(startX, startY, (int) distanceX,
 					(int) distanceY);
 			return true;
 		}
 
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-//			startDragging(velocityX, velocityY, 
-//						e1.getX(), e1.getY(), e2.getX(), e2.getY(), true);
-
-//	        scroller.fling(getScrollX(), getScrollY(),
-//	                -(int)velocityX, -(int)velocityY, 0, (int)mMaxScrollX, 0, (int)mMaxScrollY);
-
-//			scroller.fling(scrollPosX, scrollPosY, -(int) velocityX,
-//					-(int) velocityY, 0, (int) mMaxScrollX, 0,
-//					(int) mMaxScrollY);
-			
-//			int distanceX = 100;
-//			int distanceY = 100;
-//			scroller.startScroll((int) (e1.getX()),
-//					(int) (e1.getY()), (int) distanceX,
-//					(int) distanceY, 500);
-			startAnimateDrag();
-			//invalidate();
-
-			return true;
+			return false;
 		}
 	}
-	
 
+	FunctionDrawable selectedDrawable = null;
+	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-//		synchronized (getHolder()) {
-//	        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-//	        	FunctionDrawable draw = getDrawableFromPoint(event.getX(), event.getY());
-//	        	
-//	        	if(draw != null) {
-//	        		current = draw;
-//	        	} else
-//	        		current = new FunctionDrawable(getContext(), "test");
-//	        	current.setXY(event.getX(), event.getY());
-//	        	
-//	        } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-//	        	current.setXY(event.getX(), event.getY());
-//	        } else if (event.getAction() == MotionEvent.ACTION_UP) {
-//	        	drawables.add(current);
-//	        	current = null;
-//	        }
-//		}
+		
 		gestureDetector.onTouchEvent(event);
+		
 		updatePanel();
 		return true;
 	}
 	
 
-	private final static float DRAGGING_ANIMATION_TIME = 1200f;
-	public void startDragging(final float velocityX, final float velocityY,
-			float startX, float startY, final float endX, final float endY,
-			final boolean notifyListener) {
-		final float animationTime = DRAGGING_ANIMATION_TIME;
-		float curX = endX;
-		float curY = endY;
-		DecelerateInterpolator interpolator = new DecelerateInterpolator(1);
-
-		long timeMillis = SystemClock.uptimeMillis();
-		float normalizedTime = 0f;
-		float prevNormalizedTime = 0f;
-		normalizedTime = (SystemClock.uptimeMillis() - timeMillis)
-				/ animationTime;
-		if (normalizedTime >= 1f) {
-			return;
-		}
-		float interpolation = interpolator.getInterpolation(normalizedTime);
-
-		float newX = velocityX * (1 - interpolation)
-				* (normalizedTime - prevNormalizedTime) + curX;
-		float newY = velocityY * (1 - interpolation)
-				* (normalizedTime - prevNormalizedTime) + curY;
-
-		//dragToAnimate(curX, curY, newX, newY, notifyListener);
-	}
-
-	public void startAnimateDrag() {
-		Thread thread = new Thread(new Runnable() {
-			public void run() {
-				while (scroller.isFinished() == false) {
-					updatePanel();
-				}
-			}
-		});
-		thread.run();
-	}
 	
 	public FunctionDrawable getDrawableFromPoint(float x, float y) {
 		for (FunctionDrawable drawable : drawables) {

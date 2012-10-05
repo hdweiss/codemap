@@ -9,17 +9,21 @@ import android.graphics.drawable.shapes.RoundRectShape;
 
 public class FunctionDrawable extends ShapeDrawable {
 
+	private Rect position = new Rect();
 	private String mTitle;
 	
-	public FunctionDrawable(Context context, String title) {
+	public FunctionDrawable(Context context, String title, int x, int y) {
 		super();
 		mTitle = title;
-		
+
 		float[] outerR = new float[] { 6, 6, 6, 6, 0, 0, 0, 0 };
-        RectF inset = new RectF(3, 3, 3, 3);
-        setShape(new RoundRectShape(outerR, inset, null));
-        getPaint().setColor(0xFFFF0000);
-        setBounds(100, 100, 200, 200);
+		RectF inset = new RectF(3, 3, 3, 3);
+		setShape(new RoundRectShape(outerR, inset, null));
+		getPaint().setColor(0xFFFF0000);
+		
+		setBounds(0, 0, 100, 100); // Set initial size
+		
+		setXY(x, y);
 	}
 		
 	public void setText(String message) {
@@ -34,34 +38,23 @@ public class FunctionDrawable extends ShapeDrawable {
 	}
 	
 	public void drawWithOffset(Canvas canvas, int x, int y) {
-		Rect bounds = getBounds();
-		bounds.left += x;
-		bounds.right += x;
-		bounds.top += y;
-		bounds.bottom += y;
-		
-		setBounds(bounds);
-		draw(canvas);
-	}
-	
-	public void drawAt(Canvas canvas, int x, int y) {
-		Rect bounds = getBounds();
-		bounds.left = x;
-		bounds.right = x + 100;
-		bounds.top = y;
-		bounds.bottom = y + 100;
+		Rect bounds = new Rect();
+		bounds.left = position.left + x;
+		bounds.right = position.right + x;
+		bounds.top = position.top + y;
+		bounds.bottom = position.bottom + y;
 		
 		setBounds(bounds);
 		draw(canvas);
 	}
 
 	public void setXY(float x, float y) {
-		final int left = (int) (x - getShape().getHeight() / 2);
-		final int top = (int) (y - getShape().getWidth() / 2);
+		position.left = (int) (x - getShape().getHeight() / 2);
+		position.right = (int) (x + getShape().getHeight() / 2);
 
-		final int right = (int) (x + getShape().getHeight() / 2);
-		final int bottom = (int) (y + getShape().getWidth() / 2);
-
-		setBounds(left, top, right, bottom);
+		position.top = (int) (y - getShape().getWidth() / 2);
+		position.bottom = (int) (y + getShape().getWidth() / 2);
+		
+		setBounds(position);
 	}
 }
