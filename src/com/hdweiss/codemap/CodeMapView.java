@@ -103,7 +103,7 @@ public class CodeMapView extends SurfaceView implements
 	
 	public FunctionDrawable getDrawableFromPoint(float x, float y) {
 		for (FunctionDrawable drawable : drawables) {
-			if (drawable.getBounds().contains((int) x, (int) y))
+			if (drawable.contains(x, y, zoom))
 				return drawable;
 		}
 		return null;

@@ -23,7 +23,7 @@ public class FunctionDrawable extends ShapeDrawable {
 		
 		setBounds(0, 0, 100, 100); // Set initial size
 		
-		setXY(x, y);
+		setXY(x, y, 1);
 	}
 		
 	public void setText(String message) {
@@ -48,13 +48,29 @@ public class FunctionDrawable extends ShapeDrawable {
 		draw(canvas);
 	}
 
-	public void setXY(float x, float y) {
-		position.left = (int) (x - getShape().getHeight() / 2);
-		position.right = (int) (x + getShape().getHeight() / 2);
+	public void setXY(float x, float y, float zoom) {
+		position.left = (int) (x / zoom - getShape().getHeight() / 2);
+		position.right = (int) (x / zoom + getShape().getHeight() / 2);
 
-		position.top = (int) (y - getShape().getWidth() / 2);
-		position.bottom = (int) (y + getShape().getWidth() / 2);
+		position.top = (int) (y / zoom - getShape().getWidth() / 2);
+		position.bottom = (int) (y / zoom + getShape().getWidth() / 2);
 		
 		setBounds(position);
+	}
+	
+	public boolean contains(float x, float y, float zoom) {		
+		return scaleRect(getBounds(), zoom).contains((int)x, (int)y);
+//		return getBounds().contains((int)x, (int)y);
+	}
+	
+	public Rect scaleRect(Rect rect, float scale) {
+		Rect scaledRect = new Rect(rect);
+		
+		scaledRect.bottom *= scale;
+		scaledRect.top *= scale;
+		scaledRect.left *= scale;
+		scaledRect.right *= scale;
+		
+		return scaledRect;
 	}
 }
