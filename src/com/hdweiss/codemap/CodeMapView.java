@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
@@ -14,22 +15,27 @@ import android.view.SurfaceView;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.drawables.FunctionDrawable;
+import com.hdweiss.codemap.util.MultiTouchSupport;
+import com.hdweiss.codemap.util.MultiTouchSupport.MultiTouchZoomListener;
 
 public class CodeMapView extends SurfaceView implements
 		SurfaceHolder.Callback {
 
+	private MultiTouchSupport multiTouchSupport;
 	private GestureDetector gestureDetector;
 	private Scroller scroller;
 	private int scrollPosX = 0;
 	private int scrollPosY = 0;
 	
 	private ArrayList<FunctionDrawable> drawables = new ArrayList<FunctionDrawable>();
+	private float zoom = 3;
 
 	public CodeMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
         getHolder().addCallback(this);
         
 		this.gestureDetector = new GestureDetector(getContext(), new CodeMapGestureListener());
+		this.multiTouchSupport = new MultiTouchSupport(getContext(), new CodeMapMultiTouchListener());
 		this.scroller = new Scroller(getContext());
         
         drawables.add(new FunctionDrawable(getContext(), "initial", 100, 100));
@@ -85,25 +91,9 @@ public class CodeMapView extends SurfaceView implements
 		this.scrollPosY = y;
 	}
 	
-
-	private final static int DEFAULT_SLEEP_TO_REDRAW = 55;
-	public void startAnimateDrag() {
-		Thread thread = new Thread(new Runnable() {
-			public void run() {
-				while (scroller.isFinished() == false) {
-					updatePanel();
-					
-					try {
-						Thread.sleep(DEFAULT_SLEEP_TO_REDRAW);
-					} catch (InterruptedException e) {
-					}
-				}
-			}
-		});
-		thread.run();
-	}
 	
 	private class CodeMapGestureListener implements OnGestureListener {
+		FunctionDrawable selectedDrawable = null;
 		
 		public boolean onDown(MotionEvent event) {
 			if (!scroller.isFinished())
@@ -139,19 +129,48 @@ public class CodeMapView extends SurfaceView implements
 			return false;
 		}
 	}
+	
+	private class CodeMapMultiTouchListener implements MultiTouchZoomListener {
 
-	FunctionDrawable selectedDrawable = null;
+		private float initialMultiTouchZoom;
+
+		public void onZoomStarted(float distance, PointF centerPoint) {
+			initialMultiTouchZoom = zoom;
+		}
+
+		public void onZooming(float distance, float relativeToStart) {
+			float dz = (float) (Math.log(relativeToStart) / Math.log(2) * 1.5);
+			float calcZoom = initialMultiTouchZoom + dz;
+			if (Math.abs(calcZoom - zoom) > 0.05) {
+				setZoom(calcZoom);
+				//zoomPositionChanged(calcZoom);
+			}
+		}
+
+		public void onZoomEnded(float distance, float relativeToStart) {
+		}
+
+		public void onGestureInit(float x1, float y1, float x2, float y2) {
+		}
+		
+	}
+	
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
+		updatePanel();
+	}
+	
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
-		
-		gestureDetector.onTouchEvent(event);
+
+		if (!multiTouchSupport.onTouchEvent(event))
+			gestureDetector.onTouchEvent(event);
 		
 		updatePanel();
 		return true;
 	}
-	
 
 	
 	public FunctionDrawable getDrawableFromPoint(float x, float y) {
