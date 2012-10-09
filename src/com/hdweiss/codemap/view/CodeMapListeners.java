@@ -44,7 +44,7 @@ public class CodeMapListeners {
 			int startY = (int) (e2.getY() + distanceY);
 			
 			if(selectedDrawable != null)
-				selectedDrawable.setXY(startX, startY, codeMapView.getZoom());
+				selectedDrawable.setXY(startX, startY);
 			else
 				scroller.startScroll(startX, startY, (int) distanceX,
 					(int) distanceY);

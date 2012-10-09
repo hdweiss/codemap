@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Scroller;
@@ -30,22 +31,18 @@ public class CodeMapView extends CodeMapLayout {
 		this.gestureDetector = new GestureDetector(getContext(), new CodeMapGestureListener(this, scroller));
 		this.multiTouchSupport = new MultiTouchSupport(getContext(), new CodeMapMultiTouchListener(this));
 		setFocusable(false);
-        
-		
+       
+		initState();
+	}
+
+	private void initState() {
 		FunctionView functionView = new FunctionView(getContext(), 200, 200);
 		addView(functionView);
 		
-		FunctionView functionView2 = new FunctionView(getContext(), 300, 300);
+		FunctionView functionView2 = new FunctionView(getContext(), 500, 300);
 		addView(functionView2);
 	}
 
-	
-	public void updateScroll() {
-	    if(scroller.computeScrollOffset()) {
-			float dx = (scroller.getStartX() - scroller.getFinalX());
-			float dy = (scroller.getStartY() - scroller.getFinalY());
-			scrollBy((int)dx, (int)dy);	    }
-	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -58,22 +55,36 @@ public class CodeMapView extends CodeMapLayout {
 		return true;
 	}
 	
+	private void updateScroll() {
+	    if(scroller.computeScrollOffset()) {
+			float dx = (scroller.getStartX() - scroller.getFinalX());
+			float dy = (scroller.getStartY() - scroller.getFinalY());
+			scrollBy(-(int)dx, -(int)dy);	    
+		}
+	}
+	
+	
 	public float getZoom() {
 		return this.zoom;
 	}
 	
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
-		updateScroll();
+		updateZoom();
 	}
 
+	public void updateZoom() {
+		Log.d("CodeMap", "zoom :" + zoom);
+		setScaleX(zoom);
+		setScaleY(zoom);
+	}
+	
 	
 	public FunctionView getDrawableFromPoint(float x, float y) {
 		for (FunctionView view : views) {
-//			if (view.contains(x, y, zoom))
-//				return view;
+			if (view.contains(x, y, zoom))
+				return view;
 		}
 		return null;
 	}
-
 }

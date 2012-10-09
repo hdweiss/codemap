@@ -1,26 +1,34 @@
 package com.hdweiss.codemap.drawables;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.webkit.WebView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.hdweiss.codemap.view.CodeMapLayout;
 
 public class FunctionView extends LinearLayout {
 
 	private WebView webView;
-	private Rect position = new Rect();
 
+	public FunctionView(Context context) {
+		this(context, 0, 0);
+	}
+	
 	public FunctionView(Context context, int x, int y) {
 		super(context);
-		
+		setOrientation(LinearLayout.VERTICAL);
+
+		init();
+		setXY(x, y);
+	}
+	
+	private void init() {
+		TextView text = new TextView(getContext());
+		text.setText("heeelllooooo!");
+		addView(text);
+
 		webView = getWebView(getContext());
-
-		setXY(x, y, 1);
-
 		addView(webView);
 	}
 	
@@ -37,20 +45,19 @@ public class FunctionView extends LinearLayout {
 		
 		return webView;
 	}
-	
 
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-		
-		canvas.drawText("hej", position.left + webView.getWidth(), position.top, new Paint());
-		webView.draw(canvas);
+
+	public void setXY(int startX, int startY) {
+		setX(startX);
+		setY(startY);
 	}
 
 
-	public void setXY(int startX, int startY, float zoom) {
-		setX(startX);
-		setY(startY);
+	public boolean contains(float x, float y, float zoom) {
+		return false;
+	}
+
+	public void setZoom(float zoom) {
 		webView.setScaleX(zoom);
 		webView.setScaleY(zoom);
 	}
