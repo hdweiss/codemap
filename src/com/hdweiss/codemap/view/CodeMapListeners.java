@@ -1,11 +1,10 @@
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.view;
 
 import android.graphics.PointF;
-import android.view.MotionEvent;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.MotionEvent;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.drawables.FunctionDrawable;
 import com.hdweiss.codemap.drawables.FunctionView;
 import com.hdweiss.codemap.util.MultiTouchSupport.MultiTouchZoomListener;
 

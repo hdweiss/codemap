@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -22,6 +22,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RemoteViews.RemoteView;
+
+import com.hdweiss.codemap.R;
 
 
 /**

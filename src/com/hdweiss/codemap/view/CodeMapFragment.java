@@ -1,10 +1,12 @@
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.view;
 
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hdweiss.codemap.R;
 
 public class CodeMapFragment extends Fragment {
 

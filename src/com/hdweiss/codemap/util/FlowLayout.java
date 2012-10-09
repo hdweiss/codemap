@@ -1,8 +1,5 @@
 package com.hdweiss.codemap.util;
 
-import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.drawables.FunctionView;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -10,6 +7,9 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.drawables.FunctionView;
 
 public class FlowLayout extends ViewGroup {
 	private int mHorizontalSpacing;

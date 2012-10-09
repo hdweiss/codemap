@@ -1,8 +1,10 @@
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.view;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+
+import com.hdweiss.codemap.R;
 
 public class MainActivity extends Activity {
 

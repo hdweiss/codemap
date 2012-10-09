@@ -1,24 +1,19 @@
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.view;
 
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.CodeMapListeners.CodeMapGestureListener;
-import com.hdweiss.codemap.CodeMapListeners.CodeMapMultiTouchListener;
-import com.hdweiss.codemap.drawables.FunctionDrawable;
 import com.hdweiss.codemap.drawables.FunctionView;
 import com.hdweiss.codemap.util.MultiTouchSupport;
+import com.hdweiss.codemap.view.CodeMapListeners.CodeMapGestureListener;
+import com.hdweiss.codemap.view.CodeMapListeners.CodeMapMultiTouchListener;
 
-public class CodeMapView extends CodeMapLayout implements
-		SurfaceHolder.Callback {
+public class CodeMapView extends CodeMapLayout {
 
 	private MultiTouchSupport multiTouchSupport;
 	private GestureDetector gestureDetector;
@@ -26,7 +21,7 @@ public class CodeMapView extends CodeMapLayout implements
 	
 	private float zoom = 1;
 	
-	private ArrayList<FunctionView> drawables = new ArrayList<FunctionView>();
+	private ArrayList<FunctionView> views = new ArrayList<FunctionView>();
 
 	public CodeMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
@@ -42,23 +37,14 @@ public class CodeMapView extends CodeMapLayout implements
 		
 		FunctionView functionView2 = new FunctionView(getContext(), 300, 300);
 		addView(functionView2);
-		
-		functionView2.setX(500);
 	}
 
 	
-	public void refresh() {
-		doDraw();
-	}
-    
-	private void doDraw() {	
-		for (FunctionView drawable : drawables) {
-			//drawable.drawWithOffset(getScrollX(), getScrollY());
-			drawable.setX(drawable.getX() + getScrollX());
-			drawable.setY(drawable.getY() + getScrollY());
-		}
-	    if(scroller.computeScrollOffset())
-	    	scroll(scroller);
+	public void updateScroll() {
+	    if(scroller.computeScrollOffset()) {
+			float dx = (scroller.getStartX() - scroller.getFinalX());
+			float dy = (scroller.getStartY() - scroller.getFinalY());
+			scrollBy((int)dx, (int)dy);	    }
 	}
 
 	@Override
@@ -68,15 +54,8 @@ public class CodeMapView extends CodeMapLayout implements
 		if (!multiTouchSupport.onTouchEvent(event))
 			gestureDetector.onTouchEvent(event);
 		
-		refresh();
+		updateScroll();
 		return true;
-	}
-	
-	
-	private void scroll(Scroller scroller) {
-		float dx = (scroller.getStartX() - scroller.getFinalX());
-		float dy = (scroller.getStartY() - scroller.getFinalY());
-		scrollBy((int)dx, (int)dy);
 	}
 	
 	public float getZoom() {
@@ -85,29 +64,16 @@ public class CodeMapView extends CodeMapLayout implements
 	
 	public void setZoom(float zoom) {
 		this.zoom = zoom;
-		refresh();
+		updateScroll();
 	}
 
 	
 	public FunctionView getDrawableFromPoint(float x, float y) {
-		for (FunctionView drawable : drawables) {
-//			if (drawable.contains(x, y, zoom))
-//				return drawable;
+		for (FunctionView view : views) {
+//			if (view.contains(x, y, zoom))
+//				return view;
 		}
 		return null;
-	}
-	
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		refresh();
-	}
-
-	public void surfaceCreated(SurfaceHolder holder) {
-		refresh();
-	}
-
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		refresh();
 	}
 
 }

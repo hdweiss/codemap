@@ -5,7 +5,7 @@
 
     <fragment
         android:id="@+id/codeMapFragment"
-        android:name="com.hdweiss.codemap.CodeMapFragment"
+        android:name="com.hdweiss.codemap.view.CodeMapFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1" />
