@@ -87,4 +87,14 @@ public class CodeMapView extends CodeMapLayout {
 		}
 		return null;
 	}
+
+	public void addFunction(float x, float y) {
+		float offsetX = x + getScrollX();
+		float offsetY = y + getScrollY();
+		addView(new FunctionView(getContext(), offsetX, offsetY));
+	}
+
+	public void clear() {
+		removeAllViews();
+	}
 }

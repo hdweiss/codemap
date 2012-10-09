@@ -29,7 +29,8 @@ public class CodeMapListeners {
 		}
 		
 		public boolean onSingleTapUp(MotionEvent e) {
-			return false;
+			this.codeMapView.addFunction(e.getX(), e.getY());
+			return true;
 		}
 		
 		public void onLongPress(MotionEvent e) {

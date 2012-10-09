@@ -1,53 +1,54 @@
 package com.hdweiss.codemap.drawables;
 
+import com.hdweiss.codemap.R;
+
 import android.content.Context;
-import android.webkit.WebView;
+import android.graphics.Color;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.hdweiss.codemap.view.CodeMapLayout;
-
 public class FunctionView extends LinearLayout {
 
-	private WebView webView;
-
+	private TextView titleView;
+	private TextView sourceView;
+	
 	public FunctionView(Context context) {
 		this(context, 0, 0);
 	}
 	
-	public FunctionView(Context context, int x, int y) {
+	public FunctionView(Context context, float x, float y) {
 		super(context);
 		setOrientation(LinearLayout.VERTICAL);
 
+		inflate(getContext(), R.layout.map_fragment, this);
+		titleView = (TextView) findViewById(R.id.title);
+		sourceView = (TextView) findViewById(R.id.source);
+		
 		init();
 		setXY(x, y);
 	}
 	
 	private void init() {
-		TextView text = new TextView(getContext());
-		text.setText("heeelllooooo!");
-		addView(text);
-
-		webView = getWebView(getContext());
-		addView(webView);
-	}
-	
-	
-	private static WebView getWebView(Context context) {
-		WebView webView = new WebView(context);
-		webView.setLayoutParams(new CodeMapLayout.LayoutParams(100, 100, 0, 0));
-
-		String html = "<html><body><font color='" + "black" + "'>"
-				+ "<a href=\"www.slashdot.org\">hellllllo!</a>"
-				+ "</font></body></html>";
-		webView.setClickable(true);
-		webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
+		titleView.setText("main()");
 		
-		return webView;
+		sourceView.setLinksClickable(true);
+		
+		SpannableString spannableString = new SpannableString(Html.fromHtml(
+				"void main() { <br>\n int i = <a href=\"http://www.google.com\">func</a>;<br>"
+						+ "i++; <br>}"));
+
+		spannableString.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
+		
+		sourceView.setText(spannableString);
+		sourceView.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
 
-	public void setXY(int startX, int startY) {
+	public void setXY(float startX, float startY) {
 		setX(startX);
 		setY(startY);
 	}
@@ -58,7 +59,5 @@ public class FunctionView extends LinearLayout {
 	}
 
 	public void setZoom(float zoom) {
-		webView.setScaleX(zoom);
-		webView.setScaleY(zoom);
 	}
 }
