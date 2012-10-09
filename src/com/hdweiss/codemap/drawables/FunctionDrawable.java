@@ -28,9 +28,6 @@ public class FunctionDrawable extends ShapeDrawable {
 		setXY(x, y, 1);
 		
 		webView = new WebView(context);
-		String html = "<html><body>Hey</body></html>";
-		webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
-
 	}
 		
 	public void setText(String message) {

@@ -6,12 +6,13 @@ import android.view.GestureDetector.OnGestureListener;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.drawables.FunctionDrawable;
+import com.hdweiss.codemap.drawables.FunctionView;
 import com.hdweiss.codemap.util.MultiTouchSupport.MultiTouchZoomListener;
 
 public class CodeMapListeners {
 	
 	public static class CodeMapGestureListener implements OnGestureListener {
-		FunctionDrawable selectedDrawable = null;
+		private FunctionView selectedDrawable = null;
 		private CodeMapView codeMapView;
 		private Scroller scroller;
 		
