@@ -6,11 +6,13 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.RoundRectShape;
+import android.webkit.WebView;
 
 public class FunctionDrawable extends ShapeDrawable {
 
 	private Rect position = new Rect();
 	private String mTitle;
+	private WebView webView;
 	
 	public FunctionDrawable(Context context, String title, int x, int y) {
 		super();
@@ -24,6 +26,11 @@ public class FunctionDrawable extends ShapeDrawable {
 		setBounds(0, 0, 100, 100); // Set initial size
 		
 		setXY(x, y, 1);
+		
+		webView = new WebView(context);
+		String html = "<html><body>Hey</body></html>";
+		webView.loadDataWithBaseURL(null, html, "text/html", "UTF-8", null);
+
 	}
 		
 	public void setText(String message) {
@@ -46,6 +53,12 @@ public class FunctionDrawable extends ShapeDrawable {
 		
 		setBounds(bounds);
 		draw(canvas);
+		
+		webView.setLeft(bounds.left - 5);
+		webView.setRight(bounds.right - 5);
+		webView.setTop(bounds.top - 5);
+		webView.setBottom(bounds.bottom - 5);
+		webView.draw(canvas);
 	}
 
 	public void setXY(float x, float y, float zoom) {
@@ -60,7 +73,6 @@ public class FunctionDrawable extends ShapeDrawable {
 	
 	public boolean contains(float x, float y, float zoom) {		
 		return scaleRect(getBounds(), zoom).contains((int)x, (int)y);
-//		return getBounds().contains((int)x, (int)y);
 	}
 	
 	public Rect scaleRect(Rect rect, float scale) {
