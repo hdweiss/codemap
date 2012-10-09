@@ -1,4 +1,4 @@
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.data;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

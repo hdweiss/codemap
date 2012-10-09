@@ -5,8 +5,8 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.drawables.FunctionView;
 import com.hdweiss.codemap.util.MultiTouchSupport.MultiTouchZoomListener;
+import com.hdweiss.codemap.view.fragments.FunctionView;
 
 public class CodeMapListeners {
 	

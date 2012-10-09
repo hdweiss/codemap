@@ -8,7 +8,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
-import com.hdweiss.codemap.Cscope;
+import com.hdweiss.codemap.data.Cscope;
 
 @SuppressLint("SdCardPath")
 public class CscopeTest extends AndroidTestCase {

@@ -9,10 +9,10 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.drawables.FunctionView;
 import com.hdweiss.codemap.util.MultiTouchSupport;
 import com.hdweiss.codemap.view.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.CodeMapListeners.CodeMapMultiTouchListener;
+import com.hdweiss.codemap.view.fragments.FunctionView;
 
 public class CodeMapView extends CodeMapLayout {
 

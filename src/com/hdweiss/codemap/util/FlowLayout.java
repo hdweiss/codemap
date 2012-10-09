@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.drawables.FunctionView;
+import com.hdweiss.codemap.view.fragments.FunctionView;
 
 public class FlowLayout extends ViewGroup {
 	private int mHorizontalSpacing;

@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.drawables;
+package com.hdweiss.codemap.view.fragments;
 
 import com.hdweiss.codemap.R;
 

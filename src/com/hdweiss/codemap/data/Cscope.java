@@ -1,4 +1,4 @@
-package com.hdweiss.codemap;
+package com.hdweiss.codemap.data;
 
 import java.io.File;
 import java.io.FileInputStream;
