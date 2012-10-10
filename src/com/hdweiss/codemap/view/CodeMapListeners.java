@@ -67,6 +67,7 @@ public class CodeMapListeners {
 	public static class CodeMapScaleListener implements OnScaleGestureListener {
 		
 		private CodeMapView codeMapView;
+		private float initialZoom = 1;
 
 		public CodeMapScaleListener(CodeMapView codeMapView) {
 			this.codeMapView = codeMapView;
@@ -76,14 +77,15 @@ public class CodeMapListeners {
 		}
 		
 		public boolean onScaleBegin(ScaleGestureDetector detector) {
+			initialZoom = codeMapView.getZoom();
 			return true;
 		}
 		
 		public boolean onScale(ScaleGestureDetector detector) {
-			float zoom = detector.getScaleFactor();
-			if(Math.abs(zoom - codeMapView.getZoom()) > 0.05) {
+			float currentZoom = detector.getScaleFactor();
+			if(Math.abs(currentZoom - codeMapView.getZoom()) > 0.05) {
 				CodeMapCursorPoint point = new CodeMapCursorPoint(detector.getFocusX(), detector.getFocusY());
-				codeMapView.setZoom(zoom, point.getCodeMapPoint(codeMapView));
+				codeMapView.setZoom(currentZoom, point.getCodeMapPoint(codeMapView));
 			}
 			return false;
 		}

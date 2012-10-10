@@ -3,6 +3,7 @@ package com.hdweiss.codemap.view;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -69,31 +70,20 @@ public class CodeMapView extends CodeMapLayout {
 	
 	public void setZoom(float zoom, CodeMapPoint pivot) {
 		this.zoom = zoom;
-		setPivotX(pivot.x);
-		setPivotY(pivot.y);
-		setScaleX(zoom);
-		setScaleY(zoom);
 		invalidate();
 	}
 	
 	
-//	@Override
-//	public void dispatchDraw(Canvas canvas) {
-//	    super.onDraw(canvas);
-//	    
-//	    for(int i = 0; i < getChildCount(); i++)
-//	    	getChildAt(i).draw(canvas);
-//	    
-//	    canvas.save();
-//	    //canvas.translate(getScrollX(), getScrollY());
-//	    canvas.scale(zoom, zoom);
-//	    canvas.restore();
-//	}
+	@Override
+	public void dispatchDraw(Canvas canvas) {	    
+	    canvas.save();
+	    canvas.scale(zoom, zoom);
+	    super.dispatchDraw(canvas);
+	    canvas.restore();
+	}
 
-	public FunctionView addFunction(CodeMapPoint center) {
-		float absoluteX = center.x + getScrollX();
-		float absoluteY = center.y + getScrollY();
-		FunctionView functionView = new FunctionView(getContext(), new CodeMapPoint(absoluteX, absoluteY));
+	public FunctionView addFunction(CodeMapPoint point) {
+		FunctionView functionView = new FunctionView(getContext(), point);
 		addView(functionView);
 		views.add(functionView);
 		return functionView;
