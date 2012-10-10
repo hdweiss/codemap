@@ -2,15 +2,16 @@ package com.hdweiss.codemap.view.fragments;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.PointF;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.util.CodeMapPoint;
 
 public class FunctionView extends LinearLayout {
 
@@ -18,10 +19,10 @@ public class FunctionView extends LinearLayout {
 	private TextView sourceView;
 	
 	public FunctionView(Context context) {
-		this(context, 0, 0);
+		this(context, new CodeMapPoint(0, 0));
 	}
 	
-	public FunctionView(Context context, float x, float y) {
+	public FunctionView(Context context, CodeMapPoint point) {
 		super(context);
 		setOrientation(LinearLayout.VERTICAL);
 
@@ -30,7 +31,7 @@ public class FunctionView extends LinearLayout {
 		sourceView = (TextView) findViewById(R.id.source);
 		
 		init();
-		setXY(x, y);
+		setPosition(point);
 	}
 	
 	private void init() {
@@ -49,22 +50,27 @@ public class FunctionView extends LinearLayout {
 	}
 
 
-	public void setXY(float startX, float startY) {
+	public void setPosition(CodeMapPoint point) {
+		setX(point.x);
+		setY(point.y);
+	}
+
+	public void setPositionCenter(CodeMapPoint point) {
+		float startX = point.x - (getWidth() / 2);
+		float startY = point.y - (getHeight() / 2);
 		setX(startX);
 		setY(startY);
 	}
 
-	public void setCenterPoint(float x, float y) {
-		float startX = x - (getWidth() / 2);
-		float startY = y - (getHeight() / 2);
-		setX(startX);
-		setY(startY);
-	}
-
-	public boolean contains(PointF point, float zoom) {
+	public boolean contains(CodeMapPoint point) {
+//		Log.d("CodeMap", "point : [" + getX() + " < " + point.x + " < "
+//				+ (getX() + getWidth()) + "] [" + getY() + " < " + point.y
+//				+ " < " + (getY() + getHeight()) + "]");
 		if (point.x >= getX() && point.x <= getX() + getWidth()
-				&& point.y >= getY() && point.y <= getY() + getHeight())
+				&& point.y >= getY() && point.y <= getY() + getHeight()) {
+			Log.d("CodeMap", "match!");
 			return true;
+		}
 		else
 			return false;
 	}

@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.view.fragments.FunctionView;
 
 public class FlowLayout extends ViewGroup {
 	private int mHorizontalSpacing;
@@ -31,8 +30,6 @@ public class FlowLayout extends ViewGroup {
 		mPaint.setAntiAlias(true);
 		mPaint.setColor(0xffff0000);
 		mPaint.setStrokeWidth(2.0f);
-		
-		addView(new FunctionView(getContext(), 200, 200));
 	}
 
 	@Override

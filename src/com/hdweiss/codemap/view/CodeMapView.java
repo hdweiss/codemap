@@ -3,14 +3,14 @@ package com.hdweiss.codemap.view;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.PointF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Scroller;
 
+import com.hdweiss.codemap.util.CodeMapCursorPoint;
+import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.CodeMapListeners.CodeMapScaleListener;
 import com.hdweiss.codemap.view.fragments.FunctionView;
@@ -38,8 +38,8 @@ public class CodeMapView extends CodeMapLayout {
 	}
 	
 	private void initState() {
-		addFunction(new PointF(200, 200));
-		addFunction(new PointF(300, 500));
+		addFunction(new CodeMapPoint(200, 200));
+		addFunction(new CodeMapPoint(300, 500));
 	}
 
 
@@ -67,12 +67,13 @@ public class CodeMapView extends CodeMapLayout {
 		return this.zoom;
 	}
 	
-	public void setZoom(float zoom, PointF pivot) {
+	public void setZoom(float zoom, CodeMapPoint pivot) {
 		this.zoom = zoom;
 		setPivotX(pivot.x);
 		setPivotY(pivot.y);
 		setScaleX(zoom);
 		setScaleY(zoom);
+		invalidate();
 	}
 	
 	
@@ -88,27 +89,35 @@ public class CodeMapView extends CodeMapLayout {
 //	    canvas.scale(zoom, zoom);
 //	    canvas.restore();
 //	}
-	
-	public FunctionView getDrawableFromPoint(PointF point) {
-		for (FunctionView view : views) {
-			if (view.contains(point, zoom)) {
-				Log.d("CodeMap" , "!Found view at point");
-				return view;
-			}
-		}
-		Log.d("CodeMap" , "?Didn't find any view at point");
-		return null;
-	}
 
-	public void addFunction(PointF center) {
-		float offsetX = center.x + getScrollX();
-		float offsetY = center.y + getScrollY();
-		FunctionView functionView = new FunctionView(getContext(), offsetX, offsetY);
+	public FunctionView addFunction(CodeMapPoint center) {
+		float absoluteX = center.x + getScrollX();
+		float absoluteY = center.y + getScrollY();
+		FunctionView functionView = new FunctionView(getContext(), new CodeMapPoint(absoluteX, absoluteY));
 		addView(functionView);
 		views.add(functionView);
+		return functionView;
 	}
-
+	
+	
+	public void addFunctionCentered(CodeMapCursorPoint cursorPoint) {
+		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
+		FunctionView functionView = addFunction(point);
+		functionView.setPositionCenter(point);
+	}
+	
+	public FunctionView getDrawable(CodeMapCursorPoint cursorPoint) {
+		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
+		for (FunctionView view : views) {
+			if (view.contains(point))
+				return view;
+		}
+		return null;
+	}
+	
+	
 	public void clear() {
 		removeAllViews();
+		views.clear();
 	}
 }

@@ -1,12 +1,12 @@
 package com.hdweiss.codemap.view;
 
-import android.graphics.PointF;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.Scroller;
 
+import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.view.fragments.FunctionView;
 
 public class CodeMapListeners {
@@ -25,19 +25,19 @@ public class CodeMapListeners {
 			if (!scroller.isFinished())
 				scroller.forceFinished(true);
 
-			PointF point = new PointF(e.getX(), e.getY());
-			selectedDrawable = codeMapView.getDrawableFromPoint(point);
+			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
+			selectedDrawable = codeMapView.getDrawable(point);
 			
 			return true;
 		}
 		
 		public boolean onSingleTapUp(MotionEvent e) {
-			PointF point = new PointF(e.getX(), e.getY());
-			this.codeMapView.addFunction(point);
-			return true;
+			return false;
 		}
 		
 		public void onLongPress(MotionEvent e) {
+			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
+			this.codeMapView.addFunctionCentered(point);
 		}
 
 		public void onShowPress(MotionEvent e) {
@@ -48,11 +48,13 @@ public class CodeMapListeners {
 			int startX = (int) (e2.getX() + distanceX);
 			int startY = (int) (e2.getY() + distanceY);
 			
-			if(selectedDrawable != null)
-				selectedDrawable.setCenterPoint(startX, startY);
+			if(selectedDrawable != null) {
+				CodeMapCursorPoint point = new CodeMapCursorPoint(startX, startY);
+				selectedDrawable.setPositionCenter(point.getCodeMapPoint(codeMapView));
+			}
 			else
 				scroller.startScroll(startX, startY, (int) distanceX,
-					(int) distanceY);
+						(int) distanceY);
 			return true;
 		}
 
@@ -79,9 +81,10 @@ public class CodeMapListeners {
 		
 		public boolean onScale(ScaleGestureDetector detector) {
 			float zoom = detector.getScaleFactor();
-			
-			if(Math.abs(zoom - codeMapView.getZoom()) > 0.05)
-				codeMapView.setZoom(zoom, new PointF(0, 0));
+			if(Math.abs(zoom - codeMapView.getZoom()) > 0.05) {
+				CodeMapCursorPoint point = new CodeMapCursorPoint(detector.getFocusX(), detector.getFocusY());
+				codeMapView.setZoom(zoom, point.getCodeMapPoint(codeMapView));
+			}
 			return false;
 		}
 	};
