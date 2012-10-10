@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.view;
 
 import android.app.Fragment;
+import android.graphics.PointF;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -49,7 +50,7 @@ public class CodeMapFragment extends Fragment {
 			return true;
 			
 		case R.id.codemap_resetZoom:
-			codeMapView.setZoom(1);
+			codeMapView.setZoom(1, new PointF(0,0));
 			return true;
 			
 		default:

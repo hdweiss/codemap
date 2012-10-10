@@ -3,9 +3,10 @@ package com.hdweiss.codemap.view;
 import android.graphics.PointF;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
+import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.util.MultiTouchSupport.MultiTouchZoomListener;
 import com.hdweiss.codemap.view.fragments.FunctionView;
 
 public class CodeMapListeners {
@@ -20,16 +21,19 @@ public class CodeMapListeners {
 			this.scroller = scroller;
 		}
 		
-		public boolean onDown(MotionEvent event) {
+		public boolean onDown(MotionEvent e) {
 			if (!scroller.isFinished())
 				scroller.forceFinished(true);
-			selectedDrawable = codeMapView.getDrawableFromPoint(event.getX(),
-					event.getY());
+
+			PointF point = new PointF(e.getX(), e.getY());
+			selectedDrawable = codeMapView.getDrawableFromPoint(point);
+			
 			return true;
 		}
 		
 		public boolean onSingleTapUp(MotionEvent e) {
-			this.codeMapView.addFunction(e.getX(), e.getY());
+			PointF point = new PointF(e.getX(), e.getY());
+			this.codeMapView.addFunction(point);
 			return true;
 		}
 		
@@ -45,7 +49,7 @@ public class CodeMapListeners {
 			int startY = (int) (e2.getY() + distanceY);
 			
 			if(selectedDrawable != null)
-				selectedDrawable.setXY(startX, startY);
+				selectedDrawable.setCenterPoint(startX, startY);
 			else
 				scroller.startScroll(startX, startY, (int) distanceX,
 					(int) distanceY);
@@ -58,38 +62,27 @@ public class CodeMapListeners {
 	}
 	
 	
-	public static class CodeMapMultiTouchListener implements MultiTouchZoomListener {
-
-		private float minZoom = 0.5f;
-		private float maxZoom = 5;
+	public static class CodeMapScaleListener implements OnScaleGestureListener {
 		
 		private CodeMapView codeMapView;
-		private float initialMultiTouchZoom;
 
-		public CodeMapMultiTouchListener(CodeMapView codeMapView) {
+		public CodeMapScaleListener(CodeMapView codeMapView) {
 			this.codeMapView = codeMapView;
 		}
 		
-		public void onZoomStarted(float distance, PointF centerPoint) {
-			initialMultiTouchZoom = codeMapView.getZoom();
-		}
-
-		public void onZooming(float distance, float relativeToStart) {
-			float dz = (float) (Math.log(relativeToStart) / Math.log(2) * 1.5);
-			float calcZoom = initialMultiTouchZoom + dz;
-			if (Math.abs(calcZoom - codeMapView.getZoom()) > 0.05) {
-				if(calcZoom >= minZoom && calcZoom <= maxZoom) {
-					codeMapView.setZoom(calcZoom);
-					//zoomPositionChanged(calcZoom);
-				}
-			}
-		}
-
-		public void onZoomEnded(float distance, float relativeToStart) {
-		}
-
-		public void onGestureInit(float x1, float y1, float x2, float y2) {
+		public void onScaleEnd(ScaleGestureDetector detector) {			
 		}
 		
-	}
+		public boolean onScaleBegin(ScaleGestureDetector detector) {
+			return true;
+		}
+		
+		public boolean onScale(ScaleGestureDetector detector) {
+			float zoom = detector.getScaleFactor();
+			
+			if(Math.abs(zoom - codeMapView.getZoom()) > 0.05)
+				codeMapView.setZoom(zoom, new PointF(0, 0));
+			return false;
+		}
+	};
 }

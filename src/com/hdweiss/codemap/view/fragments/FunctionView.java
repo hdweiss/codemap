@@ -1,15 +1,16 @@
 package com.hdweiss.codemap.view.fragments;
 
-import com.hdweiss.codemap.R;
-
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PointF;
 import android.text.Html;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.hdweiss.codemap.R;
 
 public class FunctionView extends LinearLayout {
 
@@ -53,11 +54,18 @@ public class FunctionView extends LinearLayout {
 		setY(startY);
 	}
 
-
-	public boolean contains(float x, float y, float zoom) {
-		return false;
+	public void setCenterPoint(float x, float y) {
+		float startX = x - (getWidth() / 2);
+		float startY = y - (getHeight() / 2);
+		setX(startX);
+		setY(startY);
 	}
 
-	public void setZoom(float zoom) {
+	public boolean contains(PointF point, float zoom) {
+		if (point.x >= getX() && point.x <= getX() + getWidth()
+				&& point.y >= getY() && point.y <= getY() + getHeight())
+			return true;
+		else
+			return false;
 	}
 }
