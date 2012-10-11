@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.hdweiss.codemap.view;
+package com.hdweiss.codemap.util;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -36,21 +36,21 @@ import com.hdweiss.codemap.R;
  * android.R.styleable#View View Attributes}</p>
  */
 @RemoteView
-public class CodeMapLayout extends ViewGroup {
+public class MyAbsoluteLayout extends ViewGroup {
     private int mPaddingRight;
 	private int mPaddingBottom;
 	private int mPaddingTop;
 	private int mPaddingLeft;
 
-	public CodeMapLayout(Context context) {
+	public MyAbsoluteLayout(Context context) {
         super(context);
     }
 
-    public CodeMapLayout(Context context, AttributeSet attrs) {
+    public MyAbsoluteLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public CodeMapLayout(Context context, AttributeSet attrs,
+    public MyAbsoluteLayout(Context context, AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -72,8 +72,8 @@ public class CodeMapLayout extends ViewGroup {
                 int childRight;
                 int childBottom;
 
-                CodeMapLayout.LayoutParams lp
-                        = (CodeMapLayout.LayoutParams) child.getLayoutParams();
+                MyAbsoluteLayout.LayoutParams lp
+                        = (MyAbsoluteLayout.LayoutParams) child.getLayoutParams();
 
                 childRight = lp.x + child.getMeasuredWidth();
                 childBottom = lp.y + child.getMeasuredHeight();
@@ -115,8 +115,8 @@ public class CodeMapLayout extends ViewGroup {
             View child = getChildAt(i);
             if (child.getVisibility() != GONE) {
 
-            	CodeMapLayout.LayoutParams lp =
-                        (CodeMapLayout.LayoutParams) child.getLayoutParams();
+            	MyAbsoluteLayout.LayoutParams lp =
+                        (MyAbsoluteLayout.LayoutParams) child.getLayoutParams();
 
                 int childLeft = mPaddingLeft + lp.x;
                 int childTop = mPaddingTop + lp.y;
@@ -130,13 +130,13 @@ public class CodeMapLayout extends ViewGroup {
 
     @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new CodeMapLayout.LayoutParams(getContext(), attrs);
+        return new MyAbsoluteLayout.LayoutParams(getContext(), attrs);
     }
 
     // Override to allow type-checking of LayoutParams. 
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof CodeMapLayout.LayoutParams;
+        return p instanceof MyAbsoluteLayout.LayoutParams;
     }
 
     @Override

@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/fragment_bg" >
 
-            <com.hdweiss.codemap.view.CodeMapBrowserList
+            <com.hdweiss.codemap.view.CodeMapBrowser
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>

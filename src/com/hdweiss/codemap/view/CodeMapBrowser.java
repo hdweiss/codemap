@@ -8,9 +8,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class CodeMapBrowserList extends ListView implements android.widget.AdapterView.OnItemClickListener {
+public class CodeMapBrowser extends ListView implements android.widget.AdapterView.OnItemClickListener {
 
-	public CodeMapBrowserList(Context context, AttributeSet attrs) {
+	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		String[] items = {"hej", "ho"};
@@ -20,7 +20,7 @@ public class CodeMapBrowserList extends ListView implements android.widget.Adapt
 		setOnItemClickListener(this);
 	}
 
-	public void onItemClick(AdapterView<?> adapterView, View parent, int position, long id) {
+	public void onItemClick(AdapterView<?> view, View parent, int position, long id) {
 		String item = (String) getItemAtPosition(position);
 		Toast.makeText(getContext(), item, Toast.LENGTH_SHORT).show();
 	}
