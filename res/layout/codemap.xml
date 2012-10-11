@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
@@ -9,4 +9,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</LinearLayout>
+    <SlidingDrawer
+        android:id="@+id/drawer"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="bottom"
+        android:content="@+id/codemap_browser"
+        android:handle="@+id/codemap_handle"
+        android:orientation="horizontal"
+        android:paddingRight="5dp" >
+
+        <ImageView
+            android:id="@+id/codemap_handle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:drawable/ic_menu_share" />
+
+        <LinearLayout
+            android:id="@+id/codemap_browser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/fragment_bg" >
+
+            <com.hdweiss.codemap.view.CodeMapBrowserList
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </SlidingDrawer>
+
+</RelativeLayout>
