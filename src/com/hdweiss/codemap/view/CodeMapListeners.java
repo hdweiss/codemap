@@ -84,11 +84,9 @@ public class CodeMapListeners {
 		}
 		
 		public boolean onScale(ScaleGestureDetector detector) {
-			float currentZoom = detector.getScaleFactor();
-			if(Math.abs(currentZoom - codeMapView.getZoom()) > 0.05) {
-				CodeMapCursorPoint point = new CodeMapCursorPoint(detector.getFocusX(), detector.getFocusY());
-				codeMapView.setZoom(currentZoom, point.getCodeMapPoint(codeMapView));
-			}
+			float currentZoom = detector.getScaleFactor() * initialZoom;
+			CodeMapCursorPoint point = new CodeMapCursorPoint(detector.getFocusX(), detector.getFocusY());
+			codeMapView.setZoom(currentZoom, point.getCodeMapPoint(codeMapView));
 			return false;
 		}
 	};
