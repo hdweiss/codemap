@@ -13,8 +13,11 @@ import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 
 public class CodeMapFragment extends Fragment {
-
-	CodeMapView codeMapView;
+	private static final String ZOOM = "zoom";
+	private static final String SCROLL_X = "scrollX";
+	private static final String SCROLL_Y = "scrollY";
+	
+	private CodeMapView codeMapView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -32,9 +35,32 @@ public class CodeMapFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		
+		if(savedInstanceState != null)
+			restoreInstanceState(savedInstanceState);
+	}
+	
+	public void restoreInstanceState(Bundle savedInstanceState) {
+		if(savedInstanceState != null) {
+			float zoom = savedInstanceState.getFloat(ZOOM);
+			int scrollX = savedInstanceState.getInt(SCROLL_X);
+			int scrollY = savedInstanceState.getInt(SCROLL_Y);
+
+			codeMapView.setZoom(zoom, new CodeMapPoint(0, 0));
+			codeMapView.setScrollX(scrollX);
+			codeMapView.setScrollY(scrollY);
+		}
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putFloat(ZOOM, codeMapView.getZoom());
+		outState.putInt(SCROLL_X, codeMapView.getScrollX());
+		outState.putInt(SCROLL_Y, codeMapView.getScrollY());
 	}
 
-	
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);

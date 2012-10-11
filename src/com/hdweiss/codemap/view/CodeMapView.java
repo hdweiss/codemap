@@ -42,7 +42,7 @@ public class CodeMapView extends CodeMapLayout {
 		addFunction(new CodeMapPoint(200, 200));
 		addFunction(new CodeMapPoint(300, 500));
 	}
-
+	
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -78,6 +78,7 @@ public class CodeMapView extends CodeMapLayout {
 	public void dispatchDraw(Canvas canvas) {	    
 	    canvas.save();
 	    canvas.scale(zoom, zoom);
+//	    canvas.translate(getScrollX() * zoom, getScrollY() * zoom);
 	    super.dispatchDraw(canvas);
 	    canvas.restore();
 	}
