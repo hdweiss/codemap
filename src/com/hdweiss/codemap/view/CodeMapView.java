@@ -40,8 +40,8 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 	
 	private void initState() {
-		addFunction(new CodeMapPoint(200, 200));
-		addFunction(new CodeMapPoint(300, 500));
+		createFunction(new CodeMapPoint(200, 200), "bar");
+		createFunction(new CodeMapPoint(300, 500), "foo");
 	}
 	
 
@@ -84,19 +84,34 @@ public class CodeMapView extends MyAbsoluteLayout {
 	    canvas.restore();
 	}
 
-	public CodeMapFunction addFunction(CodeMapPoint point) {
-		CodeMapFunction functionView = new CodeMapFunction(getContext(), point);
-		addView(functionView);
-		views.add(functionView);
+	public CodeMapFunction createFunction(CodeMapPoint position, String url) {
+		final String content = "void main() { <br>\n int i = <a href=\"func\">func</a>;<br>"
+				 + "int j = <a href=\"func2\">func2(a,b)</a>;<br>" + "i++; <br>}";
+		
+		CodeMapFunction functionView = new CodeMapFunction(getContext(), position, url, content, this);
+		addFunction(functionView);
 		return functionView;
 	}
 	
-	
-	public void addFunctionCentered(CodeMapCursorPoint cursorPoint) {
-		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
-		CodeMapFunction functionView = addFunction(point);
-		functionView.setPositionCenter(point);
+	public void createFunctionCentered(CodeMapCursorPoint cursorPosition, String url) {
+		CodeMapPoint position = cursorPosition.getCodeMapPoint(this);
+		CodeMapFunction functionView = createFunction(position, url);
+		functionView.setPositionCenter(position);
 	}
+	
+	public void addFunction(CodeMapFunction function) {
+		addView(function);
+		views.add(function);
+	}
+
+	public CodeMapFunction openFunctionFromFragment(String url, CodeMapFunction codeMapFunction) {
+		CodeMapPoint position = new CodeMapPoint();
+		position.x = codeMapFunction.getX() + codeMapFunction.getWidth() + 30;
+		position.y = codeMapFunction.getY() + 20;
+
+		return createFunction(position, url);
+	}
+	
 	
 	public CodeMapFunction getDrawable(CodeMapCursorPoint cursorPoint) {
 		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
@@ -106,6 +121,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 		}
 		return null;
 	}
+	
 	
 	public void refresh() {
 		invalidate();

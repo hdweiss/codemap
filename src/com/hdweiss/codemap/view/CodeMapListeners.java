@@ -37,7 +37,7 @@ public class CodeMapListeners {
 		
 		public void onLongPress(MotionEvent e) {
 			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
-			this.codeMapView.addFunctionCentered(point);
+			this.codeMapView.createFunctionCentered(point, "click!");
 		}
 
 		public void onShowPress(MotionEvent e) {
