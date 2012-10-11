@@ -105,6 +105,10 @@ public class CodeMapView extends CodeMapLayout {
 		return null;
 	}
 	
+	public void refresh() {
+		invalidate();
+	}
+	
 	
 	public void clear() {
 		removeAllViews();

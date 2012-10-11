@@ -51,6 +51,7 @@ public class CodeMapListeners {
 			if(selectedDrawable != null) {
 				CodeMapCursorPoint point = new CodeMapCursorPoint(startX, startY);
 				selectedDrawable.setPositionCenter(point.getCodeMapPoint(codeMapView));
+				codeMapView.refresh();
 			}
 			else
 				scroller.startScroll((int) startX, (int) startY, (int) distanceX,
