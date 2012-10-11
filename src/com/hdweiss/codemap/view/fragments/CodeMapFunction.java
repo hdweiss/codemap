@@ -13,16 +13,16 @@ import android.widget.TextView;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 
-public class FunctionView extends LinearLayout {
+public class CodeMapFunction extends LinearLayout {
 
 	private TextView titleView;
 	private TextView sourceView;
 	
-	public FunctionView(Context context) {
+	public CodeMapFunction(Context context) {
 		this(context, new CodeMapPoint(0, 0));
 	}
 	
-	public FunctionView(Context context, CodeMapPoint point) {
+	public CodeMapFunction(Context context, CodeMapPoint point) {
 		super(context);
 		setOrientation(LinearLayout.VERTICAL);
 

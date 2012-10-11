@@ -14,7 +14,7 @@ import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.CodeMapListeners.CodeMapScaleListener;
-import com.hdweiss.codemap.view.fragments.FunctionView;
+import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 
 public class CodeMapView extends CodeMapLayout {
 
@@ -24,7 +24,7 @@ public class CodeMapView extends CodeMapLayout {
 	
 	private float zoom = 1;
 	
-	private ArrayList<FunctionView> views = new ArrayList<FunctionView>();
+	private ArrayList<CodeMapFunction> views = new ArrayList<CodeMapFunction>();
 
 	public CodeMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
@@ -82,8 +82,8 @@ public class CodeMapView extends CodeMapLayout {
 	    canvas.restore();
 	}
 
-	public FunctionView addFunction(CodeMapPoint point) {
-		FunctionView functionView = new FunctionView(getContext(), point);
+	public CodeMapFunction addFunction(CodeMapPoint point) {
+		CodeMapFunction functionView = new CodeMapFunction(getContext(), point);
 		addView(functionView);
 		views.add(functionView);
 		return functionView;
@@ -92,13 +92,13 @@ public class CodeMapView extends CodeMapLayout {
 	
 	public void addFunctionCentered(CodeMapCursorPoint cursorPoint) {
 		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
-		FunctionView functionView = addFunction(point);
+		CodeMapFunction functionView = addFunction(point);
 		functionView.setPositionCenter(point);
 	}
 	
-	public FunctionView getDrawable(CodeMapCursorPoint cursorPoint) {
+	public CodeMapFunction getDrawable(CodeMapCursorPoint cursorPoint) {
 		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
-		for (FunctionView view : views) {
+		for (CodeMapFunction view : views) {
 			if (view.contains(point))
 				return view;
 		}

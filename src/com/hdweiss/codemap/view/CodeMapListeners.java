@@ -7,12 +7,12 @@ import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
-import com.hdweiss.codemap.view.fragments.FunctionView;
+import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 
 public class CodeMapListeners {
 	
 	public static class CodeMapGestureListener implements OnGestureListener {
-		private FunctionView selectedDrawable = null;
+		private CodeMapFunction selectedDrawable = null;
 		private CodeMapView codeMapView;
 		private Scroller scroller;
 		
@@ -45,20 +45,21 @@ public class CodeMapListeners {
 		
 		
 		public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-			int startX = (int) (e2.getX() + distanceX);
-			int startY = (int) (e2.getY() + distanceY);
+			float startX = e2.getX() + distanceX;
+			float startY = e2.getY() + distanceY;
 			
 			if(selectedDrawable != null) {
 				CodeMapCursorPoint point = new CodeMapCursorPoint(startX, startY);
 				selectedDrawable.setPositionCenter(point.getCodeMapPoint(codeMapView));
 			}
 			else
-				scroller.startScroll(startX, startY, (int) distanceX,
+				scroller.startScroll((int) startX, (int) startY, (int) distanceX,
 						(int) distanceY);
 			return true;
 		}
 
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			// TODO Implement
 			return false;
 		}
 	}
