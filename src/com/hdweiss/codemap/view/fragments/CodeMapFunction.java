@@ -3,15 +3,19 @@ package com.hdweiss.codemap.view.fragments;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
+import com.hdweiss.codemap.view.fragments.FunctionLinkSpan.URLSpanConverter;
 
 public class CodeMapFunction extends LinearLayout {
 
@@ -40,12 +44,20 @@ public class CodeMapFunction extends LinearLayout {
 		sourceView.setLinksClickable(true);
 		
 		SpannableString spannableString = new SpannableString(Html.fromHtml(
-				"void main() { <br>\n int i = <a href=\"http://www.google.com\">func</a>;<br>"
+				"void main() { <br>\n int i = <a href=\"function:func\">func</a>;<br>"
 						+ "i++; <br>}"));
 
 		spannableString.setSpan(new ForegroundColorSpan(Color.RED), 5, 9, 0);
 		
 		sourceView.setText(spannableString);
+
+		
+		Spannable span = FunctionLinkSpan.replaceAll(
+				(Spanned) sourceView.getText(), URLSpan.class,
+				new URLSpanConverter(getContext()));
+		
+		sourceView.setText(span);
+		
 		sourceView.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
