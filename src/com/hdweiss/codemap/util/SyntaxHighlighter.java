@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 
 import android.text.Html;
 import android.text.SpannableString;
-import android.util.Log;
 
 import com.hdweiss.codemap.data.CscopeEntry;
 
@@ -82,7 +81,7 @@ public class SyntaxHighlighter {
 	public void markupReferences(ArrayList<CscopeEntry> references) {
 		StringBuilder result = new StringBuilder(content);
 		for(CscopeEntry entry: references) {
-			Log.d("CodeMap", entry.toString());
+			//Log.d("CodeMap", entry.toString());
 			Matcher matcher = Pattern.compile(Pattern.quote(entry.actualName)).matcher(result);
 			
 			if(matcher.find()) {

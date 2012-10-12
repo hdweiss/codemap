@@ -147,8 +147,7 @@ public class Cscope {
 		return cscopeEntry;
 	}
 	
-	private int getFunctionEndLine(String projectName, String projectPath, CscopeEntry cscopeEntry) {
-		
+	private int getFunctionEndLine(String projectName, String projectPath, CscopeEntry cscopeEntry) {	
 		String options = "-L -1 '.*' " + cscopeEntry.file;
 		String symbols = runCommandSpecial(projectName, projectPath, options);
 		
@@ -211,7 +210,6 @@ public class Cscope {
 		}
 		
 		String command = getCscopeCommand(projectName, projectPath, options, false);
-		Log.d("CodeMap", "Running command " + command);
 		
 		File tmpdir = context.getFilesDir();
 		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
@@ -220,4 +218,18 @@ public class Cscope {
 	}
 	
 	/******************/
+	
+	public ArrayList<String> getDeclarations(String filename, String projectName, String projectPath) {
+		ArrayList<String> result = new ArrayList<String>();
+		
+		String options = "-k -L -1 '.*' " + filename;
+		String symbols = runCommandSpecial(projectName, projectPath, options);
+		
+		Log.d("CodeMap", "Got declarations of " + filename + "\n" + symbols);
+		
+		for(CscopeEntry entry: getAllReferences(symbols, 0, 0))
+			result.add(entry.name);
+		
+		return result;
+	}
 }

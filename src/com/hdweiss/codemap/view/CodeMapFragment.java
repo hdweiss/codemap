@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.CodeMapPoint;
 
 public class CodeMapFragment extends Fragment {
@@ -18,6 +19,7 @@ public class CodeMapFragment extends Fragment {
 	private static final String SCROLL_Y = "scrollY";
 	
 	private CodeMapView codeMapView;
+	private CodeMapBrowser codeMapBrowser;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -28,6 +30,7 @@ public class CodeMapFragment extends Fragment {
 		
 		View view = inflater.inflate(R.layout.codemap, container, false);
 		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
+		codeMapBrowser = (CodeMapBrowser) view.findViewById(R.id.codemap_browser);
 		
 		return view;
 	}
@@ -38,6 +41,10 @@ public class CodeMapFragment extends Fragment {
 		
 		if(savedInstanceState != null)
 			restoreInstanceState(savedInstanceState);
+		
+		Project project = ((CodeMapActivity) getActivity()).getProject();
+		codeMapView.setProject(project);
+		codeMapBrowser.setProject(project);
 	}
 	
 	public void restoreInstanceState(Bundle savedInstanceState) {

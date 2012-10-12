@@ -1,5 +1,10 @@
 package com.hdweiss.codemap.view;
 
+import java.util.ArrayList;
+
+import com.hdweiss.codemap.data.Project;
+
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -10,13 +15,10 @@ import android.widget.Toast;
 
 public class CodeMapBrowser extends ListView implements android.widget.AdapterView.OnItemClickListener {
 
+	private Project project;
+
 	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		
-		String[] items = {"hej", "ho"};
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(context,
-				android.R.layout.simple_list_item_1, items);
-		setAdapter(arrayAdapter);
 		setOnItemClickListener(this);
 	}
 
@@ -24,5 +26,17 @@ public class CodeMapBrowser extends ListView implements android.widget.AdapterVi
 		String item = (String) getItemAtPosition(position);
 		Toast.makeText(getContext(), item, Toast.LENGTH_SHORT).show();
 	}
+
+	public void setProject(Project project) {
+		this.project = project;
+		refresh();
+	}
 	
+	@SuppressLint("SdCardPath")
+	public void refresh() {
+		ArrayList<String> symbols = project.getSymbols("/sdcard/ctags/main.c");
+		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
+				android.R.layout.simple_list_item_1, symbols);
+		setAdapter(arrayAdapter);
+	}
 }

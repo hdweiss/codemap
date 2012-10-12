@@ -1,5 +1,7 @@
 package com.hdweiss.codemap.data;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.text.SpannableString;
 
@@ -36,5 +38,13 @@ public class Project {
 		} catch (IllegalArgumentException e) {
 			return new SpannableString("");
 		}
+	}
+	
+	public ArrayList<String> getFiles() {
+		return new ArrayList<String>();
+	}
+	
+	public ArrayList<String> getSymbols(String filename) {
+		return cscope.getDeclarations(filename, name, path);
 	}
 }

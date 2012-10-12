@@ -2,7 +2,6 @@ package com.hdweiss.codemap.view;
 
 import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.text.SpannableString;
@@ -39,18 +38,17 @@ public class CodeMapView extends MyAbsoluteLayout {
 		this.scaleDetector = new ScaleGestureDetector(getContext(), new CodeMapScaleListener(this));
 		
 		setFocusable(false);
-       
-		initState();
 	}
 	
-	@SuppressLint("SdCardPath")
-	private void initState() {
-		this.project = new Project("Testproject", "/sdcard/ctags/", getContext());
-		
+	private void initState() {		
 		createFunction(new CodeMapPoint(200, 200), "addTotals");
 		createFunction(new CodeMapPoint(300, 500), "createTagsFromFileInput");
 	}
 	
+	public void setProject(Project project) {
+		this.project = project;
+		initState();
+	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
