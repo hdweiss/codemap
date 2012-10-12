@@ -154,7 +154,7 @@ public class Cscope {
 		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
 		
 		if(nextEntry == null)
-			return 1000; // TODO Fix
+			return Integer.MAX_VALUE;
 			
 		return nextEntry.lineNumber - 2;
 	}
@@ -165,7 +165,7 @@ public class Cscope {
 		for(int i = 0; i < entries.length; i++) {
 			CscopeEntry cscopeEntry = new CscopeEntry(entries[i]);
 			if(cscopeEntry.lineNumber == entry.lineNumber) {
-				if(entries.length > i)
+				if(entries.length > i+1)
 					return new CscopeEntry(entries[i+1]);
 			}
 		}
