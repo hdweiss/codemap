@@ -1,8 +1,9 @@
 package com.hdweiss.codemap.data;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.SpannableString;
+
+import com.hdweiss.codemap.util.SyntaxHighlighter;
 
 public class Project {
 
@@ -28,8 +29,7 @@ public class Project {
 	
 	public SpannableString getFunctionSource(String symbolName) {
 		String content = cscope.getFunction(this.name, this.path, symbolName).trim();
-		SpannableString spannableString = new SpannableString(
-				Html.fromHtml(content));
-		return spannableString;
+		SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
+		return highlighter.formatToHtml();
 	}
 }
