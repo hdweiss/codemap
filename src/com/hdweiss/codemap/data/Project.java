@@ -27,9 +27,14 @@ public class Project {
 		cscope.generateReffile(this.name, this.path);
 	}
 	
-	public SpannableString getFunctionSource(String symbolName) {
-		String content = cscope.getFunction(this.name, this.path, symbolName).trim();
-		SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
-		return highlighter.formatToHtml();
+	public SpannableString getFunctionSource(String functionName) {
+		try {
+			String content = cscope.getFunction(this.name, this.path, functionName).trim();
+			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
+			highlighter.markupReferences(cscope.getReferences(name, path, functionName));
+			return highlighter.formatToHtml();
+		} catch (IllegalArgumentException e) {
+			return new SpannableString("");
+		}
 	}
 }

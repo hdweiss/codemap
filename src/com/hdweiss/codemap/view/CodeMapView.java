@@ -48,7 +48,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 		this.project = new Project("Testproject", "/sdcard/ctags/", getContext());
 		
 		createFunction(new CodeMapPoint(200, 200), "addTotals");
-		createFunction(new CodeMapPoint(300, 500), "vStringStripLeading");
+		createFunction(new CodeMapPoint(300, 500), "createTagsFromFileInput");
 	}
 	
 

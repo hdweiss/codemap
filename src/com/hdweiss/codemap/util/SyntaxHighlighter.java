@@ -1,7 +1,14 @@
 package com.hdweiss.codemap.util;
 
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.text.Html;
 import android.text.SpannableString;
+import android.util.Log;
+
+import com.hdweiss.codemap.data.CscopeEntry;
 
 public class SyntaxHighlighter {
 	
@@ -70,5 +77,19 @@ public class SyntaxHighlighter {
 	private void highlightComments() {
 		content = content.replaceAll("/\\*.*\\*/", "<font color=\"green\">$0</font>");
 		content = content.replaceAll("//[^\n]*\n", "<font color=\"green\">$0</font>");
+	}
+	
+	public void markupReferences(ArrayList<CscopeEntry> references) {
+		StringBuilder result = new StringBuilder(content);
+		for(CscopeEntry entry: references) {
+			Log.d("CodeMap", entry.toString());
+			Matcher matcher = Pattern.compile(Pattern.quote(entry.actualName)).matcher(result);
+			
+			if(matcher.find()) {
+				result.insert(matcher.end(), "</a>");
+				result.insert(matcher.start(), "<a href=\"" + entry.actualName + "\">");
+			}
+		}
+		content = result.toString();
 	}
 }

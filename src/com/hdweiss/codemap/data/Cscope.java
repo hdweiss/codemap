@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.util.Log;
@@ -138,23 +139,26 @@ public class Cscope {
 	
 	/******************/
 	
-	public String getFunction (String projectName, String projectPath, String functionName) {
+	private CscopeEntry getFunctionEntry(String projectName, String projectPath, String functionName) {
 		String output = runCommand(projectName, projectPath, "-L -1 " + functionName);
 		String[] entries = output.trim().split("\n");
 		
 		CscopeEntry cscopeEntry = new CscopeEntry(entries[0]);
+		return cscopeEntry;
+	}
+	
+	private int getFunctionEndLine(String projectName, String projectPath, CscopeEntry cscopeEntry) {
 		
 		String options = "-L -1 '.*' " + cscopeEntry.file;
 		String symbols = runCommandSpecial(projectName, projectPath, options);
 		
 		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
-		
-		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, nextEntry.lineNumber - 2);
+		return nextEntry.lineNumber - 2;
 	}
 	
 	private CscopeEntry getNextEntry(String symbols, CscopeEntry entry) {
 		String[] entries = symbols.trim().split("\n");
-
+		
 		for(int i = 0; i < entries.length; i++) {
 			CscopeEntry cscopeEntry = new CscopeEntry(entries[i]);
 			if(cscopeEntry.lineNumber == entry.lineNumber)
@@ -162,6 +166,42 @@ public class Cscope {
 		}
 		
 		return null;
+	}
+	
+	
+	public String getFunction (String projectName, String projectPath, String functionName) {
+		CscopeEntry cscopeEntry = getFunctionEntry(projectName, projectPath, functionName);
+		int endLine = getFunctionEndLine(projectName, projectPath, cscopeEntry);
+		
+		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, endLine);
+	}
+	
+	
+	public ArrayList<CscopeEntry> getReferences(String projectName, String projectPath, String functionName) {
+		CscopeEntry cscopeEntry = getFunctionEntry(projectName, projectPath, functionName);
+		int endLine = getFunctionEndLine(projectName, projectPath, cscopeEntry);
+		
+		String options = "-L -2 '" + functionName + "'";
+		String symbols = runCommand(projectName, projectPath, options);
+		ArrayList<CscopeEntry> references = getAllReferences(symbols, cscopeEntry.lineNumber, endLine);
+		return references;
+	}
+	
+	private ArrayList<CscopeEntry> getAllReferences(String symbols, int startLine, int endLine) {
+		ArrayList<CscopeEntry> references = new ArrayList<CscopeEntry>();
+		
+		String[] entries = symbols.trim().split("\n");
+
+		if(entries.length == 1 && entries[0].isEmpty())
+			return references;
+		
+		for (int i = 0; i < entries.length; i++) {
+			CscopeEntry entry = new CscopeEntry(entries[i]);
+			entry.lineNumber -= startLine;
+			references.add(entry);
+		}
+		
+		return references;
 	}
 	
 	public String runCommandSpecial(String projectName, String projectPath, String options) {
@@ -178,4 +218,6 @@ public class Cscope {
 		String output = Utils.runCommand(command, environment);
 		return output;
 	}
+	
+	/******************/
 }
