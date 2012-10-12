@@ -89,9 +89,10 @@ public class CodeMapView extends MyAbsoluteLayout {
 	    super.dispatchDraw(canvas);
 	    canvas.restore();
 	}
+	
 
 	public CodeMapFunction createFunction(String functionName) {
-		CodeMapPoint position = new CodeMapPoint(getScrollX() + 100, getScrollY() + 100);
+		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
 		return createFunction(position, functionName);
 	}
 	
@@ -102,6 +103,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 		addFunction(functionView);
 		return functionView;
 	}
+	
 	
 	public void createFunctionCentered(CodeMapCursorPoint cursorPosition, String url) {
 		CodeMapPoint position = cursorPosition.getCodeMapPoint(this);

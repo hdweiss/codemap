@@ -57,7 +57,7 @@ public class CodeMapBrowser extends ListView implements android.widget.AdapterVi
 			if(funcNameStart == -1)
 				funcNameStart = 0;
 			
-			String funcName = substring.substring(funcNameStart, substring.length());
+			String funcName = substring.substring(funcNameStart, substring.length()).trim();
 			result.add(funcName);
 		}
 		

@@ -152,6 +152,10 @@ public class Cscope {
 		String symbols = runCommandSpecial(projectName, projectPath, options);
 		
 		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
+		
+		if(nextEntry == null)
+			return 1000; // TODO Fix
+			
 		return nextEntry.lineNumber - 2;
 	}
 	
@@ -160,8 +164,10 @@ public class Cscope {
 		
 		for(int i = 0; i < entries.length; i++) {
 			CscopeEntry cscopeEntry = new CscopeEntry(entries[i]);
-			if(cscopeEntry.lineNumber == entry.lineNumber)
-				return new CscopeEntry(entries[i+1]);
+			if(cscopeEntry.lineNumber == entry.lineNumber) {
+				if(entries.length > i)
+					return new CscopeEntry(entries[i+1]);
+			}
 		}
 		
 		return null;
