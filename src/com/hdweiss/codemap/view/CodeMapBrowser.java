@@ -2,8 +2,6 @@ package com.hdweiss.codemap.view;
 
 import java.util.ArrayList;
 
-import com.hdweiss.codemap.data.Project;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -11,7 +9,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.hdweiss.codemap.data.Project;
 
 public class CodeMapBrowser extends ListView implements android.widget.AdapterView.OnItemClickListener {
 
@@ -24,7 +23,7 @@ public class CodeMapBrowser extends ListView implements android.widget.AdapterVi
 
 	public void onItemClick(AdapterView<?> view, View parent, int position, long id) {
 		String item = (String) getItemAtPosition(position);
-		Toast.makeText(getContext(), item, Toast.LENGTH_SHORT).show();
+		project.addFunctionView(item);
 	}
 
 	public void setProject(Project project) {

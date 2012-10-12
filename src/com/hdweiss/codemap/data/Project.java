@@ -6,6 +6,7 @@ import android.content.Context;
 import android.text.SpannableString;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
+import com.hdweiss.codemap.view.CodeMapView;
 
 public class Project {
 
@@ -14,6 +15,7 @@ public class Project {
 	private Context context;
 	
 	private Cscope cscope;
+	private CodeMapView codeMapView;
 
 	public Project(String name, String path, Context context) {
 		this.name = name;
@@ -21,6 +23,10 @@ public class Project {
 		this.context = context;
 		
 		init();
+	}
+	
+	public void setView(CodeMapView codeMapView) {
+		this.codeMapView = codeMapView;
 	}
 	
 	private void init() {
@@ -46,5 +52,10 @@ public class Project {
 	
 	public ArrayList<String> getSymbols(String filename) {
 		return cscope.getDeclarations(filename, name, path);
+	}
+	
+	public void addFunctionView(String functionName) {
+		if(codeMapView != null)
+			codeMapView.createFunction(functionName);
 	}
 }

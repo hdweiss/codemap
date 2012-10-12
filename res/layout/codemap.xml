@@ -11,33 +11,27 @@
 
     <SlidingDrawer
         android:id="@+id/drawer"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="600dp"
+        android:layout_height="1000dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="bottom"
-        android:content="@+id/content"
+        android:content="@+id/codemap_browser"
         android:handle="@+id/handle"
-        android:orientation="horizontal"
-        android:paddingRight="5dp" >
+        android:orientation="horizontal" >
 
         <ImageView
             android:id="@+id/handle"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@android:drawable/ic_menu_share" />
+            android:background="@android:drawable/ic_menu_share"
+            android:paddingRight="5dp" />
 
-        <LinearLayout
-            android:id="@+id/content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/fragment_bg" >
-
-            <com.hdweiss.codemap.view.CodeMapBrowser
-                android:id="@+id/codemap_browser"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
+        <com.hdweiss.codemap.view.CodeMapBrowser
+            android:id="@+id/codemap_browser"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/fragment_bg" />
     </SlidingDrawer>
 
 </RelativeLayout>

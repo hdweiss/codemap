@@ -43,6 +43,7 @@ public class CodeMapFragment extends Fragment {
 			restoreInstanceState(savedInstanceState);
 		
 		Project project = ((CodeMapActivity) getActivity()).getProject();
+		project.setView(codeMapView);
 		codeMapView.setProject(project);
 		codeMapBrowser.setProject(project);
 	}

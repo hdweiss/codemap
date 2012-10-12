@@ -33,6 +33,7 @@ public class SyntaxHighlighter {
 			"register",
 			"return",
 			"short",
+			"unsigned",
 			"signed",
 			"sizeof",
 			"static",
@@ -40,7 +41,6 @@ public class SyntaxHighlighter {
 			"switch",
 			"typedef",
 			"union",
-			"unsigned",
 			"void",
 			"volatile",
 			"while" };

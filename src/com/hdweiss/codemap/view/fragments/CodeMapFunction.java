@@ -6,6 +6,8 @@ import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,6 +35,12 @@ public class CodeMapFunction extends LinearLayout {
 		inflate(getContext(), R.layout.map_fragment, this);
 		titleView = (TextView) findViewById(R.id.title);
 		sourceView = (TextView) findViewById(R.id.source);
+		ImageButton removeButton = (ImageButton) findViewById(R.id.remove);
+		removeButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {				
+				remove();
+			}
+		});
 		
 		init(name, content);
 		setPosition(point);
@@ -78,5 +86,9 @@ public class CodeMapFunction extends LinearLayout {
 		}
 		else
 			return false;
+	}
+	
+	public void remove() {
+		codeMapView.remove(this);
 	}
 }

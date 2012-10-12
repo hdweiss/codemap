@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
+import android.widget.LinearLayout;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.data.Project;
@@ -89,6 +90,11 @@ public class CodeMapView extends MyAbsoluteLayout {
 	    canvas.restore();
 	}
 
+	public CodeMapFunction createFunction(String functionName) {
+		CodeMapPoint position = new CodeMapPoint(getScrollX() + 100, getScrollY() + 100);
+		return createFunction(position, functionName);
+	}
+	
 	public CodeMapFunction createFunction(CodeMapPoint position, String functionName) {
 		final SpannableString content = project.getFunctionSource(functionName);
 		
@@ -131,6 +137,10 @@ public class CodeMapView extends MyAbsoluteLayout {
 		invalidate();
 	}
 	
+	public void remove(LinearLayout view) {
+		removeView(view);
+		views.remove(view);
+	}
 	
 	public void clear() {
 		removeAllViews();
