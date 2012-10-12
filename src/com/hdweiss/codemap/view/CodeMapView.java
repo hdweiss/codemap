@@ -2,14 +2,17 @@ package com.hdweiss.codemap.view;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Scroller;
 
+import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.MyAbsoluteLayout;
@@ -26,6 +29,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 	private float zoom = 1;
 	
 	private ArrayList<CodeMapFunction> views = new ArrayList<CodeMapFunction>();
+	private Project project;
 
 	public CodeMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
@@ -39,9 +43,12 @@ public class CodeMapView extends MyAbsoluteLayout {
 		initState();
 	}
 	
+	@SuppressLint("SdCardPath")
 	private void initState() {
-		createFunction(new CodeMapPoint(200, 200), "bar");
-		createFunction(new CodeMapPoint(300, 500), "foo");
+		this.project = new Project("Testproject", "/sdcard/ctags/", getContext());
+		
+		createFunction(new CodeMapPoint(200, 200), "addTotals");
+		createFunction(new CodeMapPoint(300, 500), "vStringStripLeading");
 	}
 	
 
@@ -84,11 +91,10 @@ public class CodeMapView extends MyAbsoluteLayout {
 	    canvas.restore();
 	}
 
-	public CodeMapFunction createFunction(CodeMapPoint position, String url) {
-		final String content = "void main() { <br>\n int i = <a href=\"func\">func</a>;<br>"
-				 + "int j = <a href=\"func2\">func2(a,b)</a>;<br>" + "i++; <br>}";
+	public CodeMapFunction createFunction(CodeMapPoint position, String functionName) {
+		final SpannableString content = project.getFunctionSource(functionName);
 		
-		CodeMapFunction functionView = new CodeMapFunction(getContext(), position, url, content, this);
+		CodeMapFunction functionView = new CodeMapFunction(getContext(), position, functionName, content, this);
 		addFunction(functionView);
 		return functionView;
 	}

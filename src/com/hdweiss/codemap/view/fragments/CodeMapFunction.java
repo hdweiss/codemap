@@ -1,10 +1,8 @@
 package com.hdweiss.codemap.view.fragments;
 
 import android.content.Context;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
@@ -24,10 +22,10 @@ public class CodeMapFunction extends LinearLayout {
 	private CodeMapView codeMapView;
 	
 	public CodeMapFunction(Context context) {
-		this(context, new CodeMapPoint(0, 0), "", "", null);
+		this(context, new CodeMapPoint(0, 0), "", new SpannableString(""), null);
 	}
 	
-	public CodeMapFunction(Context context, CodeMapPoint point, String name, String content, CodeMapView codeMapView) {
+	public CodeMapFunction(Context context, CodeMapPoint point, String name, SpannableString content, CodeMapView codeMapView) {
 		super(context);
 		
 		this.codeMapView = codeMapView;
@@ -40,18 +38,17 @@ public class CodeMapFunction extends LinearLayout {
 		setPosition(point);
 	}
 	
-	private void init(String name, String content) {
+	private void init(String name, SpannableString content) {
 		titleView.setText(name);
 
-		SpannableString spannableString = new SpannableString(
-				Html.fromHtml(content));
-		sourceView.setText(spannableString);
+		sourceView.setText(content);
+		
+		Spannable span = SpanUtils.replaceAll(content,
+				URLSpan.class, new FunctionLinkSpanConverter(this));
+		
+		sourceView.setText(span);
 		sourceView.setLinksClickable(true);
 		sourceView.setMovementMethod(LinkMovementMethod.getInstance());
-
-		Spannable span = SpanUtils.replaceAll((Spanned) sourceView.getText(),
-				URLSpan.class, new FunctionLinkSpanConverter(this));
-		sourceView.setText(span);
 	}
 
 	public void openNewFragment(String url) {

@@ -65,6 +65,7 @@ public class Cscope {
 		}
 		
 		String command = getCscopeCommand(projectName, projectPath, options);
+		Log.d("CodeMap", "Running command " + command);
 		
 		File tmpdir = context.getFilesDir();
 		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
@@ -73,9 +74,14 @@ public class Cscope {
 	}
 	
 	private String getCscopeCommand(String projectName, String projectPath, String options) {
+		return getCscopeCommand(projectName, projectPath, options, true);
+	}
+	
+	private String getCscopeCommand(String projectName, String projectPath, String options, boolean includeIndex) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.cscopeExecPath).append(" ");
-		builder.append("-i ").append(getNamefilePath(projectName)).append(" ");
+		if(includeIndex)
+			builder.append("-i ").append(getNamefilePath(projectName)).append(" ");
 		builder.append("-f ").append(getReffilePath(projectName)).append(" ");
 		builder.append("-P ").append(projectPath).append(" ");
 		builder.append(options);
@@ -138,12 +144,38 @@ public class Cscope {
 		
 		CscopeEntry cscopeEntry = new CscopeEntry(entries[0]);
 		
-		String options = "-L -1 '.*' \\| head" ; //| grep \'" + cscopeEntry.file
-				//+ "\' | grep -A 1 \'" + cscopeEntry.name + "\'";
-		String symbols = runCommand(projectName, projectPath, options);
-		Log.d("CodeMap", "Got :" + symbols);
+		String options = "-L -1 '.*' " + cscopeEntry.file;
+		String symbols = runCommandSpecial(projectName, projectPath, options);
 		
-		Log.d("CodeMap", cscopeEntry.toString());
-		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, cscopeEntry.lineNumber+10);
+		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
+		
+		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, nextEntry.lineNumber - 2);
+	}
+	
+	private CscopeEntry getNextEntry(String symbols, CscopeEntry entry) {
+		String[] entries = symbols.trim().split("\n");
+
+		for(int i = 0; i < entries.length; i++) {
+			CscopeEntry cscopeEntry = new CscopeEntry(entries[i]);
+			if(cscopeEntry.lineNumber == entry.lineNumber)
+				return new CscopeEntry(entries[i+1]);
+		}
+		
+		return null;
+	}
+	
+	public String runCommandSpecial(String projectName, String projectPath, String options) {
+		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
+			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
+			return "";
+		}
+		
+		String command = getCscopeCommand(projectName, projectPath, options, false);
+		Log.d("CodeMap", "Running command " + command);
+		
+		File tmpdir = context.getFilesDir();
+		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
+		String output = Utils.runCommand(command, environment);
+		return output;
 	}
 }

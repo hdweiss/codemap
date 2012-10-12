@@ -15,6 +15,8 @@ public class CscopeTest extends AndroidTestCase {
 	private static String PROJECT_NAME = "Testproject";
 	private static String PROJECT_PATH = "/sdcard/ctags/";
 	
+	private static String ADDTOTALS_FIRSTLINE = "extern void addTotals";
+	@SuppressWarnings("unused")
 	private static String MAIN_FIRSTLINE = "extern int main (int __unused__ argc, char **argv)";
 
 	private Context context;
@@ -72,6 +74,6 @@ public class CscopeTest extends AndroidTestCase {
 		cscope.generateNamefile(PROJECT_NAME, PROJECT_PATH);
 		cscope.generateReffile(PROJECT_NAME, PROJECT_PATH);
 		String contents = cscope.getFunction(PROJECT_NAME, PROJECT_PATH, "addTotals");
-		assertTrue(contents.contains(MAIN_FIRSTLINE));
+		assertTrue(contents.contains(ADDTOTALS_FIRSTLINE));
 	}
 }
