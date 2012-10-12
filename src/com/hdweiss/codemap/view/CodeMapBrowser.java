@@ -35,7 +35,32 @@ public class CodeMapBrowser extends ListView implements android.widget.AdapterVi
 	public void refresh() {
 		ArrayList<String> symbols = project.getSymbols("/sdcard/ctags/main.c");
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
-				android.R.layout.simple_list_item_1, symbols);
+				android.R.layout.simple_list_item_1, cleanSymbols(symbols));
 		setAdapter(arrayAdapter);
+	}
+	
+	private ArrayList<String> cleanSymbols(ArrayList<String> symbols) {
+		ArrayList<String> result = new ArrayList<String>();
+		for(String symbol: symbols) {
+			if(symbol.startsWith("#")) {
+				continue;
+			}
+			
+			int startParenthesis = symbol.indexOf("(");
+			
+			if(startParenthesis == -1)
+				continue;
+			
+			String substring = symbol.substring(0, startParenthesis).trim();
+			int funcNameStart = substring.lastIndexOf(" ");
+			
+			if(funcNameStart == -1)
+				funcNameStart = 0;
+			
+			String funcName = substring.substring(funcNameStart, substring.length());
+			result.add(funcName);
+		}
+		
+		return result;
 	}
 }
