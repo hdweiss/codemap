@@ -51,6 +51,14 @@ public class CodeMapView extends MyAbsoluteLayout {
 		initState();
 	}
 
+	
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		event.setLocation(event.getX() / zoom, event.getY() / zoom);
+		return super.dispatchTouchEvent(event);
+	}
+
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
@@ -83,8 +91,8 @@ public class CodeMapView extends MyAbsoluteLayout {
 	
 	@Override
 	public void dispatchDraw(Canvas canvas) {	    
-	    canvas.save();
 	    canvas.scale(zoom, zoom);
+	    canvas.save();
 //	    canvas.translate(getScrollX() * zoom, getScrollY() * zoom);
 	    super.dispatchDraw(canvas);
 	    canvas.restore();

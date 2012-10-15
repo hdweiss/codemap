@@ -74,19 +74,18 @@ public class SyntaxHighlighter {
 	}
 	
 	private void highlightComments() {
-		content = content.replaceAll("/\\*.*\\*/", "<font color=\"green\">$0</font>");
-		content = content.replaceAll("//[^\n]*\n", "<font color=\"green\">$0</font>");
+		content = content.replaceAll("/\\*.*?\\*/", "<font color=\"green\">$0</font>");
+		content = content.replaceAll("//[^\n]*?\n", "<font color=\"green\">$0</font>");
 	}
 	
 	public void markupReferences(ArrayList<CscopeEntry> references) {
 		StringBuilder result = new StringBuilder(content);
 		for(CscopeEntry entry: references) {
-			//Log.d("CodeMap", entry.toString());
-			Matcher matcher = Pattern.compile(Pattern.quote(entry.actualName)).matcher(result);
+			Matcher matcher = Pattern.compile("(" + Pattern.quote(entry.actualName) + ")(?:\\s?\\()").matcher(result);
 			
 			if(matcher.find()) {
-				result.insert(matcher.end(), "</a>");
-				result.insert(matcher.start(), "<a href=\"" + entry.actualName + "\">");
+				result.insert(matcher.end(1), "</a>");
+				result.insert(matcher.start(1), "<a href=\"" + entry.actualName + "\">");
 			}
 		}
 		content = result.toString();

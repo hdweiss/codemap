@@ -178,7 +178,13 @@ public class Cscope {
 		CscopeEntry cscopeEntry = getFunctionEntry(projectName, projectPath, functionName);
 		int endLine = getFunctionEndLine(projectName, projectPath, cscopeEntry);
 		
-		return Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, endLine);
+		String source = Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, endLine);
+		int index = source.lastIndexOf("}");
+		
+		if(index != -1)
+			return source.substring(0, index+1);
+		else
+			return source;
 	}
 	
 	
@@ -230,9 +236,7 @@ public class Cscope {
 		
 		String options = "-k -L -1 '.*' " + filename;
 		String symbols = runCommandSpecial(projectName, projectPath, options);
-		
-		Log.d("CodeMap", "Got declarations of " + filename + "\n" + symbols);
-		
+				
 		for(CscopeEntry entry: getAllReferences(symbols, 0, 0))
 			result.add(entry.name);
 		

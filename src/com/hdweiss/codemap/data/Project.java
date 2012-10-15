@@ -40,6 +40,7 @@ public class Project {
 			String content = cscope.getFunction(this.name, this.path, functionName).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
 			highlighter.markupReferences(cscope.getReferences(name, path, functionName));
+
 			return highlighter.formatToHtml();
 		} catch (IllegalArgumentException e) {
 			return new SpannableString("");
