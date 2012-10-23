@@ -244,6 +244,32 @@ public class Cscope {
 		for(CscopeEntry entry: getAllReferences(symbols, 0, 0))
 			result.add(entry.name);
 		
+		return cleanSymbols(result);
+	}
+	
+	
+	private ArrayList<String> cleanSymbols(ArrayList<String> symbols) {
+		ArrayList<String> result = new ArrayList<String>();
+		for(String symbol: symbols) {
+			if(symbol.startsWith("#")) {
+				continue;
+			}
+			
+			int startParenthesis = symbol.indexOf("(");
+			
+			if(startParenthesis == -1)
+				continue;
+			
+			String substring = symbol.substring(0, startParenthesis).trim();
+			int funcNameStart = substring.lastIndexOf(" ");
+			
+			if(funcNameStart == -1)
+				funcNameStart = 0;
+			
+			String funcName = substring.substring(funcNameStart, substring.length()).trim();
+			result.add(funcName);
+		}
+		
 		return result;
 	}
 	

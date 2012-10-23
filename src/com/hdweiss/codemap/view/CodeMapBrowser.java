@@ -1,29 +1,21 @@
 package com.hdweiss.codemap.view;
 
-import java.util.ArrayList;
-
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.ExpandableListView;
+import android.widget.ExpandableListView.OnChildClickListener;
 
 import com.hdweiss.codemap.data.Project;
 
-public class CodeMapBrowser extends ListView implements android.widget.AdapterView.OnItemClickListener {
+public class CodeMapBrowser extends ExpandableListView implements OnChildClickListener {
 
+	private CodeMapBrowserAdapter adapter;
 	private Project project;
 
 	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setOnItemClickListener(this);
-	}
-
-	public void onItemClick(AdapterView<?> view, View parent, int position, long id) {
-		String item = (String) getItemAtPosition(position);
-		project.addFunctionView(item);
+		setOnChildClickListener(this);
 	}
 
 	public void setProject(Project project) {
@@ -31,37 +23,15 @@ public class CodeMapBrowser extends ListView implements android.widget.AdapterVi
 		refresh();
 	}
 	
-	@SuppressLint("SdCardPath")
 	public void refresh() {
-		String[] files = project.getFiles();
-		
-		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
-				android.R.layout.simple_list_item_1, files);
-		setAdapter(arrayAdapter);
+		this.adapter = new CodeMapBrowserAdapter(getContext(), project);
+		setAdapter(adapter);
 	}
-	
-	private ArrayList<String> cleanSymbols(ArrayList<String> symbols) {
-		ArrayList<String> result = new ArrayList<String>();
-		for(String symbol: symbols) {
-			if(symbol.startsWith("#")) {
-				continue;
-			}
-			
-			int startParenthesis = symbol.indexOf("(");
-			
-			if(startParenthesis == -1)
-				continue;
-			
-			String substring = symbol.substring(0, startParenthesis).trim();
-			int funcNameStart = substring.lastIndexOf(" ");
-			
-			if(funcNameStart == -1)
-				funcNameStart = 0;
-			
-			String funcName = substring.substring(funcNameStart, substring.length()).trim();
-			result.add(funcName);
-		}
-		
-		return result;
+
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+		String item = adapter.getChild(groupPosition, childPosition);
+		project.addFunctionView(item);
+		return true;
 	}
 }
