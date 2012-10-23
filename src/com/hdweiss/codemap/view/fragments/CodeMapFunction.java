@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.view.fragments;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.method.LinkMovementMethod;
@@ -27,7 +28,8 @@ public class CodeMapFunction extends LinearLayout {
 		this(context, new CodeMapPoint(0, 0), "", new SpannableString(""), null);
 	}
 	
-	public CodeMapFunction(Context context, CodeMapPoint point, String name, SpannableString content, CodeMapView codeMapView) {
+	public CodeMapFunction(Context context, CodeMapPoint point, String name,
+			SpannableString content, CodeMapView codeMapView) {
 		super(context);
 		
 		this.codeMapView = codeMapView;
@@ -60,7 +62,7 @@ public class CodeMapFunction extends LinearLayout {
 	}
 
 	public void openNewFragment(String url) {
-		this.codeMapView.openFunctionFromFragment(url, this);
+		this.codeMapView.openFragmentFromUrl(url, this);
 	}
 
 	public void setPosition(CodeMapPoint point) {
@@ -73,6 +75,16 @@ public class CodeMapFunction extends LinearLayout {
 		float startY = point.y - (getHeight() / 2);
 		setX(startX);
 		setY(startY);
+	}
+	
+	public Rect getBounds() {
+		final int top = (int) getY();
+		final int bottom = top + getHeight();
+
+		final int left = (int) getX();
+		final int right = left + getWidth();
+				
+		return new Rect(left, top, right, bottom);
 	}
 
 	public boolean contains(CodeMapPoint point) {
@@ -90,5 +102,9 @@ public class CodeMapFunction extends LinearLayout {
 	
 	public void remove() {
 		codeMapView.remove(this);
+	}
+	
+	public String getName() {
+		return this.titleView.getText().toString();
 	}
 }

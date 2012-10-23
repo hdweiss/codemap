@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.text.SpannableString;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -42,8 +44,8 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 	
 	private void initState() {		
-		createFunction(new CodeMapPoint(200, 200), "addTotals");
-		createFunction(new CodeMapPoint(300, 500), "createTagsFromFileInput");
+		createFunctionFragment("addTotals", new CodeMapPoint(200, 200));
+		createFunctionFragment("createTagsFromFileInput", new CodeMapPoint(300, 500));
 	}
 	
 	public void setProject(Project project) {
@@ -96,52 +98,78 @@ public class CodeMapView extends MyAbsoluteLayout {
 	    super.dispatchDraw(canvas);
 	    canvas.restore();
 	}
+
 	
 
-	public CodeMapFunction createFile(String fileName) {
+	public CodeMapFunction createFileFragment(String fileName) {
 		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
 		final SpannableString content = project.getFileSource(fileName);
 		
-		CodeMapFunction functionView = new CodeMapFunction(getContext(), position, fileName, content, this);
-		addFunction(functionView);
+		CodeMapFunction functionView = new CodeMapFunction(getContext(),
+				position, fileName, content, this);
+		addMapFragment(functionView);
 		return functionView;
 	}
 
-	public CodeMapFunction createFunction(String functionName) {
+	
+	public CodeMapFunction createFunctionFragment(String functionName) {
 		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
-		return createFunction(position, functionName);
+		return createFunctionFragment(functionName, position);
 	}
 	
-	public CodeMapFunction createFunction(CodeMapPoint position, String functionName) {
+	public CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
 		final SpannableString content = project.getFunctionSource(functionName);
 		
-		CodeMapFunction functionView = new CodeMapFunction(getContext(), position, functionName, content, this);
-		addFunction(functionView);
+		CodeMapFunction functionView = new CodeMapFunction(getContext(),
+				position, functionName, content, this);
+		
+		addMapFragment(functionView);
 		return functionView;
 	}
 	
-	
-	public void createFunctionCentered(CodeMapCursorPoint cursorPosition, String url) {
-		CodeMapPoint position = cursorPosition.getCodeMapPoint(this);
-		CodeMapFunction functionView = createFunction(position, url);
-		functionView.setPositionCenter(position);
-	}
-	
-	public void addFunction(CodeMapFunction function) {
-		addView(function);
-		views.add(function);
-	}
 
-	public CodeMapFunction openFunctionFromFragment(String url, CodeMapFunction codeMapFunction) {
+	public CodeMapFunction openFragmentFromUrl(String url, CodeMapFunction codeMapFunction) {
 		CodeMapPoint position = new CodeMapPoint();
 		position.x = codeMapFunction.getX() + codeMapFunction.getWidth() + 30;
 		position.y = codeMapFunction.getY() + 20;
 
-		return createFunction(position, url);
+		return createFunctionFragment(url, position);
 	}
 	
 	
-	public CodeMapFunction getDrawable(CodeMapCursorPoint cursorPoint) {
+	public void addMapFragment(CodeMapFunction function) {
+		addView(function);
+		views.add(function);
+		moveMapFragmentToEmptyPosition(function);
+	}
+	
+	public boolean moveMapFragmentToEmptyPosition(CodeMapFunction function) {
+		Rect rect = new Rect();
+		function.getDrawingRect(rect);
+		final int offset = 5;
+		
+		boolean foundEmpty = false;
+		while (foundEmpty == false) {
+			foundEmpty = true;
+			for (CodeMapFunction view : views) {
+				Log.d("CodeMap", "Comparing " + function.getBounds().toString() + " " + view.getBounds().toString());
+				if (view != function && Rect.intersects(view.getBounds(), rect)) {
+					Log.d("CodeMap", function.getName() + " collieded with " + view.getName());
+					int height = rect.bottom - rect.top;
+					rect.top = view.getBounds().bottom + offset;
+					rect.bottom = rect.top + height;
+					foundEmpty = false;
+					break;
+				}
+			}
+		}
+		
+		function.setX(rect.left);
+		function.setY(rect.top);
+		return true;
+	}
+	
+	public CodeMapFunction getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {
 		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
 		for (CodeMapFunction view : views) {
 			if (view.contains(point))

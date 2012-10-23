@@ -102,11 +102,11 @@ public class Project {
 	
 	public void addFunctionView(String functionName) {
 		if(codeMapView != null)
-			codeMapView.createFunction(functionName);
+			codeMapView.createFunctionFragment(functionName);
 	}
 	
 	public void addFileView(String fileName) {
 		if(codeMapView != null)
-			codeMapView.createFile(fileName);
+			codeMapView.createFileFragment(fileName);
 	}
 }

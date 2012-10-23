@@ -26,7 +26,7 @@ public class CodeMapListeners {
 				scroller.forceFinished(true);
 
 			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
-			selectedDrawable = codeMapView.getDrawable(point);
+			selectedDrawable = codeMapView.getMapFragmentAtPoint(point);
 			
 			return true;
 		}
@@ -36,8 +36,6 @@ public class CodeMapListeners {
 		}
 		
 		public void onLongPress(MotionEvent e) {
-			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
-			this.codeMapView.createFunctionCentered(point, "click!");
 		}
 
 		public void onShowPress(MotionEvent e) {
