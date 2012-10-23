@@ -60,18 +60,18 @@ public class Cscope {
 		}
 	}
 	
-	public String runCommand(String projectName, String projectPath, String options) {
-		return runCommand(projectName, projectPath, options, true);
+	public String runCommand(Project project, String options) {
+		return runCommand(project, options, true);
 	}
 	
 	
-	public String runCommand(String projectName, String projectPath, String options, boolean includeIndex) {
+	public String runCommand(Project project, String options, boolean includeIndex) {
 		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
 			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
 			return "";
 		}
 		
-		String command = getCscopeCommand(projectName, projectPath, options, includeIndex);
+		String command = getCscopeCommand(project, options, includeIndex);
 		
 		File tmpdir = context.getFilesDir();
 		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
@@ -79,22 +79,22 @@ public class Cscope {
 		return output;
 	}
 	
-	private String getCscopeCommand(String projectName, String projectPath, String options, boolean includeIndex) {
+	private String getCscopeCommand(Project project, String options, boolean includeIndex) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.cscopeExecPath).append(" ");
 		if(includeIndex)
-			builder.append("-i ").append(getNamefilePath(projectName)).append(" ");
-		builder.append("-f ").append(getReffilePath(projectName)).append(" ");
-		builder.append("-P ").append(projectPath).append(" ");
+			builder.append("-i ").append(getNamefilePath(project.getName())).append(" ");
+		builder.append("-f ").append(getReffilePath(project.getName())).append(" ");
+		builder.append("-P ").append(project.getPath()).append(" ");
 		builder.append(options);
 		return builder.toString();
 	}
 	
 	/***************/
 	
-	public String generateNamefile(String projectName, String path) {
-		String command = "find " + path + " " + SEARCH_PATTERN
-				+ ">" + getNamefilePath(projectName);
+	public String generateNamefile(Project project) {
+		String command = "find " + project.getPath() + " " + SEARCH_PATTERN
+				+ ">" + getNamefilePath(project.getName());
 		return Utils.runCommand(command);
 	}
 	
@@ -117,8 +117,8 @@ public class Cscope {
 	
 	/******************/
 
-	public String generateReffile(String projectName, String projectPath) {
-		return runCommand(projectName, projectPath, BUILDINDEX_OPTIONS);
+	public String generateReffile(Project project) {
+		return runCommand(project, BUILDINDEX_OPTIONS);
 	}
 
 	public void deleteReffile(String projectName) {
@@ -140,17 +140,17 @@ public class Cscope {
 	
 	/******************/
 	
-	private CscopeEntry getFunctionEntry(String projectName, String projectPath, String functionName) {
-		String output = runCommand(projectName, projectPath, "-L -1 " + functionName);
+	private CscopeEntry getFunctionEntry(Project project, String functionName) {
+		String output = runCommand(project, "-L -1 " + functionName);
 		String[] entries = output.trim().split("\n");
 		
 		CscopeEntry cscopeEntry = new CscopeEntry(entries[0]);
 		return cscopeEntry;
 	}
 	
-	private int getFunctionEndLine(String projectName, String projectPath, CscopeEntry cscopeEntry) {	
+	private int getFunctionEndLine(Project project, CscopeEntry cscopeEntry) {	
 		String options = "-L -1 '.*' " + cscopeEntry.file;
-		String symbols = runCommand(projectName, projectPath, options, false);
+		String symbols = runCommand(project, options, false);
 		
 		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
 		
@@ -175,9 +175,9 @@ public class Cscope {
 	}
 	
 	
-	public String getFunction (String projectName, String projectPath, String functionName) {
-		CscopeEntry cscopeEntry = getFunctionEntry(projectName, projectPath, functionName);
-		int endLine = getFunctionEndLine(projectName, projectPath, cscopeEntry);
+	public String getFunction (Project project, String functionName) {
+		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName);
+		int endLine = getFunctionEndLine(project, cscopeEntry);
 		
 		String source = Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, endLine);
 		int index = source.lastIndexOf("}");
@@ -189,12 +189,12 @@ public class Cscope {
 	}
 	
 	
-	public ArrayList<CscopeEntry> getReferences(String projectName, String projectPath, String functionName) {
-		CscopeEntry cscopeEntry = getFunctionEntry(projectName, projectPath, functionName);
-		int endLine = getFunctionEndLine(projectName, projectPath, cscopeEntry);
+	public ArrayList<CscopeEntry> getReferences(Project project, String functionName) {
+		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName);
+		int endLine = getFunctionEndLine(project, cscopeEntry);
 		
 		String options = "-L -2 '" + functionName + "'";
-		String symbols = runCommand(projectName, projectPath, options);
+		String symbols = runCommand(project, options);
 		ArrayList<CscopeEntry> references = getAllReferences(symbols, cscopeEntry.lineNumber, endLine);
 		return references;
 	}
@@ -219,11 +219,11 @@ public class Cscope {
 	
 	/******************/
 	
-	public ArrayList<String> getDeclarations(String filename, String projectName, String projectPath) {
+	public ArrayList<String> getDeclarations(String filename, Project project) {
 		ArrayList<String> result = new ArrayList<String>();
 		
-		String options = "-k -L -1 '.*' " + filename;
-		String symbols = runCommand(projectName, projectPath, options, false);
+		String options = "-k -L -1 '.*' " + project.getPath() + "/" + filename;
+		String symbols = runCommand(project, options, false);
 				
 		for(CscopeEntry entry: getAllReferences(symbols, 0, 0))
 			result.add(entry.name);
@@ -231,11 +231,11 @@ public class Cscope {
 		return result;
 	}
 	
-	public HashMap<String,CscopeEntry> getAllDeclarations(String projectName, String projectPath) {
+	public HashMap<String,CscopeEntry> getAllDeclarations(Project project) {
 		HashMap<String, CscopeEntry> result = new HashMap<String, CscopeEntry>();
 		
 		String options = "-k -L -1 '.*' ";
-		String symbols = runCommand(projectName, projectPath, options, false);
+		String symbols = runCommand(project, options, true);
 		
 		Log.d("CodeMap", "Dec: \n" + symbols);
 		

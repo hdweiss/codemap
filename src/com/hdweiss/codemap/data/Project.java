@@ -21,25 +21,31 @@ public class Project {
 		this.name = name;
 		this.path = path;
 		this.context = context;
-		
-		init();
 	}
 	
 	public void setView(CodeMapView codeMapView) {
 		this.codeMapView = codeMapView;
 	}
 	
-	private void init() {
+	public void init() {
 		this.cscope = new Cscope(context);
-		cscope.generateNamefile(this.name, this.path);
-		cscope.generateReffile(this.name, this.path);
+		cscope.generateNamefile(this);
+		cscope.generateReffile(this);
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public String getPath() {
+		return this.path;
 	}
 	
 	public SpannableString getFunctionSource(String functionName) {
 		try {
-			String content = cscope.getFunction(this.name, this.path, functionName).trim();
+			String content = cscope.getFunction(this, functionName).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
-			highlighter.markupReferences(cscope.getReferences(name, path, functionName));
+			highlighter.markupReferences(cscope.getReferences(this, functionName));
 
 			return highlighter.formatToHtml();
 		} catch (IllegalArgumentException e) {
@@ -52,7 +58,7 @@ public class Project {
 	}
 	
 	public ArrayList<String> getSymbols(String filename) {
-		return cscope.getDeclarations(filename, name, path);
+		return cscope.getDeclarations(filename, this);
 	}
 	
 	public void addFunctionView(String functionName) {

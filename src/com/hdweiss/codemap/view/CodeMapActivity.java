@@ -19,6 +19,7 @@ public class CodeMapActivity extends Activity {
         setContentView(R.layout.activity_main);
         
 		project = new Project("Testproject", "/sdcard/ctags/", this);
+		project.init();
     }
 
     @Override
