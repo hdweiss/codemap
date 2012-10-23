@@ -1,9 +1,11 @@
 package com.hdweiss.codemap.data;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.text.SpannableString;
+import android.util.Log;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
 import com.hdweiss.codemap.view.CodeMapView;
@@ -53,8 +55,13 @@ public class Project {
 		}
 	}
 	
-	public ArrayList<String> getFiles() {
-		return new ArrayList<String>();
+	public String[] getFiles() {
+		try {
+			return cscope.getFiles(this);
+		} catch (FileNotFoundException e) {
+			Log.e("CodeMap", e.getStackTrace().toString());
+			return new String[0];
+		}
 	}
 	
 	public ArrayList<String> getSymbols(String filename) {

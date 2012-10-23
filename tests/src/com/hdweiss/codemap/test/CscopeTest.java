@@ -16,14 +16,13 @@ import com.hdweiss.codemap.data.Project;
 
 @SuppressLint("SdCardPath")
 public class CscopeTest extends AndroidTestCase {
-	private static String PROJECT_NAME = "Testproject";
-	private static String PROJECT_PATH = "/sdcard/ctags/";
-	private static int NUMBER_OF_FILES = 87;
+	private static final String PROJECT_NAME = "Testproject";
+	private static final String PROJECT_PATH = "/sdcard/ctags/";
+	private static final int NUMBER_OF_FILES = 87;
 	
-	private static String ADDTOTALS_FIRSTLINE = "extern void addTotals";
-	@SuppressWarnings("unused")
-	private static String MAIN_FIRSTLINE = "extern int main (int __unused__ argc, char **argv)";
-	
+	private static final String ADDTOTALS_FIRSTLINE = "extern void addTotals";
+	private static final int declarationsInMain = 29;
+
 
 	private Context context;
 	private Cscope cscope;
@@ -84,14 +83,12 @@ public class CscopeTest extends AndroidTestCase {
 		String contents = cscope.getFunction(project, "addTotals");
 		assertTrue(contents.contains(ADDTOTALS_FIRSTLINE));
 	}
-
 	
 	public void testGetDeclarations() {
 		cscope.generateNamefile(project);
 		cscope.generateReffile(project);
 		
 		ArrayList<String> declarations = cscope.getDeclarations("main.c", project);
-		final int declarationsInMain = 29;
 		assertEquals(declarationsInMain, declarations.size());
 	}
 	
@@ -99,7 +96,11 @@ public class CscopeTest extends AndroidTestCase {
 		cscope.generateNamefile(project);
 		cscope.generateReffile(project);
 		
-		HashMap<String,CscopeEntry> declarations = cscope.getAllDeclarations(project);
+		HashMap<String,ArrayList<CscopeEntry>> declarations = cscope.getAllDeclarations(project);
 		assertEquals(NUMBER_OF_FILES, declarations.size());
+		
+		ArrayList<CscopeEntry> mainDeclarations = declarations.get(PROJECT_PATH + "main.c");
+		assertNotNull(mainDeclarations);
+		assertEquals(declarationsInMain, mainDeclarations.size());
 	}
 }

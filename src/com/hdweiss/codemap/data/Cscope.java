@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import android.content.Context;
@@ -113,6 +114,21 @@ public class Cscope {
 	
 	public FileInputStream getNamefileStream(String projectName) throws FileNotFoundException {
 		return context.openFileInput(getNamefileName(projectName));
+	}
+	
+	public String[] getFiles(Project project) throws FileNotFoundException {		
+		FileInputStream stream = getNamefileStream(project.getName());
+		String contents = Utils.inputStreamToString(stream);
+		
+		String[] files = contents.trim().split("\n");
+		
+		int pathLength = project.getPath().length();
+		for(int i = 0; i < files.length; i++)
+			files[i] = files[i].substring(pathLength);
+		
+		Arrays.sort(files);
+		
+		return files;
 	}
 	
 	/******************/
@@ -231,16 +247,21 @@ public class Cscope {
 		return result;
 	}
 	
-	public HashMap<String,CscopeEntry> getAllDeclarations(Project project) {
-		HashMap<String, CscopeEntry> result = new HashMap<String, CscopeEntry>();
+	public HashMap<String,ArrayList<CscopeEntry>> getAllDeclarations(Project project) {
+		HashMap<String, ArrayList<CscopeEntry>> result = new HashMap<String, ArrayList<CscopeEntry>>();
 		
 		String options = "-k -L -1 '.*' ";
 		String symbols = runCommand(project, options, true);
-		
-		Log.d("CodeMap", "Dec: \n" + symbols);
-		
+				
 		for(CscopeEntry entry: getAllReferences(symbols, 0, 0)) {
-			result.put(entry.file, entry);
+			ArrayList<CscopeEntry> list = result.get(entry.file);
+			
+			if(list == null) {
+				list = new ArrayList<CscopeEntry>();
+				result.put(entry.file, list);
+			}
+			
+			list.add(entry);
 		}
 		
 		return result;

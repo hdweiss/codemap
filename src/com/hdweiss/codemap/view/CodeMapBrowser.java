@@ -33,9 +33,10 @@ public class CodeMapBrowser extends ListView implements android.widget.AdapterVi
 	
 	@SuppressLint("SdCardPath")
 	public void refresh() {
-		ArrayList<String> symbols = project.getSymbols("main.c");
+		String[] files = project.getFiles();
+		
 		ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getContext(),
-				android.R.layout.simple_list_item_1, cleanSymbols(symbols));
+				android.R.layout.simple_list_item_1, files);
 		setAdapter(arrayAdapter);
 	}
 	

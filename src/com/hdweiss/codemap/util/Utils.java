@@ -25,12 +25,6 @@ public class Utils {
 			else
 				process = Runtime.getRuntime().exec(shellCommand);
 			
-			try {
-				process.waitFor();
-			} catch (InterruptedException e) {
-				Log.e("CodeMap", e.getStackTrace().toString());
-			}
-
 			String output = getProcessOutput(process);
 			return output;
 
