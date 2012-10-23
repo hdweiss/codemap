@@ -11,7 +11,7 @@
 
     <SlidingDrawer
         android:id="@+id/drawer"
-        android:layout_width="600dp"
+        android:layout_width="400dp"
         android:layout_height="1000dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
@@ -31,7 +31,7 @@
             android:id="@+id/codemap_browser"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:background="@drawable/fragment_bg" />
+            android:background="@drawable/codebrowser_bg" />
     </SlidingDrawer>
 
 </RelativeLayout>
