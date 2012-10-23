@@ -98,6 +98,15 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 	
 
+	public CodeMapFunction createFile(String fileName) {
+		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
+		final SpannableString content = project.getFileSource(fileName);
+		
+		CodeMapFunction functionView = new CodeMapFunction(getContext(), position, fileName, content, this);
+		addFunction(functionView);
+		return functionView;
+	}
+
 	public CodeMapFunction createFunction(String functionName) {
 		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
 		return createFunction(position, functionName);

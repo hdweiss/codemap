@@ -204,6 +204,11 @@ public class Cscope {
 			return source;
 	}
 	
+	public String getFile (Project project, String fileName) throws FileNotFoundException {
+		FileInputStream stream = new FileInputStream(project.getPath() + fileName);
+		String content = Utils.inputStreamToString(stream);
+		return content;
+	}
 	
 	public ArrayList<CscopeEntry> getReferences(Project project, String functionName) {
 		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName);
@@ -211,11 +216,18 @@ public class Cscope {
 		
 		String options = "-L -2 '" + functionName + "'";
 		String symbols = runCommand(project, options);
-		ArrayList<CscopeEntry> references = getAllReferences(symbols, cscopeEntry.lineNumber, endLine);
+		ArrayList<CscopeEntry> references = parseReferences(symbols, cscopeEntry.lineNumber, endLine);
 		return references;
 	}
 	
-	private ArrayList<CscopeEntry> getAllReferences(String symbols, int startLine, int endLine) {
+	public ArrayList<CscopeEntry> getFileReferences(Project project, String fileName) {
+		String options = "-L -2 '.*' " + project.getPath() + fileName;
+		String symbols = runCommand(project, options, false);
+		ArrayList<CscopeEntry> references = parseReferences(symbols, 0, Integer.MAX_VALUE);
+		return references;
+	}
+	
+	private ArrayList<CscopeEntry> parseReferences(String symbols, int startLine, int endLine) {
 		ArrayList<CscopeEntry> references = new ArrayList<CscopeEntry>();
 		
 		String[] entries = symbols.trim().split("\n");
@@ -241,7 +253,7 @@ public class Cscope {
 		String options = "-k -L -1 '.*' " + project.getPath() + "/" + filename;
 		String symbols = runCommand(project, options, false);
 				
-		for(CscopeEntry entry: getAllReferences(symbols, 0, 0))
+		for(CscopeEntry entry: parseReferences(symbols, 0, 0))
 			result.add(entry.name);
 		
 		return cleanSymbols(result);
@@ -279,7 +291,7 @@ public class Cscope {
 		String options = "-k -L -1 '.*' ";
 		String symbols = runCommand(project, options, true);
 				
-		for(CscopeEntry entry: getAllReferences(symbols, 0, 0)) {
+		for(CscopeEntry entry: parseReferences(symbols, 0, 0)) {
 			ArrayList<CscopeEntry> list = result.get(entry.file);
 			
 			if(list == null) {

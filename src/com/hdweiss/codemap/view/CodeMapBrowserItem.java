@@ -22,10 +22,10 @@ public class CodeMapBrowserItem extends LinearLayout {
 	public void setChild(boolean isChild) {
 		if (isChild) {
 			this.textView.setPadding(50, 5, 10, 5);
-			this.textView.setTextSize(15);
+			this.textView.setTextSize(14);
 		} else {
 			this.textView.setPadding(40, 5, 10, 5);
-			this.textView.setTextSize(20);
+			this.textView.setTextSize(15);
 		}
 	}
 }
