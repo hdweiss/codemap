@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.util.Log;
@@ -60,22 +61,22 @@ public class Cscope {
 	}
 	
 	public String runCommand(String projectName, String projectPath, String options) {
+		return runCommand(projectName, projectPath, options, true);
+	}
+	
+	
+	public String runCommand(String projectName, String projectPath, String options, boolean includeIndex) {
 		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
 			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
 			return "";
 		}
 		
-		String command = getCscopeCommand(projectName, projectPath, options);
-		Log.d("CodeMap", "Running command " + command);
+		String command = getCscopeCommand(projectName, projectPath, options, includeIndex);
 		
 		File tmpdir = context.getFilesDir();
 		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
 		String output = Utils.runCommand(command, environment);
 		return output;
-	}
-	
-	private String getCscopeCommand(String projectName, String projectPath, String options) {
-		return getCscopeCommand(projectName, projectPath, options, true);
 	}
 	
 	private String getCscopeCommand(String projectName, String projectPath, String options, boolean includeIndex) {
@@ -149,7 +150,7 @@ public class Cscope {
 	
 	private int getFunctionEndLine(String projectName, String projectPath, CscopeEntry cscopeEntry) {	
 		String options = "-L -1 '.*' " + cscopeEntry.file;
-		String symbols = runCommandSpecial(projectName, projectPath, options);
+		String symbols = runCommand(projectName, projectPath, options, false);
 		
 		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
 		
@@ -214,20 +215,7 @@ public class Cscope {
 		
 		return references;
 	}
-	
-	public String runCommandSpecial(String projectName, String projectPath, String options) {
-		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
-			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
-			return "";
-		}
-		
-		String command = getCscopeCommand(projectName, projectPath, options, false);
-		
-		File tmpdir = context.getFilesDir();
-		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
-		String output = Utils.runCommand(command, environment);
-		return output;
-	}
+
 	
 	/******************/
 	
@@ -235,10 +223,25 @@ public class Cscope {
 		ArrayList<String> result = new ArrayList<String>();
 		
 		String options = "-k -L -1 '.*' " + filename;
-		String symbols = runCommandSpecial(projectName, projectPath, options);
+		String symbols = runCommand(projectName, projectPath, options, false);
 				
 		for(CscopeEntry entry: getAllReferences(symbols, 0, 0))
 			result.add(entry.name);
+		
+		return result;
+	}
+	
+	public HashMap<String,CscopeEntry> getAllDeclarations(String projectName, String projectPath) {
+		HashMap<String, CscopeEntry> result = new HashMap<String, CscopeEntry>();
+		
+		String options = "-k -L -1 '.*' ";
+		String symbols = runCommand(projectName, projectPath, options, false);
+		
+		Log.d("CodeMap", "Dec: \n" + symbols);
+		
+		for(CscopeEntry entry: getAllReferences(symbols, 0, 0)) {
+			result.put(entry.file, entry);
+		}
 		
 		return result;
 	}

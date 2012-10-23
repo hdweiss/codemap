@@ -3,12 +3,14 @@ package com.hdweiss.codemap.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
 import com.hdweiss.codemap.data.Cscope;
+import com.hdweiss.codemap.data.CscopeEntry;
 
 @SuppressLint("SdCardPath")
 public class CscopeTest extends AndroidTestCase {
@@ -19,6 +21,8 @@ public class CscopeTest extends AndroidTestCase {
 	@SuppressWarnings("unused")
 	private static String MAIN_FIRSTLINE = "extern int main (int __unused__ argc, char **argv)";
 
+	private static int NUMBER_OF_FILES = 87;
+	
 	private Context context;
 	private Cscope cscope;
 	
@@ -75,5 +79,14 @@ public class CscopeTest extends AndroidTestCase {
 		cscope.generateReffile(PROJECT_NAME, PROJECT_PATH);
 		String contents = cscope.getFunction(PROJECT_NAME, PROJECT_PATH, "addTotals");
 		assertTrue(contents.contains(ADDTOTALS_FIRSTLINE));
+	}
+	
+	public void testAllDeclarations() {
+		cscope.generateNamefile(PROJECT_NAME, PROJECT_PATH);
+		cscope.generateReffile(PROJECT_NAME, PROJECT_PATH);
+		
+		HashMap<String,CscopeEntry> declarations = cscope.getAllDeclarations(PROJECT_NAME, PROJECT_PATH);
+		
+		assertEquals(NUMBER_OF_FILES, declarations.size());
 	}
 }

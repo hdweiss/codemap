@@ -52,10 +52,19 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 
 	
+	public float getZoom() {
+		return this.zoom;
+	}
+	
+	public void setZoom(float zoom, CodeMapPoint pivot) {
+		this.zoom = zoom;
+		invalidate();
+	}
+	
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-		event.setLocation(event.getX() / zoom, event.getY() / zoom);
+		event.setLocation(event.getX() * zoom, event.getY() * zoom);
 		return super.dispatchTouchEvent(event);
 	}
 
@@ -77,22 +86,12 @@ public class CodeMapView extends MyAbsoluteLayout {
 			scrollBy(-(int)dx, -(int)dy);	    
 		}
 	}
-	
-	
-	public float getZoom() {
-		return this.zoom;
-	}
-	
-	public void setZoom(float zoom, CodeMapPoint pivot) {
-		this.zoom = zoom;
-		invalidate();
-	}
-	
+
 	
 	@Override
 	public void dispatchDraw(Canvas canvas) {	    
 	    canvas.scale(zoom, zoom);
-	    canvas.save();
+	    canvas.save(Canvas.MATRIX_SAVE_FLAG);
 //	    canvas.translate(getScrollX() * zoom, getScrollY() * zoom);
 	    super.dispatchDraw(canvas);
 	    canvas.restore();
