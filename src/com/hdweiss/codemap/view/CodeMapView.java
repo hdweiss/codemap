@@ -144,8 +144,9 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 	
 	public boolean moveMapFragmentToEmptyPosition(CodeMapFunction function) {
-		Rect rect = new Rect();
-		function.getDrawingRect(rect);
+		Rect rect = function.getBounds();
+		rect.bottom += 1;
+		rect.right += 1;
 		final int offset = 5;
 		
 		boolean foundEmpty = false;
