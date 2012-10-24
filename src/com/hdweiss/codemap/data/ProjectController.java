@@ -9,7 +9,7 @@ import android.text.SpannableString;
 import android.util.Log;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
-import com.hdweiss.codemap.view.CodeMapView;
+import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 public class ProjectController {
 	
@@ -109,8 +109,15 @@ public class ProjectController {
 	}
 
 	
-	public static ArrayList<String> getProjectsList() {
+	public static ArrayList<String> getProjectsList(Context context) {
 		ArrayList<String> result = new ArrayList<String>();
+		String[] fileList = context.fileList();
+		
+		for(String filename: fileList) {
+			if(filename.endsWith(".project"))
+				result.add(filename);
+		}
+
 		return result;
 	}
 }

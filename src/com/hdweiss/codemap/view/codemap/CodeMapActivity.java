@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view;
+package com.hdweiss.codemap.view.codemap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;

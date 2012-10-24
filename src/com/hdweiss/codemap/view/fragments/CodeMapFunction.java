@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.SpanUtils;
-import com.hdweiss.codemap.view.CodeMapView;
+import com.hdweiss.codemap.view.codemap.CodeMapView;
 import com.hdweiss.codemap.view.fragments.FunctionLinkSpan.FunctionLinkSpanConverter;
 
 public class CodeMapFunction extends LinearLayout {

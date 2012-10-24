@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view;
+package com.hdweiss.codemap.view.codemap;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -1,6 +1,6 @@
 package com.hdweiss.codemap.util;
 
-import com.hdweiss.codemap.view.CodeMapView;
+import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 import android.graphics.PointF;
 

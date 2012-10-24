@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view;
+package com.hdweiss.codemap.view.codemap;
 
 import java.util.ArrayList;
 
@@ -18,8 +18,8 @@ import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.MyAbsoluteLayout;
-import com.hdweiss.codemap.view.CodeMapListeners.CodeMapGestureListener;
-import com.hdweiss.codemap.view.CodeMapListeners.CodeMapScaleListener;
+import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
+import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 
 public class CodeMapView extends MyAbsoluteLayout {
