@@ -22,6 +22,7 @@ public class CscopeTest extends AndroidTestCase {
 	
 	private static final String ADDTOTALS_FIRSTLINE = "extern void addTotals";
 	private static final int declarationsInMain = 29;
+	private static final int declarationsInMainClean = 17;
 
 
 	private Context context;
@@ -89,7 +90,7 @@ public class CscopeTest extends AndroidTestCase {
 		cscope.generateReffile(project);
 		
 		ArrayList<String> declarations = cscope.getDeclarations("main.c", project);
-		assertEquals(declarationsInMain, declarations.size());
+		assertEquals(declarationsInMainClean, declarations.size());
 	}
 	
 	public void testGetAllDeclarations() {

@@ -109,4 +109,9 @@ public class Project {
 		if(codeMapView != null)
 			codeMapView.createFileFragment(fileName);
 	}
+	
+	public static ArrayList<String> getProjectsList() {
+		ArrayList<String> result = new ArrayList<String>();
+		return result;
+	}
 }
