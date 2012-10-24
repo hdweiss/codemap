@@ -34,7 +34,7 @@ public class CscopeTest extends AndroidTestCase {
 		super.setUp();
 		this.context = getContext();
 		this.cscope = new Cscope(context);
-		this.project = new Project(PROJECT_NAME, PROJECT_PATH, context);
+		this.project = new Project(PROJECT_NAME, PROJECT_PATH);
 	}
 
 	@Override

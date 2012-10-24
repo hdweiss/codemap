@@ -14,7 +14,7 @@ import android.view.ScaleGestureDetector;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.MyAbsoluteLayout;
@@ -31,7 +31,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 	private float zoom = 1;
 	
 	private ArrayList<CodeMapFunction> views = new ArrayList<CodeMapFunction>();
-	private Project project;
+	private ProjectController controller;
 
 	public CodeMapView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
@@ -48,8 +48,8 @@ public class CodeMapView extends MyAbsoluteLayout {
 		createFunctionFragment("createTagsFromFileInput", new CodeMapPoint(300, 500));
 	}
 	
-	public void setProject(Project project) {
-		this.project = project;
+	public void setController(ProjectController controller) {
+		this.controller = controller;
 		initState();
 	}
 
@@ -103,7 +103,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 
 	public CodeMapFunction createFileFragment(String fileName) {
 		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
-		final SpannableString content = project.getFileSource(fileName);
+		final SpannableString content = controller.getFileSource(fileName);
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
 				position, fileName, content, this);
@@ -118,7 +118,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 	
 	public CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
-		final SpannableString content = project.getFunctionSource(functionName);
+		final SpannableString content = controller.getFunctionSource(functionName);
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
 				position, functionName, content, this);

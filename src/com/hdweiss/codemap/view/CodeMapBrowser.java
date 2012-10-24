@@ -7,12 +7,12 @@ import android.widget.AdapterView;
 import android.widget.ExpandableListView;
 import android.widget.ExpandableListView.OnChildClickListener;
 
-import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 
 public class CodeMapBrowser extends ExpandableListView implements OnChildClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
 	private CodeMapBrowserAdapter adapter;
-	private Project project;
+	private ProjectController controller;
 
 	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -20,20 +20,20 @@ public class CodeMapBrowser extends ExpandableListView implements OnChildClickLi
 		setOnItemLongClickListener(this);
 	}
 
-	public void setProject(Project project) {
-		this.project = project;
+	public void setController(ProjectController controller) {
+		this.controller = controller;
 		refresh();
 	}
 	
 	public void refresh() {
-		this.adapter = new CodeMapBrowserAdapter(getContext(), project);
+		this.adapter = new CodeMapBrowserAdapter(getContext(), controller);
 		setAdapter(adapter);
 	}
 
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
 		String item = adapter.getChild(groupPosition, childPosition);
-		project.addFunctionView(item);
+		controller.addFunctionView(item);
 		return true;
 	}
 
@@ -43,7 +43,7 @@ public class CodeMapBrowser extends ExpandableListView implements OnChildClickLi
 			//int childPosition = ExpandableListView.getPackedPositionChild(id);
 
             String filename = adapter.getGroup(groupPosition);
-            project.addFileView(filename);
+            controller.addFileView(filename);
             
             return true;
         }

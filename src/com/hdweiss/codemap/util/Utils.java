@@ -1,11 +1,16 @@
 package com.hdweiss.codemap.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 
 import android.util.Log;
 
@@ -79,4 +84,40 @@ public class Utils {
 		return result.toString();
 	}
 
+	public static byte[] serializeObject(Object o) {
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
+		try {
+			ObjectOutput out = new ObjectOutputStream(bos);
+			out.writeObject(o);
+			out.close();
+
+			byte[] buf = bos.toByteArray();
+
+			return buf;
+		} catch (IOException ioe) {
+			Log.e("serializeObject", "error", ioe);
+
+			return null;
+		}
+	}
+
+	public static Object deserializeObject(byte[] b) {
+		try {
+			ObjectInputStream in = new ObjectInputStream(
+					new ByteArrayInputStream(b));
+			Object object = in.readObject();
+			in.close();
+
+			return object;
+		} catch (ClassNotFoundException cnfe) {
+			Log.e("deserializeObject", "class not found error", cnfe);
+
+			return null;
+		} catch (IOException ioe) {
+			Log.e("deserializeObject", "io error", ioe);
+
+			return null;
+		}
+	}
 }

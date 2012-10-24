@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 
 public class CodeMapActivity extends Activity {
 
-    private Project project;
+    private ProjectController controller;
 
 	@SuppressLint("SdCardPath")
 	@Override
@@ -18,8 +18,8 @@ public class CodeMapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         
-		project = new Project("Testproject", "/sdcard/ctags/", this);
-		project.init();
+		controller = new ProjectController("Testproject", this);
+		controller.init();
     }
 
     @Override
@@ -28,7 +28,7 @@ public class CodeMapActivity extends Activity {
         return true;
     }
     
-    public Project getProject() {
-    	return this.project;
+    public ProjectController getController() {
+    	return this.controller;
     }
 }

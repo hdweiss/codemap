@@ -5,24 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
-import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 
 public class CodeMapBrowserAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
 
-	private Project project;
+	private ProjectController controller;
 	private String[] files;
 	
-	public CodeMapBrowserAdapter(Context context, Project project) {
+	public CodeMapBrowserAdapter(Context context, ProjectController controller) {
 		super();
 		this.context = context;
-		this.project = project;
-		files = project.getFiles();
+		this.controller = controller;
+		files = controller.getFiles();
 	}
 	
 	public String getChild(int groupPosition, int childPosition) {
-		return project.getSymbols(files[groupPosition]).get(childPosition);
+		return controller.getSymbols(files[groupPosition]).get(childPosition);
 	}
 
 	public long getChildId(int groupPosition, int childPosition) {
@@ -45,7 +45,7 @@ public class CodeMapBrowserAdapter extends BaseExpandableListAdapter {
 	}
 
 	public int getChildrenCount(int groupPosition) {
-		return project.getSymbols(files[groupPosition]).size();
+		return controller.getSymbols(files[groupPosition]).size();
 	}
 
 	public String getGroup(int groupPosition) {

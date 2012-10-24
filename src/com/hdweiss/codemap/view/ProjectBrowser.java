@@ -12,7 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 
 public class ProjectBrowser extends Activity implements OnItemClickListener, OnItemLongClickListener {
 
@@ -29,7 +29,7 @@ public class ProjectBrowser extends Activity implements OnItemClickListener, OnI
 	}
 
 	private void refresh() {
-		ArrayList<String> projectsList = Project.getProjectsList();
+		ArrayList<String> projectsList = ProjectController.getProjectsList();
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, projectsList);
 		listView.setAdapter(adapter);

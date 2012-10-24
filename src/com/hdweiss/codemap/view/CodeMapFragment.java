@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapPoint;
 
 public class CodeMapFragment extends Fragment {
@@ -42,10 +42,10 @@ public class CodeMapFragment extends Fragment {
 		if(savedInstanceState != null)
 			restoreInstanceState(savedInstanceState);
 		
-		Project project = ((CodeMapActivity) getActivity()).getProject();
-		project.setView(codeMapView);
-		codeMapView.setProject(project);
-		codeMapBrowser.setProject(project);
+		ProjectController controller = ((CodeMapActivity) getActivity()).getController();
+		controller.setView(codeMapView);
+		codeMapView.setController(controller);
+		codeMapBrowser.setController(controller);
 	}
 	
 	public void restoreInstanceState(Bundle savedInstanceState) {
