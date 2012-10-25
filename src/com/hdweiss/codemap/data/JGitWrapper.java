@@ -15,25 +15,38 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.storage.file.FileRepository;
 
+import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 public class JGitWrapper {
-
-	private String localPath;
-	private String remotePath;
 	
+	private Project project;
 	private Git git;
+	private Context context;
 	
-	public JGitWrapper(String localPath, String remoteUri) throws IOException {
-		this.localPath = localPath;
-		this.remotePath = remoteUri;
-		
-		FileRepository localRepo = new FileRepository(localPath + "/.git");
+	
+	private ProjectController controller;
+	
+	public JGitWrapper(Project project, Context context) throws IOException {
+		this.project = project;
+		this.context = context;
+		FileRepository localRepo = new FileRepository(project.getSourcePath(context) + "/.git");
 		git = new Git(localRepo);
 	}
 	
-    public void cloneRepo() {
-    	GitInfo info = new GitInfo(this.localPath, this.remotePath);
+	public void update(ProjectController controller) {
+		this.controller = controller;
+		File sourceRepo = new File(project.getSourcePath(context));
+		
+		if(sourceRepo.exists())
+			pull();
+		else
+			cloneRepo();
+	}
+	
+    private void cloneRepo() {    	
+    	GitInfo info = new GitInfo(project);
     	new CloneRepoTask().execute(info);
     }
     
@@ -41,9 +54,9 @@ public class JGitWrapper {
     	public String localPath;
     	public String remotePath;
     	
-    	public GitInfo(String localPath, String remotePath) {
-    		this.localPath = localPath;
-    		this.remotePath = remotePath;
+    	public GitInfo(Project project) {
+    		this.localPath = project.getSourcePath(context);
+    		this.remotePath = project.getUrl();
     	}
     }
     
@@ -55,49 +68,103 @@ public class JGitWrapper {
 	        try {
 				Git.cloneRepository().setURI(gitInfo.remotePath)
 						.setDirectory(new File(gitInfo.localPath)).call();
+				
+				int i = 2;
+				int count = 10;
+				
+				publishProgress((int) ((i / (float) count) * 100));				
 			} catch (InvalidRemoteException e) {
 				e.printStackTrace();
 			} catch (TransportException e) {
 				e.printStackTrace();
 			} catch (GitAPIException e) {
 				e.printStackTrace();
-			}  
+			}
 			
 			return 0L;
 		}
-    	
-    }
-    
-    public void pull() {
-        try {
-			git.pull().call();
-		} catch (WrongRepositoryStateException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (DetachedHeadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvalidRemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (CanceledException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (RefNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoHeadException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (TransportException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (GitAPIException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			
+			int progress = values[0];
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			super.onPostExecute(result);
+			controller.buildIndex();
+			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
+			
 		}
     }
+    
+    private void pull() {
+    	GitInfo info = new GitInfo(project);
+    	new PullRepoTask().execute(info);
+    }
+    
+    private class PullRepoTask extends AsyncTask<GitInfo, Integer, Long> {
+		@Override
+		protected Long doInBackground(GitInfo... params) {
+			pull();
+
+			int i = 2;
+			int count = 10;
+
+			publishProgress((int) ((i / (float) count) * 100));
+
+			return 0L;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			
+			int progress = values[0];
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			super.onPostExecute(result);
+			controller.buildIndex();
+			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
+			
+		}
+
+		private void pull() {
+			try {
+				git.pull().call();
+			} catch (WrongRepositoryStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidConfigurationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (DetachedHeadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InvalidRemoteException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (CanceledException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (RefNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NoHeadException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (TransportException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (GitAPIException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+    }
+    
 }

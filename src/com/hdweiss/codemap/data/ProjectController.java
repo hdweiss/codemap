@@ -54,8 +54,8 @@ public class ProjectController {
 		}
 			
 		try {
-			JGitWrapper jgit = new JGitWrapper(project.getSourcePath(context), project.getUrl());
-			jgit.cloneRepo();
+			JGitWrapper jgit = new JGitWrapper(project, context);
+			jgit.update(this);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
