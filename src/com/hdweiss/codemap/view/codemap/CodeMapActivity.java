@@ -1,15 +1,14 @@
 package com.hdweiss.codemap.view.codemap;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.data.ProjectController;
 
 public class CodeMapActivity extends Activity {
-
 	public final static String PROJECT_NAME = "projectName";
 	
     private ProjectController controller;
@@ -19,11 +18,9 @@ public class CodeMapActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.codemap);
         
-        Intent intent = getIntent();
-        String projectName = intent.getStringExtra(PROJECT_NAME);
+        String projectName = getIntent().getStringExtra(PROJECT_NAME);
         
-		controller = new ProjectController(projectName, this);
-		controller.init();
+        controller = CodeMapApp.get(this).getProjectController(projectName);
     }
 
     @Override
@@ -34,5 +31,15 @@ public class CodeMapActivity extends Activity {
     
     public ProjectController getController() {
     	return this.controller;
+    }
+
+	@Override
+	protected void onDestroy() {
+		saveState();
+		super.onDestroy();
+	}
+    
+    public void saveState() {
+    	
     }
 }

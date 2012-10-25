@@ -43,9 +43,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 		setFocusable(false);
 	}
 	
-	private void initState() {		
-		createFunctionFragment("addTotals", new CodeMapPoint(200, 200));
-		createFunctionFragment("createTagsFromFileInput", new CodeMapPoint(300, 500));
+	private void initState() {
 	}
 	
 	public void setController(ProjectController controller) {

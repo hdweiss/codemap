@@ -38,7 +38,7 @@ public class CodeMapFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		if(savedInstanceState != null)
 			restoreInstanceState(savedInstanceState);
 		

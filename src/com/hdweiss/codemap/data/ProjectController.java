@@ -23,6 +23,7 @@ public class ProjectController {
 	
 	public ProjectController(String name, Context context) {
 		this.context = context;
+		this.cscope = new Cscope(context);
 		loadProject(name);
 	}
 	
@@ -40,8 +41,7 @@ public class ProjectController {
 			this.project = new Project(name);
 	}
 	
-	public void init() {
-		this.cscope = new Cscope(context);
+	public void buildIndex() {
 		cscope.generateNamefile(project);
 		cscope.generateReffile(project);
 	}
@@ -138,5 +138,11 @@ public class ProjectController {
 		}
 
 		return result;
+	}
+	
+	public void saveState() {
+		if(this.codeMapView == null)
+			return;
+		
 	}
 }

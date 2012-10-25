@@ -129,7 +129,7 @@ public class Cscope {
 		
 		String[] files = contents.trim().split("\n");
 		
-		int pathLength = project.getSourcePath(context).length();
+		int pathLength = project.getSourcePath(context).length() + 1;
 		for(int i = 0; i < files.length; i++)
 			files[i] = files[i].substring(pathLength);
 		

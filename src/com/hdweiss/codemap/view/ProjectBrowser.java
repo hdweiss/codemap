@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.view.codemap.CodeMapActivity;
 
@@ -73,6 +74,10 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 			removeProject(projectName);
 			break;
 		
+		case R.id.projects_update:
+			updateProject(projectName);
+			break;
+			
 		default:
 			return super.onContextItemSelected(item);
 		}
@@ -83,6 +88,11 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 	private void removeProject(String name) {
 		ProjectController.deleteProject(name, this);
 		refresh();
+	}
+	
+	private void updateProject(String name) {
+		ProjectController controller = CodeMapApp.get(this).getProjectController(name);
+		controller.buildIndex();
 	}
 
 	@Override

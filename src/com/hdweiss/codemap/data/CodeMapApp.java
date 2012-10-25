@@ -2,10 +2,11 @@ package com.hdweiss.codemap.data;
 
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
 
-public class CodeMapApplication extends Application {
+public class CodeMapApp extends Application {
 
 	private HashMap<String, ProjectController> controllers = new HashMap<String, ProjectController>();
 	
@@ -17,11 +18,13 @@ public class CodeMapApplication extends Application {
 		
 		if(controller == null) {
 			controller = new ProjectController(projectName, this);
-			controller.init();
 			controllers.put(projectName, controller);
 		}
 		
 		return controller;
 	}
 	
+	public static CodeMapApp get(Activity activity) {
+		return (CodeMapApp) activity.getApplication();
+	}
 }
