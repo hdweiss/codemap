@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.hdweiss.codemap.util.Utils;
 
@@ -26,11 +27,17 @@ public class Project implements Serializable {
 	}
 	
 	public String getName() {
-		return this.name;
+		if(TextUtils.isEmpty(name))
+			return "";
+		else
+			return this.name;
 	}
 
 	public String getUrl() {
-		return this.url;
+		if(TextUtils.isEmpty(url))
+			return "";
+		else
+			return this.url;	
 	}
 	
 	public void setUrl(String url) {

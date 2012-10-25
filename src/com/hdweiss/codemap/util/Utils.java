@@ -12,8 +12,12 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
+import android.text.TextUtils;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class Utils {
 
@@ -128,5 +132,20 @@ public class Utils {
 	            deleteRecursive(child);
 
 	    fileOrDirectory.delete();
+	}
+	
+	public static void setupSpinner(Spinner spinner, ArrayList<String> data,
+			String selection) {		
+		if(!TextUtils.isEmpty(selection) && !data.contains(selection))
+			data.add(selection);
+
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(spinner.getContext(),
+				android.R.layout.simple_spinner_item, data);
+		spinner.setAdapter(adapter);
+		int pos = data.indexOf(selection);
+		if (pos < 0) {
+			pos = 0;
+		}
+		spinner.setSelection(pos, true);
 	}
 }
