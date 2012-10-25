@@ -213,7 +213,8 @@ public class Cscope {
 	}
 	
 	public String getFile (Project project, String fileName) throws FileNotFoundException {
-		FileInputStream stream = new FileInputStream(project.getSourcePath(context) + fileName);
+		FileInputStream stream = new FileInputStream(
+				project.getSourcePath(context) + File.separator + fileName);
 		String content = Utils.inputStreamToString(stream);
 		return content;
 	}
