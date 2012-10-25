@@ -16,9 +16,37 @@
     </EditText>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/wizard_sync"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/wizard_name"
+        android:layout_margin="25dp"
+        android:background="@drawable/fragment_bg"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/wizard_synchronizer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="10dp" />
+
+        <EditText
+            android:id="@+id/wizard_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:ems="10"
+            android:hint="Url" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/wizard_sync"
         android:layout_centerHorizontal="true" >
 
         <Button

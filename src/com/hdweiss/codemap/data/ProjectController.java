@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
+import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 public class ProjectController {
@@ -46,6 +47,19 @@ public class ProjectController {
 		cscope.generateReffile(project);
 	}
 	
+	public void updateProject() {
+		if(TextUtils.isEmpty(project.getUrl())) {
+			Log.e("CodeMap", "Invalid url for project " + project.getUrl());
+			return;
+		}
+			
+		try {
+			JGitWrapper jgit = new JGitWrapper(project.getSourcePath(context), project.getUrl());
+			jgit.cloneRepo();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public void addFunctionView(String functionName) {
 		if(codeMapView != null)
@@ -121,8 +135,11 @@ public class ProjectController {
 		Cscope cscope = new Cscope(context);
 		cscope.deleteNamefile(projectName);
 		cscope.deleteReffile(projectName);
-		File file = new File(Project.getConfigFilePath(projectName, context));
-		file.delete();
+		
+		new File(Project.getConfigFilePath(projectName, context)).delete();
+		
+		File sourceDir = new File(Project.getSourcePath(projectName, context));
+		Utils.deleteRecursive(sourceDir);
 	}
 	
 	public static ArrayList<String> getProjectsList(Context context) {

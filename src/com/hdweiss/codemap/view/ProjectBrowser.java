@@ -92,6 +92,8 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 	
 	private void updateProject(String name) {
 		ProjectController controller = CodeMapApp.get(this).getProjectController(name);
+		
+		controller.updateProject();
 		controller.buildIndex();
 	}
 

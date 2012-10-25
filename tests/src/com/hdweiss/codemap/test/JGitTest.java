@@ -17,24 +17,28 @@ import android.test.AndroidTestCase;
 
 public class JGitTest extends AndroidTestCase {
 
-    private String localPath, remotePath;
+    private final String localPath = "/sdcard/git-test";
+    private final String remotePath = "git://github.com/hdweiss/test.git";
+    
     private Repository localRepo;
     private Git git;
 
-	@Override
-    public void setUp() throws IOException {
-        localPath = "/sdcard/git-test";
-        remotePath = "https://github.com/hdweiss/test.git";
-        localRepo = new FileRepository(localPath + "/.git");
-        git = new Git(localRepo);        
+    public JGitTest() throws IOException {
+    	super();
+    	
+    	new File(localPath).delete();
+    	new File(localPath + ".git").delete();
+    	
+    	localRepo = new FileRepository(localPath + "/.git");
+    	git = new Git(localRepo);        
     }
-
+    
     public void testCreate() throws IOException {
         Repository newRepo = new FileRepository(localPath + ".git");
         newRepo.create();
     }
 
-    public void testClone() throws IOException, InvalidRemoteException, TransportException, GitAPIException {     
+    public void testClone() throws IOException, InvalidRemoteException, TransportException, GitAPIException { 
         Git.cloneRepository() 
            .setURI(remotePath)
            .setDirectory(new File(localPath))

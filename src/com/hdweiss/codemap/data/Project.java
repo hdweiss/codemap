@@ -13,9 +13,10 @@ import com.hdweiss.codemap.util.Utils;
 
 public class Project implements Serializable {
 
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	
 	private String name;
+	private String url;
 
 	public String[] files;
 	public HashMap<String, ArrayList<String>> symbols = new HashMap<String, ArrayList<String>>();
@@ -28,6 +29,14 @@ public class Project implements Serializable {
 		return this.name;
 	}
 
+	public String getUrl() {
+		return this.url;
+	}
+	
+	public void setUrl(String url) {
+		this.url = url;
+	}
+	
 	public static String getFilename(String name) {
 		return name + ".project";
 	}
@@ -56,6 +65,10 @@ public class Project implements Serializable {
 	}
 	
 	public String getSourcePath(Context context) {
+		return Project.getSourcePath(name, context);
+	}
+	
+	public static String getSourcePath(String name, Context context) {
 		return context.getExternalCacheDir() + "/" + name;
 	}
 }
