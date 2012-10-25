@@ -21,6 +21,9 @@ public class Cscope {
 	private final static String BUILDINDEX_OPTIONS = "-b -q";
 	private final static String SEARCH_PATTERN = "-iname \'*.c\' -o -iname \'*.h\'";
 	
+	private final static String CSCOPE_NAMEFILE = "cscope.files";
+	private final static String CSCOPE_REFFILE = "cscope.out";
+	
 	private Context context;
 	private String cscopeExecPath = "";
 
@@ -104,17 +107,15 @@ public class Cscope {
 		File file = new File(getNamefilePath(projectName));
 		file.delete();
 	}
-
-	private String getNamefileName(String projectName) {
-		return projectName + ".files";
-	}
 	
 	private String getNamefilePath (String projectName) {
-		return context.getFileStreamPath(getNamefileName(projectName)).getAbsolutePath();
+		File directory = Project.getProjectDirectory(projectName, context);
+		return directory.getAbsolutePath() + File.separator + CSCOPE_NAMEFILE;
 	}
 	
 	public FileInputStream getNamefileStream(String projectName) throws FileNotFoundException {
-		return context.openFileInput(getNamefileName(projectName));
+		File namefile = new File(Project.getProjectDirectory(projectName, context) + File.separator + CSCOPE_NAMEFILE);
+		return new FileInputStream(namefile);
 	}
 	
 	public String[] getFiles(Project project) throws FileNotFoundException {		
@@ -148,17 +149,10 @@ public class Cscope {
 		File file = new File(getReffilePath(projectName));
 		file.delete();
 	}
-
-	private String getReffileName(String projectName) {
-		return projectName + ".out";
-	}
 	
-	private String getReffilePath(String projectName) {
-		return context.getFileStreamPath(getReffileName(projectName)).getAbsolutePath();
-	}
-	
-	public FileInputStream getReffileStream(String projectName) throws FileNotFoundException {
-		return context.openFileInput(getReffileName(projectName));
+	private String getReffilePath(String projectName) {		
+		File directory = Project.getProjectDirectory(projectName, context);
+		return directory.getAbsolutePath() + File.separator + CSCOPE_REFFILE;
 	}
 	
 	/******************/

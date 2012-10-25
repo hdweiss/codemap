@@ -132,10 +132,8 @@ public class ProjectController {
 
 	
 	public static void deleteProject(String projectName, Context context) {
-		Cscope cscope = new Cscope(context);
-		cscope.deleteNamefile(projectName);
-		cscope.deleteReffile(projectName);
-		
+		File projectDir = Project.getProjectDirectory(projectName, context);
+		Utils.deleteRecursive(projectDir);		
 		new File(Project.getConfigFilePath(projectName, context)).delete();
 		
 		File sourceDir = new File(Project.getSourcePath(projectName, context));
@@ -144,6 +142,7 @@ public class ProjectController {
 	
 	public static ArrayList<String> getProjectsList(Context context) {
 		ArrayList<String> result = new ArrayList<String>();
+				
 		String[] fileList = context.fileList();
 		
 		for(String filename: fileList) {

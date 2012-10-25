@@ -32,14 +32,4 @@ public class CodeMapActivity extends Activity {
     public ProjectController getController() {
     	return this.controller;
     }
-
-	@Override
-	protected void onDestroy() {
-		saveState();
-		super.onDestroy();
-	}
-    
-    public void saveState() {
-    	
-    }
 }

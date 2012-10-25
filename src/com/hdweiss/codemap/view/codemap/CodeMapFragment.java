@@ -91,4 +91,15 @@ public class CodeMapFragment extends Fragment {
 			return super.onOptionsItemSelected(item);
 		}
 	}
+	
+
+	@Override
+	public void onDestroy() {
+		saveState();
+		super.onDestroy();
+	}
+    
+    public void saveState() {
+    	
+    }
 }

@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.data;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -77,5 +78,13 @@ public class Project implements Serializable {
 	
 	public static String getSourcePath(String name, Context context) {
 		return context.getExternalCacheDir() + "/" + name;
+	}
+	
+	public File getProjectDirectory(Context context) {
+		return getProjectDirectory(name, context);
+	}
+	
+	public static File getProjectDirectory(String name, Context context) {
+		return context.getDir(name, Context.MODE_PRIVATE);
 	}
 }
