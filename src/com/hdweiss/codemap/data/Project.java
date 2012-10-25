@@ -13,25 +13,19 @@ import com.hdweiss.codemap.util.Utils;
 
 public class Project implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
 	private String name;
-	private String path;
 
 	public String[] files;
 	public HashMap<String, ArrayList<String>> symbols = new HashMap<String, ArrayList<String>>();
 	
-	public Project(String name, String path) {
+	public Project(String name) {
 		this.name = name;
-		this.path = path;
 	}
 	
 	public String getName() {
 		return this.name;
-	}
-	
-	public String getPath() {
-		return this.path;
 	}
 
 	public static String getFilename(String name) {
@@ -58,11 +52,15 @@ public class Project implements Serializable {
 	}
 	
 	public static String getProjectPath(String name, Context context) {
-		return context.getExternalCacheDir() + name;
+		return context.getFileStreamPath(getFilename(name)).getAbsolutePath();
+	}
+	
+	public String getSourcePath(Context context) {
+		return context.getExternalCacheDir() + "/" + name;
 	}
 	
 	public static Project createProject(String name, Context context) {
-		Project project = new Project(name, getProjectPath(name, context));
+		Project project = new Project(name);
 		return project;
 	}
 }

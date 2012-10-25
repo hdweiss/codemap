@@ -17,7 +17,6 @@ import com.hdweiss.codemap.data.Project;
 @SuppressLint("SdCardPath")
 public class CscopeTest extends AndroidTestCase {
 	private static final String PROJECT_NAME = "Testproject";
-	private static final String PROJECT_PATH = "/sdcard/ctags/";
 	private static final int NUMBER_OF_FILES = 87;
 	
 	private static final String ADDTOTALS_FIRSTLINE = "extern void addTotals";
@@ -34,7 +33,7 @@ public class CscopeTest extends AndroidTestCase {
 		super.setUp();
 		this.context = getContext();
 		this.cscope = new Cscope(context);
-		this.project = new Project(PROJECT_NAME, PROJECT_PATH);
+		this.project = new Project(PROJECT_NAME);
 	}
 
 	@Override
@@ -48,9 +47,10 @@ public class CscopeTest extends AndroidTestCase {
 	public void testAndroidTestCaseSetupProperly() {
 		super.testAndroidTestCaseSetupProperly();
 		
-		File ctagsDir = new File(PROJECT_PATH);
+		
+		File ctagsDir = new File(project.getSourcePath(context));
 		if(ctagsDir.exists() == false)
-			fail("Didn't find source directory");
+			fail("Didn't find source directory " + project.getSourcePath(context));
 	};
 	
 	public void testGenerateNamefile() {
@@ -100,7 +100,7 @@ public class CscopeTest extends AndroidTestCase {
 		HashMap<String,ArrayList<CscopeEntry>> declarations = cscope.getAllDeclarations(project);
 		assertEquals(NUMBER_OF_FILES, declarations.size());
 		
-		ArrayList<CscopeEntry> mainDeclarations = declarations.get(PROJECT_PATH + "main.c");
+		ArrayList<CscopeEntry> mainDeclarations = declarations.get(project.getSourcePath(context) + "/main.c");
 		assertNotNull(mainDeclarations);
 		assertEquals(declarationsInMain, mainDeclarations.size());
 	}

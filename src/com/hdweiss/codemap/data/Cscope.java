@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.NoSuchElementException;
 
 import android.content.Context;
 import android.util.Log;
@@ -86,7 +87,7 @@ public class Cscope {
 		if(includeIndex)
 			builder.append("-i ").append(getNamefilePath(project.getName())).append(" ");
 		builder.append("-f ").append(getReffilePath(project.getName())).append(" ");
-		builder.append("-P ").append(project.getPath()).append(" ");
+		builder.append("-P ").append(project.getSourcePath(context)).append(" ");
 		builder.append(options);
 		return builder.toString();
 	}
@@ -94,7 +95,7 @@ public class Cscope {
 	/***************/
 	
 	public String generateNamefile(Project project) {
-		String command = "find " + project.getPath() + " " + SEARCH_PATTERN
+		String command = "find " + project.getSourcePath(context) + " " + SEARCH_PATTERN
 				+ ">" + getNamefilePath(project.getName());
 		return Utils.runCommand(command);
 	}
@@ -118,11 +119,17 @@ public class Cscope {
 	
 	public String[] getFiles(Project project) throws FileNotFoundException {		
 		FileInputStream stream = getNamefileStream(project.getName());
-		String contents = Utils.inputStreamToString(stream);
+		
+		String contents;
+		try {
+			 contents = Utils.inputStreamToString(stream);
+		} catch (NoSuchElementException e) {
+			throw new FileNotFoundException(e.getLocalizedMessage());
+		}
 		
 		String[] files = contents.trim().split("\n");
 		
-		int pathLength = project.getPath().length();
+		int pathLength = project.getSourcePath(context).length();
 		for(int i = 0; i < files.length; i++)
 			files[i] = files[i].substring(pathLength);
 		
@@ -205,7 +212,7 @@ public class Cscope {
 	}
 	
 	public String getFile (Project project, String fileName) throws FileNotFoundException {
-		FileInputStream stream = new FileInputStream(project.getPath() + fileName);
+		FileInputStream stream = new FileInputStream(project.getSourcePath(context) + fileName);
 		String content = Utils.inputStreamToString(stream);
 		return content;
 	}
@@ -221,7 +228,7 @@ public class Cscope {
 	}
 	
 	public ArrayList<CscopeEntry> getFileReferences(Project project, String fileName) {
-		String options = "-L -2 '.*' " + project.getPath() + fileName;
+		String options = "-L -2 '.*' " + project.getSourcePath(context) + fileName;
 		String symbols = runCommand(project, options, false);
 		ArrayList<CscopeEntry> references = parseReferences(symbols, 0, Integer.MAX_VALUE);
 		return references;
@@ -250,7 +257,7 @@ public class Cscope {
 	public ArrayList<String> getDeclarations(String filename, Project project) {
 		ArrayList<String> result = new ArrayList<String>();
 		
-		String options = "-k -L -1 '.*' " + project.getPath() + "/" + filename;
+		String options = "-k -L -1 '.*' " + project.getSourcePath(context) + "/" + filename;
 		String symbols = runCommand(project, options, false);
 				
 		for(CscopeEntry entry: parseReferences(symbols, 0, 0))

@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -30,7 +31,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
         
         this.listView = (ListView) findViewById(R.id.projects_list);
         listView.setOnItemClickListener(this);
-        listView.setOnCreateContextMenuListener(this);
+        registerForContextMenu(listView);
 	}
 	
 	@Override
@@ -64,10 +65,12 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
-		final String projectName = (String) listView.getSelectedItem();
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		final String projectName = (String) listView.getItemAtPosition(info.position);
 		
 		switch(item.getItemId()) {
 		case R.id.projects_remove:
+			removeProject(projectName);
 			break;
 		
 		default:
@@ -75,6 +78,11 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		}
 		
 		return true;
+	}
+	
+	private void removeProject(String name) {
+		ProjectController.deleteProject(name, this);
+		refresh();
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 package com.hdweiss.codemap.data;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.text.SpannableString;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
@@ -25,11 +27,17 @@ public class ProjectController {
 	}
 	
 	private void loadProject(String name) {
+		if(TextUtils.isEmpty(name))
+			throw new IllegalArgumentException("Invalid project name");
+		
 		try {
 			this.project = Project.readProject(name, context);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Log.e("CodeMap", e.getLocalizedMessage());
 		}
+		
+		if(this.project == null)
+			this.project = new Project(name);
 	}
 	
 	public void init() {
@@ -108,6 +116,14 @@ public class ProjectController {
 		}
 	}
 
+	
+	public static void deleteProject(String projectName, Context context) {
+		Cscope cscope = new Cscope(context);
+		cscope.deleteNamefile(projectName);
+		cscope.deleteReffile(projectName);
+		File file = new File(Project.getProjectPath(projectName, context));
+		file.delete();
+	}
 	
 	public static ArrayList<String> getProjectsList(Context context) {
 		ArrayList<String> result = new ArrayList<String>();
