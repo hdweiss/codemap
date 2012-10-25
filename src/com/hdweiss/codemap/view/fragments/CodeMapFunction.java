@@ -34,7 +34,7 @@ public class CodeMapFunction extends LinearLayout {
 		
 		this.codeMapView = codeMapView;
 		
-		inflate(getContext(), R.layout.map_fragment, this);
+		inflate(getContext(), R.layout.codemap_fragment, this);
 		titleView = (TextView) findViewById(R.id.title);
 		sourceView = (TextView) findViewById(R.id.source);
 		ImageButton removeButton = (ImageButton) findViewById(R.id.remove);

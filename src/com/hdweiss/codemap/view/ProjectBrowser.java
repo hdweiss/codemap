@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -18,7 +19,7 @@ import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.view.codemap.CodeMapActivity;
 
-public class ProjectBrowser extends FragmentActivity implements OnItemClickListener, OnItemLongClickListener {
+public class ProjectBrowser extends FragmentActivity implements OnItemClickListener {
 
 	private ListView listView;
 	
@@ -29,6 +30,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
         
         this.listView = (ListView) findViewById(R.id.projects_list);
         listView.setOnItemClickListener(this);
+        listView.setOnCreateContextMenuListener(this);
 	}
 	
 	@Override
@@ -53,15 +55,32 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 	}
 	
 	
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		return false;
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		getMenuInflater().inflate(R.menu.projects_context, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		final String projectName = (String) listView.getSelectedItem();
+		
+		switch(item.getItemId()) {
+		case R.id.projects_remove:
+			break;
+		
+		default:
+			return super.onContextItemSelected(item);
+		}
+		
+		return true;
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
-		getMenuInflater().inflate(R.menu.projects_browser, menu);
+		getMenuInflater().inflate(R.menu.projects, menu);
 		return true;
 	}
 
@@ -76,6 +95,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		}
 		return true;
 	}
+	
 	
 	public void startProjectWizard() {
 		ProjectWizard projectWizard = new ProjectWizard();
