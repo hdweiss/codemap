@@ -45,7 +45,7 @@ public class JGitWrapper {
 			cloneRepo();
 	}
 	
-    private void cloneRepo() {    	
+    private void cloneRepo() {
     	GitInfo info = new GitInfo(project);
     	new CloneRepoTask().execute(info);
     }

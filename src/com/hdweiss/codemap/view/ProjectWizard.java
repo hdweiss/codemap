@@ -17,6 +17,8 @@ import com.hdweiss.codemap.data.Project;
 
 public class ProjectWizard extends DialogFragment {
 
+	private Project project;	
+	
 	private EditText nameView;
 	private EditText urlView;
 	
@@ -36,9 +38,19 @@ public class ProjectWizard extends DialogFragment {
 		Button cancelButton = (Button) view.findViewById(R.id.wizard_cancel);
 		cancelButton.setOnClickListener(cancelClick);
 
+		setup();
 		return view;
 	}
 
+	private void setup() {
+		nameView.setText(project.getName());
+		urlView.setText(project.getUrl());
+	}
+	
+	public void setProject(Project project) {
+		this.project = project;
+	}
+	
 	public Project saveProject() {
 		final String name = nameView.getText().toString();
 		final String url = urlView.getText().toString();

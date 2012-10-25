@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.view;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Intent;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.data.CodeMapApp;
+import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.view.codemap.CodeMapActivity;
 
@@ -78,6 +80,10 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 			updateProject(projectName);
 			break;
 			
+		case R.id.projects_edit:
+			editProject(projectName);
+			break;
+			
 		default:
 			return super.onContextItemSelected(item);
 		}
@@ -96,6 +102,20 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		controller.updateProject();
 		controller.buildIndex();
 	}
+	
+	public void editProject(String name) {
+		try {
+			Project project = Project.readProject(name, this);
+			
+			ProjectWizard projectWizard = new ProjectWizard();
+			projectWizard.setProject(project);
+			projectWizard.show(getFragmentManager(), "wizard");
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -115,7 +135,6 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		}
 		return true;
 	}
-	
 	
 	public void startProjectWizard() {
 		ProjectWizard projectWizard = new ProjectWizard();
