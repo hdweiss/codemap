@@ -18,11 +18,11 @@ public class CodeMapBrowserAdapter extends BaseExpandableListAdapter {
 		super();
 		this.context = context;
 		this.controller = controller;
-		files = controller.getFiles();
+		files = controller.getProjectFiles();
 	}
 	
 	public String getChild(int groupPosition, int childPosition) {
-		return controller.getSymbols(files[groupPosition]).get(childPosition);
+		return controller.getDeclarations(files[groupPosition]).get(childPosition);
 	}
 
 	public long getChildId(int groupPosition, int childPosition) {
@@ -45,7 +45,7 @@ public class CodeMapBrowserAdapter extends BaseExpandableListAdapter {
 	}
 
 	public int getChildrenCount(int groupPosition) {
-		return controller.getSymbols(files[groupPosition]).size();
+		return controller.getDeclarations(files[groupPosition]).size();
 	}
 
 	public String getGroup(int groupPosition) {

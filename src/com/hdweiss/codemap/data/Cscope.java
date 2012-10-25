@@ -114,7 +114,8 @@ public class Cscope {
 	}
 	
 	public FileInputStream getNamefileStream(String projectName) throws FileNotFoundException {
-		File namefile = new File(Project.getProjectDirectory(projectName, context) + File.separator + CSCOPE_NAMEFILE);
+		File namefile = new File(Project.getProjectDirectory(projectName,
+				context) + File.separator + CSCOPE_NAMEFILE);
 		return new FileInputStream(namefile);
 	}
 	
@@ -153,6 +154,12 @@ public class Cscope {
 	private String getReffilePath(String projectName) {		
 		File directory = Project.getProjectDirectory(projectName, context);
 		return directory.getAbsolutePath() + File.separator + CSCOPE_REFFILE;
+	}
+	
+	public FileInputStream getReffileStream(String projectName) throws FileNotFoundException {
+		File namefile = new File(Project.getProjectDirectory(projectName,
+				context) + File.separator + CSCOPE_REFFILE);
+		return new FileInputStream(namefile);
 	}
 	
 	/******************/

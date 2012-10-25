@@ -48,6 +48,28 @@ public class Project implements Serializable {
 	public static String getFilename(String name) {
 		return name + ".project";
 	}
+
+	
+	public static String getConfigFilePath(String name, Context context) {
+		return context.getFileStreamPath(getFilename(name)).getAbsolutePath();
+	}
+	
+	public String getSourcePath(Context context) {
+		return Project.getSourcePath(name, context);
+	}
+	
+	public static String getSourcePath(String name, Context context) {
+		return context.getExternalCacheDir() + "/" + name;
+	}
+	
+	public File getProjectDirectory(Context context) {
+		return getProjectDirectory(name, context);
+	}
+	
+	public static File getProjectDirectory(String name, Context context) {
+		return context.getDir(name, Context.MODE_PRIVATE);
+	}
+	
 	
 	public void writeProject(Context context) throws IOException {
 		byte[] serializeObject = Utils.serializeObject(this);
@@ -68,23 +90,12 @@ public class Project implements Serializable {
 		return result;
 	}
 	
-	public static String getConfigFilePath(String name, Context context) {
-		return context.getFileStreamPath(getFilename(name)).getAbsolutePath();
-	}
-	
-	public String getSourcePath(Context context) {
-		return Project.getSourcePath(name, context);
-	}
-	
-	public static String getSourcePath(String name, Context context) {
-		return context.getExternalCacheDir() + "/" + name;
-	}
-	
-	public File getProjectDirectory(Context context) {
-		return getProjectDirectory(name, context);
-	}
-	
-	public static File getProjectDirectory(String name, Context context) {
-		return context.getDir(name, Context.MODE_PRIVATE);
+	public static void delete(String name, Context context) {
+		File projectDir = getProjectDirectory(name, context);
+		Utils.deleteRecursive(projectDir);		
+		new File(getConfigFilePath(name, context)).delete();
+		
+		File sourceDir = new File(getSourcePath(name, context));
+		Utils.deleteRecursive(sourceDir);
 	}
 }

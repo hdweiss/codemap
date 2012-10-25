@@ -92,7 +92,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 	}
 	
 	private void removeProject(String name) {
-		ProjectController.deleteProject(name, this);
+		Project.delete(name, this);
 		refresh();
 	}
 	

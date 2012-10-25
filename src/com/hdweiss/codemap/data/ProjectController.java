@@ -1,6 +1,5 @@
 package com.hdweiss.codemap.data;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
-import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 public class ProjectController {
@@ -28,7 +26,12 @@ public class ProjectController {
 		loadProject(name);
 	}
 	
-	private void loadProject(String name) {
+	
+/***************
+ * Project 
+ * ************/	
+	
+	public void loadProject(String name) {
 		if(TextUtils.isEmpty(name))
 			throw new IllegalArgumentException("Invalid project name");
 		
@@ -42,9 +45,33 @@ public class ProjectController {
 			this.project = new Project(name);
 	}
 	
-	public void buildIndex() {
-		cscope.generateNamefile(project);
-		cscope.generateReffile(project);
+	public static ArrayList<String> getProjectsList(Context context) {
+		ArrayList<String> result = new ArrayList<String>();
+				
+		String[] fileList = context.fileList();
+		
+		for(String filename: fileList) {
+			if(filename.endsWith(".project")) {
+				String projectName = filename.substring(0, filename.length()
+						- ".project".length());
+				result.add(projectName);
+			}
+		}
+
+		return result;
+	}	
+	
+	public String[] getProjectFiles() {
+		if(project.files != null)
+			return project.files;
+		
+		try {
+			this.project.files = cscope.getFiles(project);
+			return project.files;
+		} catch (FileNotFoundException e) {
+			Log.e("CodeMap", e.getStackTrace().toString());
+			return new String[0];
+		}
 	}
 	
 	public void updateProject() {
@@ -59,6 +86,30 @@ public class ProjectController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void buildIndex() {
+		cscope.generateNamefile(project);
+		cscope.generateReffile(project);
+	}
+
+	public ArrayList<String> getDeclarations(String filename) {
+		ArrayList<String> symbolList = project.symbols.get(filename);
+		if(symbolList != null)
+			return symbolList;
+		else {
+			ArrayList<String> declarations = cscope.getDeclarations(filename, project);
+			project.symbols.put(filename, declarations);
+			return declarations;
+		}
+	}
+	
+/***************
+ * View 
+ * ************/	
+	
+	public void setView(CodeMapView codeMapView) {
+		this.codeMapView = codeMapView;
 	}
 	
 	public void addFunctionView(String functionName) {
@@ -100,61 +151,6 @@ public class ProjectController {
 		}
 	}
 	
-	
-	public void setView(CodeMapView codeMapView) {
-		this.codeMapView = codeMapView;
-	}
-	
-	
-	public String[] getFiles() {
-		if(project.files != null)
-			return project.files;
-		
-		try {
-			this.project.files = cscope.getFiles(project);
-			return project.files;
-		} catch (FileNotFoundException e) {
-			Log.e("CodeMap", e.getStackTrace().toString());
-			return new String[0];
-		}
-	}
-	
-	public ArrayList<String> getSymbols(String filename) {
-		ArrayList<String> symbolList = project.symbols.get(filename);
-		if(symbolList != null)
-			return symbolList;
-		else {
-			ArrayList<String> declarations = cscope.getDeclarations(filename, project);
-			project.symbols.put(filename, declarations);
-			return declarations;
-		}
-	}
-
-	
-	public static void deleteProject(String projectName, Context context) {
-		File projectDir = Project.getProjectDirectory(projectName, context);
-		Utils.deleteRecursive(projectDir);		
-		new File(Project.getConfigFilePath(projectName, context)).delete();
-		
-		File sourceDir = new File(Project.getSourcePath(projectName, context));
-		Utils.deleteRecursive(sourceDir);
-	}
-	
-	public static ArrayList<String> getProjectsList(Context context) {
-		ArrayList<String> result = new ArrayList<String>();
-				
-		String[] fileList = context.fileList();
-		
-		for(String filename: fileList) {
-			if(filename.endsWith(".project")) {
-				String projectName = filename.substring(0, filename.length()
-						- ".project".length());
-				result.add(projectName);
-			}
-		}
-
-		return result;
-	}
 	
 	public void saveState() {
 		if(this.codeMapView == null)

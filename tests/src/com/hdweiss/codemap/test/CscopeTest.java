@@ -13,6 +13,7 @@ import android.test.AndroidTestCase;
 import com.hdweiss.codemap.data.Cscope;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.util.Utils;
 
 @SuppressLint("SdCardPath")
 public class CscopeTest extends AndroidTestCase {
@@ -41,6 +42,7 @@ public class CscopeTest extends AndroidTestCase {
 		super.tearDown();
 		cscope.deleteNamefile(PROJECT_NAME);
 		cscope.deleteReffile(PROJECT_NAME);
+		Utils.deleteRecursive(project.getProjectDirectory(context));
 	}
 
 	@Override

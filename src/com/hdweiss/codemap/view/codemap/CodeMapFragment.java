@@ -32,6 +32,8 @@ public class CodeMapFragment extends Fragment {
 		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
 		codeMapBrowser = (CodeMapBrowser) view.findViewById(R.id.codemap_browser);
 		
+		loadState();
+		
 		return view;
 	}
 
@@ -100,6 +102,10 @@ public class CodeMapFragment extends Fragment {
 	}
     
     public void saveState() {
+    	
+    }
+    
+    public void loadState() {
     	
     }
 }
