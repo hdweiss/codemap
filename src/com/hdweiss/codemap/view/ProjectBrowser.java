@@ -2,6 +2,7 @@ package com.hdweiss.codemap.view;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -15,6 +16,7 @@ import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.view.codemap.CodeMapActivity;
 
 public class ProjectBrowser extends FragmentActivity implements OnItemClickListener, OnItemLongClickListener {
 
@@ -27,10 +29,15 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
         
         this.listView = (ListView) findViewById(R.id.projects_list);
         listView.setOnItemClickListener(this);
-        refresh();
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		refresh();
 	}
 
-	private void refresh() {
+	public void refresh() {
 		ArrayList<String> projectsList = ProjectController.getProjectsList(this);
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_list_item_1, projectsList);
@@ -39,9 +46,13 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 
 	
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		listView.getAdapter().getItem(position);
+		String projectName = (String) listView.getAdapter().getItem(position);
+		Intent intent = new Intent(this, CodeMapActivity.class);
+		intent.putExtra(CodeMapActivity.PROJECT_NAME, projectName);
+		startActivity(intent);
 	}
-
+	
+	
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		return false;

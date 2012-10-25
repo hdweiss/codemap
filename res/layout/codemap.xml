@@ -1,37 +1,13 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <com.hdweiss.codemap.view.codemap.CodeMapView
-        android:id="@+id/codemap"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <fragment
+        android:id="@+id/codeMapFragment"
+        android:name="com.hdweiss.codemap.view.codemap.CodeMapFragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
-    <SlidingDrawer
-        android:id="@+id/drawer"
-        android:layout_width="400dp"
-        android:layout_height="1000dp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="bottom"
-        android:content="@+id/codemap_browser"
-        android:handle="@+id/handle"
-        android:orientation="horizontal" >
-
-        <ImageView
-            android:id="@+id/handle"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@android:drawable/ic_menu_share"
-            android:paddingRight="5dp" />
-
-        <com.hdweiss.codemap.view.CodeMapBrowser
-            android:id="@+id/codemap_browser"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:background="@drawable/codebrowser_bg" />
-    </SlidingDrawer>
-
-</RelativeLayout>
+</LinearLayout>

@@ -114,8 +114,11 @@ public class ProjectController {
 		String[] fileList = context.fileList();
 		
 		for(String filename: fileList) {
-			if(filename.endsWith(".project"))
-				result.add(filename);
+			if(filename.endsWith(".project")) {
+				String projectName = filename.substring(0, filename.length()
+						- ".project".length());
+				result.add(projectName);
+			}
 		}
 
 		return result;

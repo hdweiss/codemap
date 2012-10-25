@@ -28,7 +28,7 @@ public class CodeMapFragment extends Fragment {
 
 		setHasOptionsMenu(true);
 		
-		View view = inflater.inflate(R.layout.codemap, container, false);
+		View view = inflater.inflate(R.layout.codemap_view, container, false);
 		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
 		codeMapBrowser = (CodeMapBrowser) view.findViewById(R.id.codemap_browser);
 		

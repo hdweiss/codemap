@@ -56,4 +56,13 @@ public class Project implements Serializable {
 		Project result = (Project) Utils.deserializeObject(serializedObject);
 		return result;
 	}
+	
+	public static String getProjectPath(String name, Context context) {
+		return context.getExternalCacheDir() + name;
+	}
+	
+	public static Project createProject(String name, Context context) {
+		Project project = new Project(name, getProjectPath(name, context));
+		return project;
+	}
 }
