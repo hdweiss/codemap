@@ -51,16 +51,11 @@ public class Project implements Serializable {
 		return result;
 	}
 	
-	public static String getProjectPath(String name, Context context) {
+	public static String getConfigFilePath(String name, Context context) {
 		return context.getFileStreamPath(getFilename(name)).getAbsolutePath();
 	}
 	
 	public String getSourcePath(Context context) {
 		return context.getExternalCacheDir() + "/" + name;
-	}
-	
-	public static Project createProject(String name, Context context) {
-		Project project = new Project(name);
-		return project;
 	}
 }

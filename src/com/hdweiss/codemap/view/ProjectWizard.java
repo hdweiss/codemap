@@ -40,7 +40,7 @@ public class ProjectWizard extends DialogFragment {
 	public Project saveProject() {
 		final String name = nameView.getText().toString();
 		
-		Project project = Project.createProject(name, getActivity());
+		Project project = new Project(name);
 		
 		try {
 			project.writeProject(getActivity());

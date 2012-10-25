@@ -121,7 +121,7 @@ public class ProjectController {
 		Cscope cscope = new Cscope(context);
 		cscope.deleteNamefile(projectName);
 		cscope.deleteReffile(projectName);
-		File file = new File(Project.getProjectPath(projectName, context));
+		File file = new File(Project.getConfigFilePath(projectName, context));
 		file.delete();
 	}
 	
