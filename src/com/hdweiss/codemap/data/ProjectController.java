@@ -11,7 +11,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
-import com.hdweiss.codemap.view.ProjectItemView;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 public class ProjectController {
@@ -76,11 +75,11 @@ public class ProjectController {
 		}
 	}
 	
-	public void updateProject(ProjectItemView itemView) {
+	public void updateProject() {
 		if(project.isUrlValid()) {
 			try {
 				JGitWrapper jgit = new JGitWrapper(project, context);
-				jgit.update(this, itemView);
+				jgit.update(this);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}			

@@ -15,7 +15,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.hdweiss.codemap.view.ProjectItemView;
+import com.hdweiss.codemap.util.Utils;
 
 public class JGitWrapper {
 	
@@ -32,7 +32,7 @@ public class JGitWrapper {
 		git = new Git(localRepo);
 	}
 	
-	public void update(ProjectController controller, ProjectItemView itemView) {
+	public void update(ProjectController controller) {
 		this.controller = controller;
 		File sourceRepo = new File(project.getSourcePath(context));
 		
@@ -46,23 +46,24 @@ public class JGitWrapper {
 			.setDirectory(new File(project.getSourcePath(context)));
 	    }
 		
-		new GitTask(itemView).execute(command);
+		new GitTask(project.getName()).execute(command);
 	}
 
     
     private class GitTask extends AsyncTask<GitCommand<?>, Integer, Long> {
     	
-		private ProjectItemView itemView;
-		private String status = "";
+		private String projectName;
+		private String status;
 
-		public GitTask(ProjectItemView itemView) {
-			this.itemView = itemView;
-			itemView.beginUpdate();
+		public GitTask(String projectName) {
+			this.projectName = projectName;
 		}
 
 		@Override
 		protected Long doInBackground(GitCommand<?>... params) {
 			GitCommand<?> command = params[0];
+			
+			Utils.announceSyncStart(context, projectName);
 
 			if(command instanceof CloneCommand) {
 				((CloneCommand)command).setProgressMonitor(monitor);
@@ -91,9 +92,7 @@ public class JGitWrapper {
 			super.onProgressUpdate(values);
 			int progress = values[0];
 			
-			if(progress > -1)
-				itemView.setProgress(progress);
-			itemView.setStatus(status);
+			Utils.announceSyncUpdateProgress(context, projectName, progress, status);
 		}
 
 		@Override
@@ -101,11 +100,12 @@ public class JGitWrapper {
 			super.onPostExecute(result);
 			controller.buildIndex();
 			Toast.makeText(context, "Updated " + project.getName(), Toast.LENGTH_SHORT).show();
-			itemView.setProgress(100);
+			Utils.announceSyncDone(context, projectName);
 		}
 		
 		private ProgressMonitor monitor = new ProgressMonitor() {
 
+			private int progress = 0;
 			private int totalWork = 0;
 			private int workCompleted = 0;
 
@@ -125,7 +125,12 @@ public class JGitWrapper {
 			public void update(int completed) {
 				this.workCompleted += completed;
 				//Log.d("CodeMap", "completed: " + workCompleted + "/" + totalWork);
-				publishProgress(getProgress());
+				int newProgress = getProgress();
+				
+				if(this.progress != newProgress) {
+					this.progress = newProgress;
+					publishProgress(newProgress);
+				}
 			}
 
 			private int getProgress() {
@@ -134,7 +139,6 @@ public class JGitWrapper {
 				
 				final int taskWorkProgress = (int) ((100.0 / totalWork)
 						* workCompleted);
-				Log.d("CodeMap", "progress: " + taskWorkProgress);
 				return taskWorkProgress;
 			}
 

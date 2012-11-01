@@ -48,4 +48,8 @@ public class ProjectAdapter extends BaseAdapter {
 		
 		return view;
 	}
+
+	public int getItemPosition(String name) {
+		return data.indexOf(name);
+	}
 }

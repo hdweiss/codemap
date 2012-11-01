@@ -14,10 +14,14 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
+import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+
+import com.hdweiss.codemap.view.ProjectBrowser.SynchServiceReceiver;
 
 public class Utils {
 
@@ -147,5 +151,28 @@ public class Utils {
 			pos = 0;
 		}
 		spinner.setSelection(pos, true);
+	}
+	
+	
+	public static void announceSyncDone(Context context, String name) {
+		Intent intent = new Intent(SynchServiceReceiver.SYNC_UPDATE);
+		intent.putExtra(SynchServiceReceiver.SYNC_DONE, true);
+		intent.putExtra(SynchServiceReceiver.SYNC_NAME, name);
+		context.sendBroadcast(intent);
+	}
+
+	public static void announceSyncStart(Context context, String name) {
+		Intent intent = new Intent(SynchServiceReceiver.SYNC_UPDATE);
+		intent.putExtra(SynchServiceReceiver.SYNC_START, true);
+		intent.putExtra(SynchServiceReceiver.SYNC_NAME, name);
+		context.sendBroadcast(intent);
+	}
+
+	public static void announceSyncUpdateProgress(Context context, String name, int progress, String status) {
+		Intent intent = new Intent(SynchServiceReceiver.SYNC_UPDATE);
+		intent.putExtra(SynchServiceReceiver.SYNC_PROGRESS_UPDATE, progress);
+		intent.putExtra(SynchServiceReceiver.SYNC_NAME, name);
+		intent.putExtra(SynchServiceReceiver.SYNC_STATUS, status);
+		context.sendBroadcast(intent);
 	}
 }

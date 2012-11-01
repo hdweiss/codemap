@@ -3,7 +3,10 @@ package com.hdweiss.codemap.view;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.ContextMenu;
@@ -25,6 +28,7 @@ import com.hdweiss.codemap.view.codemap.CodeMapActivity;
 public class ProjectBrowser extends FragmentActivity implements OnItemClickListener {
 
 	private ListView listView;
+	private BroadcastReceiver syncReceiver;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,12 +38,22 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
         this.listView = (ListView) findViewById(R.id.projects_list);
         listView.setOnItemClickListener(this);
         registerForContextMenu(listView);
+        
+        this.syncReceiver = new SynchServiceReceiver();
+		registerReceiver(this.syncReceiver, new IntentFilter(
+				SynchServiceReceiver.SYNC_UPDATE));
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		refresh();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(this.syncReceiver);
+		super.onDestroy();
 	}
 
 	public void refresh() {
@@ -76,8 +90,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 			break;
 		
 		case R.id.projects_update:
-			ProjectItemView itemView = (ProjectItemView) listView.getChildAt(info.position);
-			updateProject(projectName, itemView);
+			updateProject(projectName);
 			break;
 			
 		case R.id.projects_edit:
@@ -96,9 +109,9 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		refresh();
 	}
 	
-	private void updateProject(String name, ProjectItemView itemView) {
+	private void updateProject(String name) {
 		ProjectController controller = CodeMapApp.get(this).getProjectController(name);
-		controller.updateProject(itemView);
+		controller.updateProject();
 	}
 	
 	public void editProject(String name) {
@@ -137,5 +150,38 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 	public void startProjectWizard() {
 		ProjectWizard projectWizard = new ProjectWizard();
 		projectWizard.show(getFragmentManager(), "wizard");
+	}
+	
+	public class SynchServiceReceiver extends BroadcastReceiver {
+		public static final String SYNC_UPDATE = "com.hdweiss.codemap.action.SYNC_UPDATE";
+		
+		public static final String SYNC_NAME = "sync_name";
+		public static final String SYNC_STATUS = "sync_status"; 
+		public static final String SYNC_START = "sync_start";
+		public static final String SYNC_DONE = "sync_done";
+		public static final String SYNC_PROGRESS_UPDATE = "sync_update";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean syncStart = intent.getBooleanExtra(SYNC_START, false);
+			boolean syncDone = intent.getBooleanExtra(SYNC_DONE, false);
+			int progress = intent.getIntExtra(SYNC_PROGRESS_UPDATE, -1);
+
+			String status = intent.getStringExtra(SYNC_STATUS);
+			String projectName = intent.getStringExtra(SYNC_NAME);
+			int position = ((ProjectAdapter)listView.getAdapter()).getItemPosition(projectName);
+			ProjectItemView itemView = (ProjectItemView) listView.getChildAt(position);
+
+			if(syncStart) {
+				itemView.beginUpdate();
+			} else if (syncDone) {
+				itemView.endUpdate();
+				
+			} else {
+				if(progress > -1)
+					itemView.setProgress(progress);
+				itemView.setStatus(status);
+			}
+		}
 	}
 }
