@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.Utils;
 
@@ -78,6 +79,9 @@ public class ProjectWizard extends DialogFragment {
 			Toast.makeText(getActivity(), "Error writing project",
 					Toast.LENGTH_LONG).show();
 		}
+		
+		CodeMapApp.get(getActivity()).removeProjectController(name);
+		
 		return project;
 	}
 	

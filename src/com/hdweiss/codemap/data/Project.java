@@ -42,6 +42,13 @@ public class Project implements Serializable {
 			return this.url;	
 	}
 	
+	public boolean isUrlValid() {
+		if(TextUtils.isEmpty(url))
+			return false;
+		else
+			return true;
+	}
+	
 	public void setUrl(String url) {
 		this.url = url;
 	}

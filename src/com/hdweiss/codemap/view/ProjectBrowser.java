@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
@@ -45,8 +44,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 
 	public void refresh() {
 		ArrayList<String> projectsList = ProjectController.getProjectsList(this);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, projectsList);
+		ProjectAdapter adapter = new ProjectAdapter(this, projectsList);
 		listView.setAdapter(adapter);
 	}
 
@@ -71,13 +69,15 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
 		final String projectName = (String) listView.getItemAtPosition(info.position);
 		
+		
 		switch(item.getItemId()) {
 		case R.id.projects_remove:
 			removeProject(projectName);
 			break;
 		
 		case R.id.projects_update:
-			updateProject(projectName);
+			ProjectItemView itemView = (ProjectItemView) listView.getChildAt(info.position);
+			updateProject(projectName, itemView);
 			break;
 			
 		case R.id.projects_edit:
@@ -96,11 +96,9 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		refresh();
 	}
 	
-	private void updateProject(String name) {
+	private void updateProject(String name, ProjectItemView itemView) {
 		ProjectController controller = CodeMapApp.get(this).getProjectController(name);
-		
-		controller.updateProject();
-		controller.buildIndex();
+		controller.updateProject(itemView);
 	}
 	
 	public void editProject(String name) {

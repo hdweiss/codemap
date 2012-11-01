@@ -4,20 +4,14 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.CanceledException;
-import org.eclipse.jgit.api.errors.DetachedHeadException;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.InvalidConfigurationException;
-import org.eclipse.jgit.api.errors.InvalidRemoteException;
-import org.eclipse.jgit.api.errors.NoHeadException;
-import org.eclipse.jgit.api.errors.RefNotFoundException;
-import org.eclipse.jgit.api.errors.TransportException;
-import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
+import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
+
+import com.hdweiss.codemap.view.ProjectItemView;
 
 public class JGitWrapper {
 	
@@ -35,19 +29,139 @@ public class JGitWrapper {
 		git = new Git(localRepo);
 	}
 	
-	public void update(ProjectController controller) {
+	public void update(ProjectController controller, ProjectItemView itemView) {
 		this.controller = controller;
 		File sourceRepo = new File(project.getSourcePath(context));
-		
-		if(sourceRepo.exists())
-			pull();
-		else
-			cloneRepo();
-	}
-	
-    private void cloneRepo() {
+
     	GitInfo info = new GitInfo(project);
-    	new CloneRepoTask().execute(info);
+		
+		if(sourceRepo.exists()) {
+	    	new PullRepoTask(itemView).execute(info);
+		}
+	    else
+	    	new CloneRepoTask(itemView).execute(info);
+	}
+
+    
+    private class CloneRepoTask extends AsyncTask<GitInfo, Integer, Long> {
+
+    	private ProjectItemView itemView;
+    	private String status = "";
+    	
+		public CloneRepoTask(ProjectItemView itemView) {
+			this.itemView = itemView;
+			itemView.startUpdate();
+		}
+
+		@Override
+		protected Long doInBackground(GitInfo... params) {
+			GitInfo gitInfo = params[0];
+			
+	        try {
+				Git.cloneRepository().setURI(gitInfo.remotePath)
+						.setDirectory(new File(gitInfo.localPath)).setProgressMonitor(new ProgressMonitor() {
+							
+							public void update(int arg0) {
+								publishProgress(arg0);
+							}
+							
+							public void start(int arg0) {
+								publishProgress(arg0);						
+							}
+							
+							public boolean isCancelled() {
+								return false;
+							}
+							
+							public void endTask() {						
+							}
+							
+							public void beginTask(String arg0, int arg1) {
+								status = arg0;
+								publishProgress(arg1);	
+							}
+						}).call();
+								
+			} catch (Exception e) {
+				status = e.getLocalizedMessage();
+				publishProgress(100);
+			}
+			
+			return 0L;
+		}
+		
+
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			itemView.setProgress(values[0]);
+			itemView.setStatus(status);
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			super.onPostExecute(result);
+			controller.buildIndex();
+			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
+		}
+    }
+    
+    private class PullRepoTask extends AsyncTask<GitInfo, Integer, Long> {
+    	
+		private ProjectItemView itemView;
+		private String status = "";
+
+		public PullRepoTask(ProjectItemView itemView) {
+			this.itemView = itemView;
+			itemView.startUpdate();
+		}
+
+		@Override
+		protected Long doInBackground(GitInfo... params) {
+			try {
+				git.pull().setProgressMonitor(new ProgressMonitor() {
+					
+					public void update(int arg0) {
+						publishProgress(arg0);
+					}
+					
+					public void start(int arg0) {
+						publishProgress(arg0);						
+					}
+					
+					public boolean isCancelled() {
+						return false;
+					}
+					
+					public void endTask() {						
+					}
+					
+					public void beginTask(String arg0, int arg1) {
+						status = arg0;
+						publishProgress(arg1);	
+					}
+				}).call();
+			} catch (Exception e) {
+				status = e.getLocalizedMessage();
+				publishProgress(100);
+			}
+			return 0L;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			itemView.setProgress(values[0]);
+			itemView.setStatus(status);
+		}
+
+		@Override
+		protected void onPostExecute(Long result) {
+			super.onPostExecute(result);
+			controller.buildIndex();
+			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
+		}
     }
     
     private class GitInfo {
@@ -59,112 +173,4 @@ public class JGitWrapper {
     		this.remotePath = project.getUrl();
     	}
     }
-    
-    private class CloneRepoTask extends AsyncTask<GitInfo, Integer, Long> {
-		@Override
-		protected Long doInBackground(GitInfo... params) {
-			GitInfo gitInfo = params[0];
-			
-	        try {
-				Git.cloneRepository().setURI(gitInfo.remotePath)
-						.setDirectory(new File(gitInfo.localPath)).call();
-				
-				int i = 2;
-				int count = 10;
-				
-				publishProgress((int) ((i / (float) count) * 100));				
-			} catch (InvalidRemoteException e) {
-				e.printStackTrace();
-			} catch (TransportException e) {
-				e.printStackTrace();
-			} catch (GitAPIException e) {
-				e.printStackTrace();
-			}
-			
-			return 0L;
-		}
-		
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			super.onProgressUpdate(values);
-			
-			int progress = values[0];
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-			super.onPostExecute(result);
-			controller.buildIndex();
-			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
-			
-		}
-    }
-    
-    private void pull() {
-    	GitInfo info = new GitInfo(project);
-    	new PullRepoTask().execute(info);
-    }
-    
-    private class PullRepoTask extends AsyncTask<GitInfo, Integer, Long> {
-		@Override
-		protected Long doInBackground(GitInfo... params) {
-			pull();
-
-			int i = 2;
-			int count = 10;
-
-			publishProgress((int) ((i / (float) count) * 100));
-
-			return 0L;
-		}
-		
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			super.onProgressUpdate(values);
-			
-			int progress = values[0];
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-			super.onPostExecute(result);
-			controller.buildIndex();
-			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
-			
-		}
-
-		private void pull() {
-			try {
-				git.pull().call();
-			} catch (WrongRepositoryStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DetachedHeadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InvalidRemoteException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CanceledException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (RefNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (NoHeadException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (TransportException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (GitAPIException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-    }
-    
 }

@@ -10,13 +10,14 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
+import com.hdweiss.codemap.view.ProjectItemView;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 public class ProjectController {
 	
 	private Context context;
 	
-	private Project project;
+	public Project project;
 	private CodeMapView codeMapView;	
 	private Cscope cscope;
 	
@@ -74,18 +75,17 @@ public class ProjectController {
 		}
 	}
 	
-	public void updateProject() {
-		if(TextUtils.isEmpty(project.getUrl())) {
-			Log.e("CodeMap", "Invalid url for project " + project.getUrl());
-			return;
+	public void updateProject(ProjectItemView itemView) {
+		if(project.isUrlValid()) {
+			try {
+				JGitWrapper jgit = new JGitWrapper(project, context);
+				jgit.update(this, itemView);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
 		}
-			
-		try {
-			JGitWrapper jgit = new JGitWrapper(project, context);
-			jgit.update(this);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		else
+			buildIndex();
 	}
 	
 	public void buildIndex() {
