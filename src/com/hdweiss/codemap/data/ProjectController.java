@@ -113,8 +113,28 @@ public class ProjectController {
 	
 	public void setView(CodeMapView codeMapView) {
 		this.codeMapView = codeMapView;
+		codeMapView.setController(this);
+		loadCodeMapState();
 	}
 	
+    public void loadCodeMapState() {
+    	try {
+			CodeMapState state = CodeMapState.readState(project.getName(), context);
+			codeMapView.setState(state);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+    
+    public void saveCodeMapState() {
+    	try {
+			codeMapView.getState().writeState(context);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    }
+	
+    
 	public void addFunctionView(String functionName) {
 		if(codeMapView != null)
 			codeMapView.createFunctionFragment(functionName);

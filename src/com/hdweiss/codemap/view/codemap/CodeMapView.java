@@ -14,6 +14,8 @@ import android.view.ScaleGestureDetector;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
+import com.hdweiss.codemap.data.CodeMapObject;
+import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
@@ -43,12 +45,32 @@ public class CodeMapView extends MyAbsoluteLayout {
 		setFocusable(false);
 	}
 	
-	private void initState() {
+	public void setState(CodeMapState state) {
+		for(CodeMapObject data: state.drawables) {
+			CodeMapFunction fragment = createFunctionFragment(data.name);
+			fragment.setPosition(data.point);
+			Log.d("CodeMap", data.toString());
+		}
+		
+		setScrollX(state.scrollX);
+		setScrollY(state.scrollY);
+		//setZoom(state.zoom, new CodeMapPoint());
+	}
+	
+	public CodeMapState getState() {
+		CodeMapState state = new CodeMapState(controller.project.getName());
+		
+		for(CodeMapFunction view: views)
+			state.drawables.add(new CodeMapObject(view.getName(), view.getPosition()));
+		
+		//state.zoom = zoom;
+		state.scrollX = getScrollX();
+		state.scrollY = getScrollY();
+		return state;
 	}
 	
 	public void setController(ProjectController controller) {
 		this.controller = controller;
-		initState();
 	}
 
 	

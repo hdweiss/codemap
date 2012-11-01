@@ -20,6 +20,7 @@ public class CodeMapFragment extends Fragment {
 	
 	private CodeMapView codeMapView;
 	private CodeMapBrowser codeMapBrowser;
+	private ProjectController controller;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -31,9 +32,7 @@ public class CodeMapFragment extends Fragment {
 		View view = inflater.inflate(R.layout.codemap_view, container, false);
 		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
 		codeMapBrowser = (CodeMapBrowser) view.findViewById(R.id.codemap_browser);
-		
-		loadState();
-		
+				
 		return view;
 	}
 
@@ -44,10 +43,9 @@ public class CodeMapFragment extends Fragment {
 		if(savedInstanceState != null)
 			restoreInstanceState(savedInstanceState);
 		
-		ProjectController controller = ((CodeMapActivity) getActivity()).getController();
-		controller.setView(codeMapView);
-		codeMapView.setController(controller);
+		this.controller = ((CodeMapActivity) getActivity()).getController();
 		codeMapBrowser.setController(controller);
+		controller.setView(codeMapView);
 	}
 	
 	public void restoreInstanceState(Bundle savedInstanceState) {
@@ -97,15 +95,7 @@ public class CodeMapFragment extends Fragment {
 
 	@Override
 	public void onDestroy() {
-		saveState();
+		controller.saveCodeMapState();
 		super.onDestroy();
 	}
-    
-    public void saveState() {
-    	
-    }
-    
-    public void loadState() {
-    	
-    }
 }

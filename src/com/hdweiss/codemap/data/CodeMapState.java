@@ -4,15 +4,22 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import android.content.Context;
 
 import com.hdweiss.codemap.util.Utils;
 
 public class CodeMapState implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 2L;
 	
-	private String projectName;
+	public String projectName;
+	public ArrayList<CodeMapObject> drawables = new ArrayList<CodeMapObject>();
+
+	public int scrollX = 0;
+	public int scrollY = 0;
+	public float zoom = 1;
+
 
 	public CodeMapState(String projectName) {
 		this.projectName = projectName;
@@ -20,6 +27,7 @@ public class CodeMapState implements Serializable {
 	
 	public void writeState(Context context) throws IOException {
 		byte[] serializeObject = Utils.serializeObject(this);
+		
 		FileOutputStream fos = context.openFileOutput(getFilename(projectName),
 				Context.MODE_PRIVATE);
 		fos.write(serializeObject);
@@ -40,4 +48,5 @@ public class CodeMapState implements Serializable {
 	private static String getFilename(String projectName) {
 		return projectName + ".state";
 	}
+
 }

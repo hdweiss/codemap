@@ -69,6 +69,11 @@ public class CodeMapFunction extends LinearLayout {
 		setX(point.x);
 		setY(point.y);
 	}
+	
+	public CodeMapPoint getPosition() {
+		Log.d("CodeMap", "getPosition():" + titleView.getText().toString() + " @ " + getX() + ":" + getY());
+		return new CodeMapPoint(getX(), getY());
+	}
 
 	public void setPositionCenter(CodeMapPoint point) {
 		float startX = point.x - (getWidth() / 2);
