@@ -48,7 +48,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 	public void setState(CodeMapState state) {
 		for(CodeMapObject data: state.drawables) {
 			CodeMapFunction fragment = createFunctionFragment(data.name);
-			fragment.setPosition(data.point);
+			fragment.setPosition(new CodeMapPoint(data.point));
 			Log.d("CodeMap", data.toString());
 		}
 		
