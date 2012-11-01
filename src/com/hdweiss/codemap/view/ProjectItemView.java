@@ -34,11 +34,12 @@ public class ProjectItemView extends LinearLayout {
 		urlView.setVisibility(VISIBLE);
 	}
 	
-	public void startUpdate() {
+	public void beginUpdate() {
 		statusView.setText("");
 		statusView.setVisibility(VISIBLE);
 		progressBar.setProgress(0);
 		progressBar.setVisibility(VISIBLE);
+		progressBar.setIndeterminate(true);
 	}
 	
 	public void endUpdate() {
@@ -51,6 +52,7 @@ public class ProjectItemView extends LinearLayout {
 	}
 
 	public void setProgress(int progress) {
+		progressBar.setIndeterminate(false);
 		progressBar.setProgress(progress);
 	}
 

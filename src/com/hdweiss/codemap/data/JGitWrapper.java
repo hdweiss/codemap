@@ -3,23 +3,26 @@ package com.hdweiss.codemap.data;
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.GitCommand;
+import org.eclipse.jgit.api.PullCommand;
 import org.eclipse.jgit.lib.ProgressMonitor;
 import org.eclipse.jgit.storage.file.FileRepository;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.view.ProjectItemView;
 
 public class JGitWrapper {
 	
-	private Project project;
-	private Git git;
 	private Context context;
+	private Git git;
 	
-	
+	private Project project;
 	private ProjectController controller;
 	
 	public JGitWrapper(Project project, Context context) throws IOException {
@@ -32,116 +35,50 @@ public class JGitWrapper {
 	public void update(ProjectController controller, ProjectItemView itemView) {
 		this.controller = controller;
 		File sourceRepo = new File(project.getSourcePath(context));
-
-    	GitInfo info = new GitInfo(project);
 		
+    	GitCommand<?> command;
+    	
 		if(sourceRepo.exists()) {
-	    	new PullRepoTask(itemView).execute(info);
+			command = git.pull();
 		}
-	    else
-	    	new CloneRepoTask(itemView).execute(info);
+	    else {
+	    	command = Git.cloneRepository().setURI(project.getUrl())
+			.setDirectory(new File(project.getSourcePath(context)));
+	    }
+		
+		new GitTask(itemView).execute(command);
 	}
 
     
-    private class CloneRepoTask extends AsyncTask<GitInfo, Integer, Long> {
-
-    	private ProjectItemView itemView;
-    	private String status = "";
-    	
-		public CloneRepoTask(ProjectItemView itemView) {
-			this.itemView = itemView;
-			itemView.startUpdate();
-		}
-
-		@Override
-		protected Long doInBackground(GitInfo... params) {
-			GitInfo gitInfo = params[0];
-			
-	        try {
-				Git.cloneRepository().setURI(gitInfo.remotePath)
-						.setDirectory(new File(gitInfo.localPath)).setProgressMonitor(new ProgressMonitor() {
-							
-							public void update(int arg0) {
-								publishProgress(arg0);
-							}
-							
-							public void start(int arg0) {
-								publishProgress(arg0);						
-							}
-							
-							public boolean isCancelled() {
-								return false;
-							}
-							
-							public void endTask() {						
-							}
-							
-							public void beginTask(String arg0, int arg1) {
-								status = arg0;
-								publishProgress(arg1);	
-							}
-						}).call();
-								
-			} catch (Exception e) {
-				status = e.getLocalizedMessage();
-				publishProgress(100);
-			}
-			
-			return 0L;
-		}
-		
-
-		
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			super.onProgressUpdate(values);
-			itemView.setProgress(values[0]);
-			itemView.setStatus(status);
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-			super.onPostExecute(result);
-			controller.buildIndex();
-			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
-		}
-    }
-    
-    private class PullRepoTask extends AsyncTask<GitInfo, Integer, Long> {
+    private class GitTask extends AsyncTask<GitCommand<?>, Integer, Long> {
     	
 		private ProjectItemView itemView;
 		private String status = "";
 
-		public PullRepoTask(ProjectItemView itemView) {
+		public GitTask(ProjectItemView itemView) {
 			this.itemView = itemView;
-			itemView.startUpdate();
+			itemView.beginUpdate();
 		}
 
 		@Override
-		protected Long doInBackground(GitInfo... params) {
+		protected Long doInBackground(GitCommand<?>... params) {
+			GitCommand<?> command = params[0];
+
+			if(command instanceof CloneCommand) {
+				((CloneCommand)command).setProgressMonitor(monitor);
+				status = "Cloning";
+			} else if(command instanceof PullCommand) {
+				((PullCommand)command).setProgressMonitor(monitor);
+				status = "Pulling";
+			} else {
+				throw new IllegalArgumentException(
+						"Coudln't attach progressMonitor to git command");
+			}
+			
+			publishProgress(-1);
+			
 			try {
-				git.pull().setProgressMonitor(new ProgressMonitor() {
-					
-					public void update(int arg0) {
-						publishProgress(arg0);
-					}
-					
-					public void start(int arg0) {
-						publishProgress(arg0);						
-					}
-					
-					public boolean isCancelled() {
-						return false;
-					}
-					
-					public void endTask() {						
-					}
-					
-					public void beginTask(String arg0, int arg1) {
-						status = arg0;
-						publishProgress(arg1);	
-					}
-				}).call();
+				command.call();
 			} catch (Exception e) {
 				status = e.getLocalizedMessage();
 				publishProgress(100);
@@ -152,7 +89,10 @@ public class JGitWrapper {
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
-			itemView.setProgress(values[0]);
+			int progress = values[0];
+			
+			if(progress > -1)
+				itemView.setProgress(progress);
 			itemView.setStatus(status);
 		}
 
@@ -160,17 +100,50 @@ public class JGitWrapper {
 		protected void onPostExecute(Long result) {
 			super.onPostExecute(result);
 			controller.buildIndex();
-			Toast.makeText(context, "Done updating", Toast.LENGTH_SHORT).show();
+			Toast.makeText(context, "Updated " + project.getName(), Toast.LENGTH_SHORT).show();
+			itemView.setProgress(100);
 		}
-    }
-    
-    private class GitInfo {
-    	public String localPath;
-    	public String remotePath;
-    	
-    	public GitInfo(Project project) {
-    		this.localPath = project.getSourcePath(context);
-    		this.remotePath = project.getUrl();
-    	}
+		
+		private ProgressMonitor monitor = new ProgressMonitor() {
+
+			private int totalWork = 0;
+			private int workCompleted = 0;
+
+			public void start(int totalTasks) {
+				Log.d("CodeMap", "total tasks: " + totalTasks);
+			}
+
+			public void beginTask(String title, int totalWork) {
+				Log.d("CodeMap", "starting: " + title + " : " + totalWork);
+
+				this.totalWork = totalWork;
+				this.workCompleted = 0;
+				status = title;
+				publishProgress(0);
+			}
+
+			public void update(int completed) {
+				this.workCompleted += completed;
+				//Log.d("CodeMap", "completed: " + workCompleted + "/" + totalWork);
+				publishProgress(getProgress());
+			}
+
+			private int getProgress() {
+				if(totalWork == 0)
+					return 0;
+				
+				final int taskWorkProgress = (int) ((100.0 / totalWork)
+						* workCompleted);
+				Log.d("CodeMap", "progress: " + taskWorkProgress);
+				return taskWorkProgress;
+			}
+
+			public void endTask() {
+			}
+
+			public boolean isCancelled() {
+				return false;
+			}
+		};
     }
 }

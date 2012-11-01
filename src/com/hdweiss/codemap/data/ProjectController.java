@@ -8,6 +8,7 @@ import android.content.Context;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.hdweiss.codemap.util.SyntaxHighlighter;
 import com.hdweiss.codemap.view.ProjectItemView;
@@ -84,8 +85,11 @@ public class ProjectController {
 				e.printStackTrace();
 			}			
 		}
-		else
+		else {
 			buildIndex();
+			Toast.makeText(context, "Updated " + project.getName(),
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public void buildIndex() {
