@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.data;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -48,5 +49,12 @@ public class CodeMapState implements Serializable {
 	private static String getFilename(String projectName) {
 		return projectName + ".state";
 	}
+	
+	private static String getFilePath(String projectName, Context context) {
+		return context.getFilesDir().getAbsolutePath() + File.separatorChar + getFilename(projectName);
+	}
 
+	public static void deleteState(String projectName, Context context) {
+		new File(getFilePath(projectName, context)).delete();
+	}
 }

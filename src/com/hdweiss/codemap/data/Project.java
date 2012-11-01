@@ -107,5 +107,7 @@ public class Project implements Serializable {
 		Utils.deleteRecursive(sourceDir);
 		
 		CodeMapApp.get((Activity) context).removeProjectController(name);
+		
+		CodeMapState.deleteState(name, context);
 	}
 }
