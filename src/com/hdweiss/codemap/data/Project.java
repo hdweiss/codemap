@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -97,5 +98,7 @@ public class Project implements Serializable {
 		
 		File sourceDir = new File(getSourcePath(name, context));
 		Utils.deleteRecursive(sourceDir);
+		
+		CodeMapApp.get((Activity) context).removeProjectController(name);
 	}
 }

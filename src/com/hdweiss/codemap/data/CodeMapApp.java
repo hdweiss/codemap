@@ -11,8 +11,7 @@ public class CodeMapApp extends Application {
 	private HashMap<String, ProjectController> controllers = new HashMap<String, ProjectController>();
 	
 	public ProjectController getProjectController(String projectName) {
-		if(TextUtils.isEmpty(projectName))
-			throw new IllegalArgumentException("Project name is invalid");
+		checkProjectName(projectName);
 		
 		ProjectController controller = controllers.get(projectName);
 		
@@ -22,6 +21,17 @@ public class CodeMapApp extends Application {
 		}
 		
 		return controller;
+	}
+	
+	public void removeProjectController(String projectName) {
+		checkProjectName(projectName);
+
+		controllers.remove(projectName);
+	}
+	
+	public void checkProjectName(String projectName) {
+		if(TextUtils.isEmpty(projectName))
+			throw new IllegalArgumentException("Project name is invalid");
 	}
 	
 	public static CodeMapApp get(Activity activity) {
