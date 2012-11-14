@@ -41,6 +41,8 @@ public class MyAbsoluteLayout extends ViewGroup {
 	private int mPaddingBottom;
 	private int mPaddingTop;
 	private int mPaddingLeft;
+	
+	private float mScaleFactor = 1;
 
 	public MyAbsoluteLayout(Context context) {
         super(context);
@@ -107,26 +109,58 @@ public class MyAbsoluteLayout extends ViewGroup {
     }
 
     @Override
-    protected void onLayout(boolean changed, int l, int t,
-            int r, int b) {
-        int count = getChildCount();
+	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+		int count = getChildCount();
 
-        for (int i = 0; i < count; i++) {
-            View child = getChildAt(i);
-            if (child.getVisibility() != GONE) {
+		for (int i = 0; i < count; i++) {
+			View child = getChildAt(i);
+			if (child.getVisibility() != GONE) {
 
-            	MyAbsoluteLayout.LayoutParams lp =
-                        (MyAbsoluteLayout.LayoutParams) child.getLayoutParams();
+				MyAbsoluteLayout.LayoutParams lp = (MyAbsoluteLayout.LayoutParams) child
+						.getLayoutParams();
 
-                int childLeft = mPaddingLeft + lp.x;
-                int childTop = mPaddingTop + lp.y;
-                child.layout(childLeft, childTop,
-                        childLeft + child.getMeasuredWidth(),
-                        childTop + child.getMeasuredHeight());
+				int childLeft = mPaddingLeft + lp.x;
+				int childTop = mPaddingTop + lp.y;
+				child.layout(
+						(int) ((float)childLeft * mScaleFactor),
+						(int) ((float)childTop * mScaleFactor),
+						(int) ((float)(childLeft + child.getMeasuredWidth()) * mScaleFactor),
+						(int) ((float)(childTop + child.getMeasuredHeight()) * mScaleFactor));
 
-            }
-        }
-    }
+			}
+		}
+	}
+    
+//    @Override
+//	protected void onLayout(boolean changed, int l, int t, int r, int b) {
+//		int count = getChildCount();
+//
+//		for (int i = 0; i < count; i++) {
+//			View child = getChildAt(i);
+//			if (child.getVisibility() != GONE) {
+//
+//				MyAbsoluteLayout.LayoutParams lp = (MyAbsoluteLayout.LayoutParams) child
+//						.getLayoutParams();
+//
+//				int childLeft = mPaddingLeft + lp.x;
+//				int childTop = mPaddingTop + lp.y;
+//				child.layout(childLeft, childTop,
+//						childLeft + child.getMeasuredWidth(),
+//						childTop + child.getMeasuredHeight());
+//
+//			}
+//		}
+//	}
+	
+	public float getZoom() {
+		return this.mScaleFactor;
+	}
+	
+	public void setZoom(float zoom, CodeMapPoint pivot) {
+		this.mScaleFactor = zoom;
+		invalidate();
+		requestLayout();
+	}
 
     @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {

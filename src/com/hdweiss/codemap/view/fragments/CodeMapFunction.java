@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.view.fragments;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -59,6 +60,55 @@ public class CodeMapFunction extends LinearLayout {
 		sourceView.setText(span);
 		sourceView.setLinksClickable(true);
 		sourceView.setMovementMethod(LinkMovementMethod.getInstance());
+	}
+	
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+
+		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
+		int heightSize = MeasureSpec.getSize(heightMeasureSpec);
+
+		float parentScale = ((CodeMapView) getParent()).getZoom();
+		
+		measureChildren(widthMeasureSpec, heightMeasureSpec);
+		
+		int chosenHeight, chosenWidth;
+		
+//		if (parentScale > 1.0f) {
+			chosenWidth = (int) (parentScale * (float)widthSize);
+			chosenHeight = (int) (parentScale * (float)heightSize);
+//		} 
+//		else 
+//		{
+//			chosenHeight = heightSize;
+//			chosenWidth = widthSize;
+//		}
+			
+	//	super.onMeasure((int)(widthMeasureSpec * parentScale), (int)(heightMeasureSpec * parentScale));
+//		chosenHeight = (int)((float)getMeasuredHeight() * parentScale);
+//		chosenWidth = (int)((float)getMeasuredWidth() * parentScale);
+		
+		measureChild(sourceView, widthMeasureSpec, heightMeasureSpec);
+		measureChild(titleView, widthMeasureSpec, heightMeasureSpec);
+		
+		
+		
+		Log.d("CodeMap", "Measured " + titleView.getText() + " to " + chosenWidth + "x" + chosenHeight);
+		setMeasuredDimension(chosenWidth, chosenHeight);
+	}
+	
+
+	@Override
+	protected void onDraw(Canvas canvas) {
+		float parentScale = ((CodeMapView) getParent()).getZoom();
+		
+		canvas.save(Canvas.MATRIX_SAVE_FLAG);
+	    canvas.scale(parentScale, parentScale);
+	    super.dispatchDraw(canvas);
+	    canvas.restore();	
 	}
 
 	public void openNewFragment(String url) {

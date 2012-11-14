@@ -3,7 +3,6 @@ package com.hdweiss.codemap.view.codemap;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.text.SpannableString;
 import android.util.AttributeSet;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
@@ -30,9 +28,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleDetector;
 	private Scroller scroller;
-	
-	private float zoom = 1;
-	
+		
 	private ArrayList<CodeMapFunction> views = new ArrayList<CodeMapFunction>();
 	private ProjectController controller;
 
@@ -75,22 +71,22 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 
 	
-	public float getZoom() {
-		return this.zoom;
-	}
-	
-	public void setZoom(float zoom, CodeMapPoint pivot) {
-		this.zoom = zoom;
-		invalidate();
+//	public float getZoom() {
+//		return this.zoom;
+//	}
+//	
+//	public void setZoom(float zoom, CodeMapPoint pivot) {
+//		this.zoom = zoom;
+//		invalidate();
 //		requestLayout();
-	}
+//	}
 	
 	
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
-		event.setLocation(event.getX() / zoom, event.getY() / zoom);
-		return super.dispatchTouchEvent(event);
-	}
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent event) {
+//		event.setLocation(event.getX() * zoom, event.getY() * zoom);
+//		return super.dispatchTouchEvent(event);
+//	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -112,29 +108,14 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 
 	
-	@Override
-	public void dispatchDraw(Canvas canvas) {	    
-	    canvas.scale(zoom, zoom);
-	    canvas.save(Canvas.MATRIX_SAVE_FLAG);
-//	    canvas.translate(getScrollX(), getScrollY());
-	    super.dispatchDraw(canvas);
-	    canvas.restore();
-	}
-
 //	@Override
-//	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//		int count = getChildCount();
-//		for (int i = 0; i < count; i++) {
-//			View child = getChildAt(i);
-//			if (child.getVisibility() != GONE) {
-//				MyAbsoluteLayout.LayoutParams params = (MyAbsoluteLayout.LayoutParams) child
-//						.getLayoutParams();
-//				child.layout((int) (params.x * zoom), (int) (params.y * zoom),
-//						(int) ((params.x + child.getMeasuredWidth()) * zoom),
-//						(int) ((params.y + child.getMeasuredHeight()) * zoom));
-//			}
-//		}
+//	public void dispatchDraw(Canvas canvas) {	    
+//	    canvas.scale(zoom, zoom);
+//	    canvas.save(Canvas.MATRIX_SAVE_FLAG);
+//	    super.dispatchDraw(canvas);
+//	    canvas.restore();
 //	}
+	
 
 	public CodeMapFunction createFileFragment(String fileName) {
 		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
