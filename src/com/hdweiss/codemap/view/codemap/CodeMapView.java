@@ -18,19 +18,21 @@ import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.util.MyAbsoluteLayout;
+import com.hdweiss.codemap.util.AbsoluteZoomableLayout;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
+import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 import com.hdweiss.codemap.view.fragments.CodeMapImage;
+import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
-public class CodeMapView extends MyAbsoluteLayout {
+public class CodeMapView extends AbsoluteZoomableLayout {
 
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleDetector;
 	private Scroller scroller;
 		
-	private ArrayList<CodeMapFunction> views = new ArrayList<CodeMapFunction>();
+	private ArrayList<CodeMapItem> views = new ArrayList<CodeMapItem>();
 	private ProjectController controller;
 
 	public CodeMapView(Context context, AttributeSet attrs) {
@@ -50,7 +52,8 @@ public class CodeMapView extends MyAbsoluteLayout {
 			Log.d("CodeMap", data.toString());
 		}
 		
-		addView(new CodeMapImage(getContext()));
+		addMapItem(new CodeMapImage(getContext()));
+		addMapItem(new CodeMapAnnotation(getContext()));
 		
 		setScrollX(state.scrollX);
 		setScrollY(state.scrollY);
@@ -60,7 +63,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 	public CodeMapState getState() {
 		CodeMapState state = new CodeMapState(controller.project.getName());
 		
-		for(CodeMapFunction view: views)
+		for(CodeMapItem view: views)
 			state.drawables.add(new CodeMapObject(view.getName(), view.getPosition()));
 		
 		//state.zoom = zoom;
@@ -72,17 +75,6 @@ public class CodeMapView extends MyAbsoluteLayout {
 	public void setController(ProjectController controller) {
 		this.controller = controller;
 	}
-
-	
-//	public float getZoom() {
-//		return this.zoom;
-//	}
-//	
-//	public void setZoom(float zoom, CodeMapPoint pivot) {
-//		this.zoom = zoom;
-//		invalidate();
-//		requestLayout();
-//	}
 	
 	
 //	@Override
@@ -109,15 +101,6 @@ public class CodeMapView extends MyAbsoluteLayout {
 			scrollBy(-(int)dx, -(int)dy);	    
 		}
 	}
-
-	
-//	@Override
-//	public void dispatchDraw(Canvas canvas) {	    
-//	    canvas.scale(zoom, zoom);
-//	    canvas.save(Canvas.MATRIX_SAVE_FLAG);
-//	    super.dispatchDraw(canvas);
-//	    canvas.restore();
-//	}
 	
 
 	public CodeMapFunction createFileFragment(String fileName) {
@@ -126,7 +109,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
 				position, fileName, content, this);
-		addMapFragment(functionView);
+		addMapItem(functionView);
 		return functionView;
 	}
 
@@ -142,7 +125,7 @@ public class CodeMapView extends MyAbsoluteLayout {
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
 				position, functionName, content, this);
 		
-		addMapFragment(functionView);
+		addMapItem(functionView);
 		return functionView;
 	}
 	
@@ -156,14 +139,14 @@ public class CodeMapView extends MyAbsoluteLayout {
 	}
 	
 	
-	public void addMapFragment(CodeMapFunction function) {
-		addView(function);
-		views.add(function);
-		moveMapFragmentToEmptyPosition(function);
+	public void addMapItem(CodeMapItem item) {
+		addView(item);
+		views.add(item);
+		moveMapItemToEmptyPosition(item);
 	}
 	
-	public boolean moveMapFragmentToEmptyPosition(CodeMapFunction function) {
-		Rect rect = function.getBounds();
+	public boolean moveMapItemToEmptyPosition(CodeMapItem item) {
+		Rect rect = item.getBounds();
 		rect.bottom += 1;
 		rect.right += 1;
 		final int offset = 5;
@@ -171,10 +154,10 @@ public class CodeMapView extends MyAbsoluteLayout {
 		boolean foundEmpty = false;
 		while (foundEmpty == false) {
 			foundEmpty = true;
-			for (CodeMapFunction view : views) {
-				Log.d("CodeMap", "Comparing " + function.getBounds().toString() + " " + view.getBounds().toString());
-				if (view != function && Rect.intersects(view.getBounds(), rect)) {
-					Log.d("CodeMap", function.getName() + " collieded with " + view.getName());
+			for (CodeMapItem view : views) {
+				Log.d("CodeMap", "Comparing " + item.getBounds().toString() + " " + view.getBounds().toString());
+				if (view != item && Rect.intersects(view.getBounds(), rect)) {
+					Log.d("CodeMap", item.getName() + " collieded with " + view.getName());
 					int height = rect.bottom - rect.top;
 					rect.top = view.getBounds().bottom + offset;
 					rect.bottom = rect.top + height;
@@ -184,14 +167,14 @@ public class CodeMapView extends MyAbsoluteLayout {
 			}
 		}
 		
-		function.setX(rect.left);
-		function.setY(rect.top);
+		item.setX(rect.left);
+		item.setY(rect.top);
 		return true;
 	}
 	
-	public CodeMapFunction getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {
+	public CodeMapItem getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {
 		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
-		for (CodeMapFunction view : views) {
+		for (CodeMapItem view : views) {
 			if (view.contains(point))
 				return view;
 		}

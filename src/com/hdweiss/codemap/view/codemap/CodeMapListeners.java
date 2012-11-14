@@ -7,12 +7,12 @@ import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
-import com.hdweiss.codemap.view.fragments.CodeMapFunction;
+import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
 public class CodeMapListeners {
 	
 	public static class CodeMapGestureListener implements OnGestureListener {
-		private CodeMapFunction selectedDrawable = null;
+		private CodeMapItem selectedDrawable = null;
 		private CodeMapView codeMapView;
 		private Scroller scroller;
 		

@@ -36,7 +36,7 @@ import com.hdweiss.codemap.R;
  * android.R.styleable#View View Attributes}</p>
  */
 @RemoteView
-public class MyAbsoluteLayout extends ViewGroup {
+public class AbsoluteZoomableLayout extends ViewGroup {
     private int mPaddingRight;
 	private int mPaddingBottom;
 	private int mPaddingTop;
@@ -44,15 +44,15 @@ public class MyAbsoluteLayout extends ViewGroup {
 	
 	private float mScaleFactor = 1;
 
-	public MyAbsoluteLayout(Context context) {
+	public AbsoluteZoomableLayout(Context context) {
         super(context);
     }
 
-    public MyAbsoluteLayout(Context context, AttributeSet attrs) {
+    public AbsoluteZoomableLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public MyAbsoluteLayout(Context context, AttributeSet attrs,
+    public AbsoluteZoomableLayout(Context context, AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -74,8 +74,8 @@ public class MyAbsoluteLayout extends ViewGroup {
                 int childRight;
                 int childBottom;
 
-                MyAbsoluteLayout.LayoutParams lp
-                        = (MyAbsoluteLayout.LayoutParams) child.getLayoutParams();
+                AbsoluteZoomableLayout.LayoutParams lp
+                        = (AbsoluteZoomableLayout.LayoutParams) child.getLayoutParams();
 
                 childRight = lp.x + child.getMeasuredWidth();
                 childBottom = lp.y + child.getMeasuredHeight();
@@ -116,7 +116,7 @@ public class MyAbsoluteLayout extends ViewGroup {
 			View child = getChildAt(i);
 			if (child.getVisibility() != GONE) {
 
-				MyAbsoluteLayout.LayoutParams lp = (MyAbsoluteLayout.LayoutParams) child
+				AbsoluteZoomableLayout.LayoutParams lp = (AbsoluteZoomableLayout.LayoutParams) child
 						.getLayoutParams();
 
 				int childLeft = mPaddingLeft + lp.x;
@@ -164,13 +164,13 @@ public class MyAbsoluteLayout extends ViewGroup {
 
     @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new MyAbsoluteLayout.LayoutParams(getContext(), attrs);
+        return new AbsoluteZoomableLayout.LayoutParams(getContext(), attrs);
     }
 
     // Override to allow type-checking of LayoutParams. 
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof MyAbsoluteLayout.LayoutParams;
+        return p instanceof AbsoluteZoomableLayout.LayoutParams;
     }
 
     @Override
