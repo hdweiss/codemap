@@ -22,6 +22,7 @@ import com.hdweiss.codemap.util.MyAbsoluteLayout;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
+import com.hdweiss.codemap.view.fragments.CodeMapImage;
 
 public class CodeMapView extends MyAbsoluteLayout {
 
@@ -48,6 +49,8 @@ public class CodeMapView extends MyAbsoluteLayout {
 			fragment.setPosition(new CodeMapPoint(data.point));
 			Log.d("CodeMap", data.toString());
 		}
+		
+		addView(new CodeMapImage(getContext()));
 		
 		setScrollX(state.scrollX);
 		setScrollY(state.scrollY);
