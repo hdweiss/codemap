@@ -76,12 +76,6 @@ public class CodeMapView extends AbsoluteZoomableLayout {
 		this.controller = controller;
 	}
 	
-	
-//	@Override
-//	public boolean dispatchTouchEvent(MotionEvent event) {
-//		event.setLocation(event.getX() * zoom, event.getY() * zoom);
-//		return super.dispatchTouchEvent(event);
-//	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {

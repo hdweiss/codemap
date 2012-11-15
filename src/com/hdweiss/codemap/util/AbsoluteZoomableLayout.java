@@ -19,8 +19,11 @@ package com.hdweiss.codemap.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RemoteViews.RemoteView;
 
 import com.hdweiss.codemap.R;
@@ -131,6 +134,7 @@ public class AbsoluteZoomableLayout extends ViewGroup {
 		}
 	}
     
+    
 //    @Override
 //	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 //		int count = getChildCount();
@@ -152,6 +156,13 @@ public class AbsoluteZoomableLayout extends ViewGroup {
 //		}
 //	}
 	
+	
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		//event.setLocation(event.getX() * this.mScaleFactor, event.getY() * this.mScaleFactor);
+		return super.dispatchTouchEvent(event);
+	}
+
 	public float getZoom() {
 		return this.mScaleFactor;
 	}

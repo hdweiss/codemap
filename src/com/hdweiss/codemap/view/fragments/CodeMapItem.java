@@ -1,11 +1,11 @@
 package com.hdweiss.codemap.view.fragments;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -27,6 +27,18 @@ public abstract class CodeMapItem extends LinearLayout {
 	
 	public CodeMapItem(Context context, AttributeSet attrs, String name) {
 		super(context, attrs);
+		
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				LinearLayout.LayoutParams.WRAP_CONTENT,
+				LinearLayout.LayoutParams.WRAP_CONTENT);
+		setLayoutParams(params);
+		
+		setOrientation(VERTICAL);
+		setBackgroundResource(R.drawable.codebrowser_bg);
+		setPadding(5, 5, 5, 5);
+		
+		
+		inflate(context, R.layout.codemap_item, this);
 		
 		titleView = (TextView) findViewById(R.id.title);
 		titleView.setText(name);
@@ -86,51 +98,71 @@ public abstract class CodeMapItem extends LinearLayout {
 			return false;
 	}
 
-//	@Override
-//	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 //		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
 //		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 //
 //		int heightMode = MeasureSpec.getMode(heightMeasureSpec);
 //		int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-//
-//		float parentScale = ((CodeMapView) getParent()).getZoom();
-//		
-//		measureChildren(widthMeasureSpec, heightMeasureSpec);
-//		
-//		int chosenHeight, chosenWidth;
-//		
-////		if (parentScale > 1.0f) {
-//			chosenWidth = (int) (parentScale * (float)widthSize);
-//			chosenHeight = (int) (parentScale * (float)heightSize);
-////		} 
-////		else 
-////		{
-////			chosenHeight = heightSize;
-////			chosenWidth = widthSize;
-////		}
-//			
-//	//	super.onMeasure((int)(widthMeasureSpec * parentScale), (int)(heightMeasureSpec * parentScale));
-////		chosenHeight = (int)((float)getMeasuredHeight() * parentScale);
-////		chosenWidth = (int)((float)getMeasuredWidth() * parentScale);
-//				
-//		
-//		Log.d("CodeMap", "Measured " + titleView.getText() + " to " + chosenWidth + "x" + chosenHeight);
-//		setMeasuredDimension(chosenWidth, chosenHeight);
-//	}
-	
 
-	@Override
-	protected void onDraw(Canvas canvas) {
 		float parentScale = ((CodeMapView) getParent()).getZoom();
 		
-		canvas.save(Canvas.MATRIX_SAVE_FLAG);
-	    canvas.scale(parentScale, parentScale);
-	    super.dispatchDraw(canvas);
-	    canvas.restore();	
+		measureChildren(widthMeasureSpec, heightMeasureSpec);
+		
+		int chosenHeight = 0, chosenWidth = 0;
+		
+		for(int i = 0; i < getChildCount(); i++) {
+			View child = getChildAt(i);
+			
+			chosenHeight += child.getMeasuredHeight();
+			chosenWidth += child.getMeasuredWidth();
+		}
+		
+		chosenHeight *= parentScale;
+		chosenWidth *= parentScale;
+		
+//		if (parentScale > 1.0f) {
+//			chosenWidth = (int) (parentScale * (float)widthSize);
+//			chosenHeight = (int) (parentScale * (float)heightSize);
+//		} 
+//		else 
+//		{
+//			chosenHeight = heightSize;
+//			chosenWidth = widthSize;
+//		}
+			
+	//	super.onMeasure((int)(widthMeasureSpec * parentScale), (int)(heightMeasureSpec * parentScale));
+//		chosenHeight = (int)((float)getMeasuredHeight() * parentScale);
+//		chosenWidth = (int)((float)getMeasuredWidth() * parentScale);
+				
+		
+		Log.d("CodeMap", "Measured " + titleView.getText() + " to " + chosenWidth + "x" + chosenHeight);
+		setMeasuredDimension(chosenWidth, chosenHeight);
 	}
+
+
+//	@Override
+//	protected void onDraw(Canvas canvas) {
+//		float parentScale = ((CodeMapView) getParent()).getZoom();
+//		
+//	    canvas.scale(parentScale, parentScale);
+//	    canvas.save(Canvas.MATRIX_SAVE_FLAG);
+//	    super.dispatchDraw(canvas);
+//	    canvas.restore();
+//	}
 	
 	
+	
+	
+	@Override
+	public ViewParent invalidateChildInParent(int[] location, Rect dirty) {
+		
+		return super.invalidateChildInParent(location, dirty);
+	}
+
+
 	public void remove() {
 		//codeMapView.remove(this);
 	}
