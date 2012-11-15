@@ -54,7 +54,7 @@ public class CodeMapFragment extends Fragment {
 			int scrollX = savedInstanceState.getInt(SCROLL_X);
 			int scrollY = savedInstanceState.getInt(SCROLL_Y);
 
-			codeMapView.setZoom(zoom, new CodeMapPoint(0, 0));
+			codeMapView.setScaleFactor(zoom, new CodeMapPoint(0, 0));
 			codeMapView.setScrollX(scrollX);
 			codeMapView.setScrollY(scrollY);
 		}
@@ -63,7 +63,7 @@ public class CodeMapFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putFloat(ZOOM, codeMapView.getZoom());
+		outState.putFloat(ZOOM, codeMapView.getScaleFactor());
 		outState.putInt(SCROLL_X, codeMapView.getScrollX());
 		outState.putInt(SCROLL_Y, codeMapView.getScrollY());
 	}
@@ -84,7 +84,7 @@ public class CodeMapFragment extends Fragment {
 			return true;
 			
 		case R.id.codemap_resetZoom:
-			codeMapView.setZoom(1, new CodeMapPoint(0,0));
+			codeMapView.setScaleFactor(1, new CodeMapPoint(0,0));
 			return true;
 			
 		default:

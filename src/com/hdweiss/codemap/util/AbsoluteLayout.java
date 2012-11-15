@@ -19,11 +19,8 @@ package com.hdweiss.codemap.util;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
-import android.view.Gravity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RemoteViews.RemoteView;
 
 import com.hdweiss.codemap.R;
@@ -39,23 +36,21 @@ import com.hdweiss.codemap.R;
  * android.R.styleable#View View Attributes}</p>
  */
 @RemoteView
-public class AbsoluteZoomableLayout extends ViewGroup {
+public class AbsoluteLayout extends ViewGroup {
     private int mPaddingRight;
 	private int mPaddingBottom;
 	private int mPaddingTop;
 	private int mPaddingLeft;
 	
-	private float mScaleFactor = 1;
-
-	public AbsoluteZoomableLayout(Context context) {
+	public AbsoluteLayout(Context context) {
         super(context);
     }
 
-    public AbsoluteZoomableLayout(Context context, AttributeSet attrs) {
+    public AbsoluteLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AbsoluteZoomableLayout(Context context, AttributeSet attrs,
+    public AbsoluteLayout(Context context, AttributeSet attrs,
             int defStyle) {
         super(context, attrs, defStyle);
     }
@@ -77,8 +72,8 @@ public class AbsoluteZoomableLayout extends ViewGroup {
                 int childRight;
                 int childBottom;
 
-                AbsoluteZoomableLayout.LayoutParams lp
-                        = (AbsoluteZoomableLayout.LayoutParams) child.getLayoutParams();
+                AbsoluteLayout.LayoutParams lp
+                        = (AbsoluteLayout.LayoutParams) child.getLayoutParams();
 
                 childRight = lp.x + child.getMeasuredWidth();
                 childBottom = lp.y + child.getMeasuredHeight();
@@ -110,7 +105,8 @@ public class AbsoluteZoomableLayout extends ViewGroup {
     protected ViewGroup.LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 0, 0);
     }
-
+    
+    
     @Override
 	protected void onLayout(boolean changed, int l, int t, int r, int b) {
 		int count = getChildCount();
@@ -119,69 +115,29 @@ public class AbsoluteZoomableLayout extends ViewGroup {
 			View child = getChildAt(i);
 			if (child.getVisibility() != GONE) {
 
-				AbsoluteZoomableLayout.LayoutParams lp = (AbsoluteZoomableLayout.LayoutParams) child
+				AbsoluteLayout.LayoutParams lp = (AbsoluteLayout.LayoutParams) child
 						.getLayoutParams();
 
 				int childLeft = mPaddingLeft + lp.x;
 				int childTop = mPaddingTop + lp.y;
-				child.layout(
-						(int) ((float)childLeft * mScaleFactor),
-						(int) ((float)childTop * mScaleFactor),
-						(int) ((float)(childLeft + child.getMeasuredWidth()) * mScaleFactor),
-						(int) ((float)(childTop + child.getMeasuredHeight()) * mScaleFactor));
+				child.layout(childLeft, childTop,
+						childLeft + child.getMeasuredWidth(),
+						childTop + child.getMeasuredHeight());
 
 			}
 		}
 	}
-    
-    
-//    @Override
-//	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//		int count = getChildCount();
-//
-//		for (int i = 0; i < count; i++) {
-//			View child = getChildAt(i);
-//			if (child.getVisibility() != GONE) {
-//
-//				MyAbsoluteLayout.LayoutParams lp = (MyAbsoluteLayout.LayoutParams) child
-//						.getLayoutParams();
-//
-//				int childLeft = mPaddingLeft + lp.x;
-//				int childTop = mPaddingTop + lp.y;
-//				child.layout(childLeft, childTop,
-//						childLeft + child.getMeasuredWidth(),
-//						childTop + child.getMeasuredHeight());
-//
-//			}
-//		}
-//	}
 	
-	
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
-		//event.setLocation(event.getX() * this.mScaleFactor, event.getY() * this.mScaleFactor);
-		return super.dispatchTouchEvent(event);
-	}
-
-	public float getZoom() {
-		return this.mScaleFactor;
-	}
-	
-	public void setZoom(float zoom, CodeMapPoint pivot) {
-		this.mScaleFactor = zoom;
-		invalidate();
-		requestLayout();
-	}
 
     @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        return new AbsoluteZoomableLayout.LayoutParams(getContext(), attrs);
+        return new AbsoluteLayout.LayoutParams(getContext(), attrs);
     }
 
     // Override to allow type-checking of LayoutParams. 
     @Override
     protected boolean checkLayoutParams(ViewGroup.LayoutParams p) {
-        return p instanceof AbsoluteZoomableLayout.LayoutParams;
+        return p instanceof AbsoluteLayout.LayoutParams;
     }
 
     @Override

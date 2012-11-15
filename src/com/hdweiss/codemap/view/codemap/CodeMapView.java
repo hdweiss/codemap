@@ -18,7 +18,7 @@ import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.util.AbsoluteZoomableLayout;
+import com.hdweiss.codemap.util.ZoomableAbsoluteLayout;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
 import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
@@ -26,7 +26,7 @@ import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 import com.hdweiss.codemap.view.fragments.CodeMapImage;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
-public class CodeMapView extends AbsoluteZoomableLayout {
+public class CodeMapView extends ZoomableAbsoluteLayout {
 
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleDetector;
@@ -136,6 +136,7 @@ public class CodeMapView extends AbsoluteZoomableLayout {
 	public void addMapItem(CodeMapItem item) {
 		addView(item);
 		views.add(item);
+		item.setCodeMapView(this);
 		moveMapItemToEmptyPosition(item);
 	}
 	
@@ -180,9 +181,10 @@ public class CodeMapView extends AbsoluteZoomableLayout {
 		invalidate();
 	}
 	
-	public void remove(LinearLayout view) {
+	public void remove(CodeMapItem view) {
 		removeView(view);
 		views.remove(view);
+		view.setCodeMapView(null);
 	}
 	
 	public void clear() {

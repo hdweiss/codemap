@@ -16,8 +16,8 @@ public class CodeMapCursorPoint extends PointF {
 	
 	public CodeMapPoint getCodeMapPoint(CodeMapView codeMapView) {
 		CodeMapPoint transformedPoint = new CodeMapPoint();
-		transformedPoint.x = (x + codeMapView.getScrollX()) / codeMapView.getZoom();
-		transformedPoint.y = (y + codeMapView.getScrollY()) / codeMapView.getZoom();
+		transformedPoint.x = (x + codeMapView.getScrollX()) / codeMapView.getScaleFactor();
+		transformedPoint.y = (y + codeMapView.getScrollY()) / codeMapView.getScaleFactor();
 		return transformedPoint;
 	}
 }
