@@ -47,8 +47,8 @@ public class ZoomableAbsoluteLayout extends AbsoluteLayout {
 		return this.mScaleFactor;
 	}
 	
-	public void setScaleFactor(float zoom, CodeMapPoint pivot) {
-		this.mScaleFactor = zoom;
+	public void setScaleFactor(float scaleFactor, CodeMapPoint pivot) {
+		this.mScaleFactor = scaleFactor;
 		
 		for(int i = 0; i < getChildCount(); i++) {
 			View child = getChildAt(i);
