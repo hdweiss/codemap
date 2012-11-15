@@ -8,18 +8,23 @@
     android:orientation="vertical"
     android:padding="5dp" >
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:layout_height="wrap_content" >
 
-    <ImageButton
-        android:id="@+id/remove"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/title"
-        android:background="@android:drawable/ic_menu_close_clear_cancel" />
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ImageButton
+            android:id="@+id/remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@android:drawable/ic_menu_close_clear_cancel" />
+    </LinearLayout>
 
 </merge>

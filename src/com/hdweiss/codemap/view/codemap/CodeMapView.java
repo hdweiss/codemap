@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.widget.LinearLayout;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.data.CodeMapObject;

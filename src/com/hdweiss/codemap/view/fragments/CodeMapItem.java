@@ -55,7 +55,6 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 			}
 		});
 	}
-
 	
 
 	protected void setContentView(View view) {
