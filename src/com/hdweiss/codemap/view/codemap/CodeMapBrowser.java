@@ -4,19 +4,19 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ExpandableListView;
-import android.widget.ExpandableListView.OnChildClickListener;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 import com.hdweiss.codemap.data.ProjectController;
 
-public class CodeMapBrowser extends ExpandableListView implements OnChildClickListener, android.widget.AdapterView.OnItemLongClickListener {
+public class CodeMapBrowser extends ListView implements OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
 	private CodeMapBrowserAdapter adapter;
 	private ProjectController controller;
 
 	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setOnChildClickListener(this);
+		setOnItemClickListener(this);
 		setOnItemLongClickListener(this);
 	}
 
@@ -30,24 +30,27 @@ public class CodeMapBrowser extends ExpandableListView implements OnChildClickLi
 		setAdapter(adapter);
 	}
 
-	public boolean onChildClick(ExpandableListView parent, View v,
-			int groupPosition, int childPosition, long id) {
-		String item = adapter.getChild(groupPosition, childPosition);
-		controller.addFunctionView(item);
-		return true;
-	}
-
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-            int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-			//int childPosition = ExpandableListView.getPackedPositionChild(id);
+//        if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
+//            int groupPosition = ExpandableListView.getPackedPositionGroup(id);
+//			//int childPosition = ExpandableListView.getPackedPositionChild(id);
+//
+//            String filename = adapter.getGroup(groupPosition);
+//            controller.addFileView(filename);
+//            
+//            return true;
+//        }
 
-            String filename = adapter.getGroup(groupPosition);
-            controller.addFileView(filename);
-            
-            return true;
-        }
-
-        return false;
+        return true;
     }
+
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		boolean changed = adapter.collapseExpand(position);
+
+		if(changed == false) {
+			CodeMapBrowserItem item = adapter.getItem(position);
+			if(item.type == CodeMapBrowserItem.TYPE.SYMBOL)
+				controller.addFunctionView(item.name);
+		}
+	}
 }

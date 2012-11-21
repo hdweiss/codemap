@@ -70,6 +70,14 @@ public class Project implements Serializable {
 		return context.getExternalCacheDir() + "/" + name;
 	}
 	
+	public File getSourceDirectory(Context context) {
+		return getSourceDirectory(name, context);
+	}
+	
+	public static File getSourceDirectory(String name, Context context) {
+		return new File(getSourcePath(name, context));
+	}
+	
 	public File getProjectDirectory(Context context) {
 		return getProjectDirectory(name, context);
 	}

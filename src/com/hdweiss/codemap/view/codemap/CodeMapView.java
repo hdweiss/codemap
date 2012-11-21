@@ -20,9 +20,7 @@ import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.ZoomableAbsoluteLayout;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
-import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
-import com.hdweiss.codemap.view.fragments.CodeMapImage;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
 public class CodeMapView extends ZoomableAbsoluteLayout {
@@ -50,9 +48,6 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 			fragment.setPosition(new CodeMapPoint(data.point));
 			Log.d("CodeMap", data.toString());
 		}
-		
-		addMapItem(new CodeMapImage(getContext()));
-		addMapItem(new CodeMapAnnotation(getContext()));
 		
 		setScrollX(state.scrollX);
 		setScrollY(state.scrollY);

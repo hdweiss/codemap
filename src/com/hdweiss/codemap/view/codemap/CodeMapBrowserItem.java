@@ -1,31 +1,41 @@
 package com.hdweiss.codemap.view.codemap;
 
+import java.io.File;
+import java.util.ArrayList;
+
 import android.content.Context;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-public class CodeMapBrowserItem extends LinearLayout {
+import com.hdweiss.codemap.data.ProjectController;
 
-	private TextView textView;
+public class CodeMapBrowserItem {
+	public enum TYPE {DIRECTORY, FILE, SYMBOL};
 	
-	public CodeMapBrowserItem(Context context) {
-		super(context);
+	public String name = "";
+	public int level = 0;
+	public TYPE type = TYPE.FILE;
+	
+	public CodeMapBrowserItem(String name, int level, TYPE type) {
+		this.name = name;
+		this.level = level;
+		this.type = type;
+	}
+	
+	public ArrayList<CodeMapBrowserItem> getChildren(ProjectController controller, Context context) {
+		ArrayList<CodeMapBrowserItem> items = new ArrayList<CodeMapBrowserItem>();
+
+		File file = new File(controller.project.getSourcePath(context)
+				+ File.separator + this.name);
 		
-		this.textView = new TextView(getContext());
-		addView(textView);
-	}
-
-	public void setText(String text) {
-		this.textView.setText(text);
-	}
-	
-	public void setChild(boolean isChild) {
-		if (isChild) {
-			this.textView.setPadding(50, 5, 10, 5);
-			this.textView.setTextSize(14);
+		if(file.isDirectory()) {
+			for (String filename: file.list())
+				items.add(new CodeMapBrowserItem(this.name + File.separator + filename, this.level + 1, TYPE.FILE));
 		} else {
-			this.textView.setPadding(40, 5, 10, 5);
-			this.textView.setTextSize(15);
+			ArrayList<String> declarations = controller.getDeclarations(this.name);
+			
+			for(String declaration: declarations)
+				items.add(new CodeMapBrowserItem(declaration, this.level + 1, TYPE.SYMBOL));
 		}
+		
+		return items;
 	}
 }
