@@ -27,7 +27,7 @@
             android:background="@android:drawable/ic_menu_share"
             android:paddingRight="5dp" />
 
-        <com.hdweiss.codemap.view.codemap.CodeMapBrowser
+        <com.hdweiss.codemap.view.browser.CodeMapBrowser
             android:id="@+id/codemap_browser"
             android:layout_width="fill_parent"
             android:layout_height="0dp"

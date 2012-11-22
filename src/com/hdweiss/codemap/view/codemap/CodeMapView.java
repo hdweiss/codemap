@@ -2,8 +2,10 @@ package com.hdweiss.codemap.view.codemap;
 
 import java.util.ArrayList;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -42,16 +44,46 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		setFocusable(false);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setState(CodeMapState state) {
-		for(CodeMapObject data: state.drawables) {
-			CodeMapFunction fragment = createFunctionFragment(data.name);
-			fragment.setPosition(new CodeMapPoint(data.point));
-			Log.d("CodeMap", data.toString());
-		}
-		
+		new LoadState().execute(state.drawables);
 		setScrollX(state.scrollX);
 		setScrollY(state.scrollY);
 		//setZoom(state.zoom, new CodeMapPoint());
+	}
+
+	
+	private class LoadState extends AsyncTask<ArrayList<CodeMapObject>, CodeMapItem, Long> {
+		private ProgressDialog dialog;
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			
+			this.dialog = ProgressDialog.show(getContext(), "Loading",
+					"Loading state...");
+		}
+
+		protected Long doInBackground(ArrayList<CodeMapObject>... objects) {
+			ArrayList<CodeMapObject> items = objects[0];
+			
+			for (int i = 0; i < items.size(); i++) {
+				CodeMapFunction fragment = instatiateFunctionFragment(items.get(i).name, new CodeMapPoint(items.get(i).point));
+				//fragment.setPosition();
+				this.publishProgress(fragment);
+			}
+
+			return (long) 0;
+		}
+
+		protected void onProgressUpdate(CodeMapItem... progress) {
+			for(int i = 0; i < progress.length; i++)
+				addMapItem(progress[i]);
+		}
+
+		protected void onPostExecute(Long result) {
+			dialog.dismiss();
+		}
 	}
 	
 	public CodeMapState getState() {
@@ -107,12 +139,16 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		return createFunctionFragment(functionName, position);
 	}
 	
-	public CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
+	public CodeMapFunction instatiateFunctionFragment(String functionName, CodeMapPoint position) {
 		final SpannableString content = controller.getFunctionSource(functionName);
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
 				position, functionName, content, this);
-		
+		return functionView;
+	}
+	
+	public CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
+		CodeMapFunction functionView = instatiateFunctionFragment(functionName, position);
 		addMapItem(functionView);
 		return functionView;
 	}
