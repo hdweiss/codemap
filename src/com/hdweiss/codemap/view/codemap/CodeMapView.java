@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.text.SpannableString;
@@ -24,6 +25,7 @@ import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
 import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.fragments.CodeMapLink;
 
 public class CodeMapView extends ZoomableAbsoluteLayout {
 
@@ -32,6 +34,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	private Scroller scroller;
 		
 	private ArrayList<CodeMapItem> views = new ArrayList<CodeMapItem>();
+	private ArrayList<CodeMapLink> links = new ArrayList<CodeMapLink>();
 	private ProjectController controller;
 
 	public CodeMapView(Context context, AttributeSet attrs) {
@@ -41,6 +44,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		this.gestureDetector = new GestureDetector(getContext(), new CodeMapGestureListener(this, scroller));
 		this.scaleDetector = new ScaleGestureDetector(getContext(), new CodeMapScaleListener(this));
 		
+		setWillNotDraw(false);
 		setFocusable(false);
 	}
 	
@@ -154,12 +158,15 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 	
 
-	public CodeMapFunction openFragmentFromUrl(String url, CodeMapFunction codeMapFunction) {
+	public CodeMapItem openFragmentFromUrl(String url, CodeMapItem parent) {
 		CodeMapPoint position = new CodeMapPoint();
-		position.x = codeMapFunction.getX() + codeMapFunction.getWidth() + 30;
-		position.y = codeMapFunction.getY() + 20;
+		position.x = parent.getX() + parent.getWidth() + 30;
+		position.y = parent.getY() + 20;
 
-		return createFunctionFragment(url, position);
+		CodeMapItem item = createFunctionFragment(url, position);
+		links.add(new CodeMapLink(parent, item));
+		refresh();
+		return item;
 	}
 	
 	
@@ -180,7 +187,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		while (foundEmpty == false) {
 			foundEmpty = true;
 			for (CodeMapItem view : views) {
-				Log.d("CodeMap", "Comparing " + item.getBounds().toString() + " " + view.getBounds().toString());
+				//Log.d("CodeMap", "Comparing " + item.getBounds().toString() + " " + view.getBounds().toString());
 				if (view != item && Rect.intersects(view.getBounds(), rect)) {
 					Log.d("CodeMap", item.getName() + " collieded with " + view.getName());
 					int height = rect.bottom - rect.top;
@@ -205,8 +212,16 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		}
 		return null;
 	}
+
 	
-	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+
+		for(CodeMapLink link: links)
+			link.doDraw(canvas);
+	}
+
 	public void refresh() {
 		invalidate();
 	}

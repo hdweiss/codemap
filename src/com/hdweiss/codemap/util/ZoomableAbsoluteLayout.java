@@ -31,7 +31,6 @@ public class ZoomableAbsoluteLayout extends AbsoluteLayout {
 						(int) ((float)childTop * mScaleFactor),
 						(int) ((float)(childLeft + child.getMeasuredWidth()) * mScaleFactor),
 						(int) ((float)(childTop + child.getMeasuredHeight()) * mScaleFactor));
-
 			}
 		}
 	}

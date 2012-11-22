@@ -33,7 +33,7 @@ public class FunctionLinkSpan extends ClickableSpan {
 		}
 		
 		public void onClick() {
-			codeMapFunction.openNewFragment(url);
+			codeMapFunction.addChildFragment(url);
 		}
 	}
 	

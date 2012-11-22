@@ -46,7 +46,7 @@ public class CodeMapFunction extends CodeMapItem {
 		sourceView.setMovementMethod(LinkMovementMethod.getInstance());
 	}
 
-	public void openNewFragment(String url) {
+	public void addChildFragment(String url) {
 		this.codeMapView.openFragmentFromUrl(url, this);
 	}
 }

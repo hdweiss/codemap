@@ -3,7 +3,6 @@ package com.hdweiss.codemap.util;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
@@ -49,7 +48,7 @@ public class ZoomableLinearLayout extends LinearLayout {
 		chosenWidth += getPaddingLeft() + getPaddingRight();
 		chosenHeight +=  getPaddingBottom() + getPaddingTop();
 		
-		Log.d("CodeMap", "Measured to " + chosenWidth + "x" + chosenHeight);
+		//Log.d("CodeMap", "Measured to " + chosenWidth + "x" + chosenHeight);
 		setMeasuredDimension(chosenWidth, chosenHeight);
 	}
 

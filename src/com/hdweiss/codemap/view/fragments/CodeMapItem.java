@@ -3,7 +3,6 @@ package com.hdweiss.codemap.view.fragments;
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -21,7 +20,7 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 	
 	private View content;
 	private CodeMapView codeMapView;
-	
+		
 	public CodeMapItem(Context context, AttributeSet attrs) {
 		this(context, attrs, "");
 	}
@@ -100,13 +99,12 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 //				+ " < " + (getY() + getHeight()) + "]");
 		if (point.x >= getX() && point.x <= getX() + getWidth()
 				&& point.y >= getY() && point.y <= getY() + getHeight()) {
-			Log.d("CodeMap", "match!");
+			//Log.d("CodeMap", "match!");
 			return true;
 		}
 		else
 			return false;
 	}
-
 
 	public void remove() {
 		if(codeMapView != null)
