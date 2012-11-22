@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.browser;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,11 +95,10 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 		}
 
 		CodeMapBrowserItem item = getItem(position);
-		
-		File file = new File(projectDirectory.getAbsolutePath() + File.separator + item.name);
-		listItem.setDirectory(file.isDirectory());
-		
 		listItem.setItem(item);
+
+		File file = new File(projectDirectory.getAbsolutePath() + File.separator + item.name);
+		listItem.setDirectory(file.isDirectory());		
 		
 		return listItem;
 	}

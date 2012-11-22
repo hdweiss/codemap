@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.browser;
 
 import java.io.File;
 import java.util.ArrayList;

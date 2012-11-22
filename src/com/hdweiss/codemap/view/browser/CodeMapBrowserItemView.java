@@ -1,11 +1,11 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.browser;
 
 import android.content.Context;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hdweiss.codemap.R.color;
-import com.hdweiss.codemap.view.codemap.CodeMapBrowserItem.TYPE;
+import com.hdweiss.codemap.view.browser.CodeMapBrowserItem.TYPE;
 
 public class CodeMapBrowserItemView extends LinearLayout {
 
@@ -16,6 +16,7 @@ public class CodeMapBrowserItemView extends LinearLayout {
 		
 		this.textView = new TextView(getContext());
 		this.textView.setPadding(30, 5, 10, 5);
+		
 		addView(textView);
 	}
 
@@ -33,10 +34,10 @@ public class CodeMapBrowserItemView extends LinearLayout {
 		
 		switch(item.type) {
 		case SYMBOL:
-			this.textView.setTextColor(color.dark_blue);
+			this.textView.setTextColor(getResources().getColor(color.gray));
 			break;
 		default:
-			this.textView.setTextColor(color.black);
+			this.textView.setTextColor(getResources().getColor(color.black));
 			break;
 		}
 	}
@@ -44,7 +45,7 @@ public class CodeMapBrowserItemView extends LinearLayout {
 	public void setDirectory(boolean isDirectory) {
 		if (isDirectory) {
 			this.textView.setTextSize(15);
-			this.textView.setTextColor(color.blue);
+			this.textView.setTextColor(getResources().getColor(color.blue));
 		} else {
 			this.textView.setTextSize(14);
 		}

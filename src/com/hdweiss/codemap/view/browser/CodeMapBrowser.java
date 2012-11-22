@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.browser;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,6 +8,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.view.browser.CodeMapBrowserItem.TYPE;
 
 public class CodeMapBrowser extends ListView implements OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
@@ -31,17 +32,14 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//        if (ExpandableListView.getPackedPositionType(id) == ExpandableListView.PACKED_POSITION_TYPE_GROUP) {
-//            int groupPosition = ExpandableListView.getPackedPositionGroup(id);
-//			//int childPosition = ExpandableListView.getPackedPositionChild(id);
-//
-//            String filename = adapter.getGroup(groupPosition);
-//            controller.addFileView(filename);
-//            
-//            return true;
-//        }
-
-        return true;
+		CodeMapBrowserItem item = adapter.getItem(position);
+		
+		if(item.type == TYPE.FILE) {
+			controller.addFileView(item.name);
+			return true;
+		}
+		
+        return false;
     }
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
