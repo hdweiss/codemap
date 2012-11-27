@@ -7,34 +7,30 @@ import android.view.View;
 import com.hdweiss.codemap.util.SpanUtils.OnClickListener;
 import com.hdweiss.codemap.util.SpanUtils.SpanConverter;
 
-public class FunctionLinkSpan extends ClickableSpan {
+public class FunctionLinkSpan extends ClickableSpan implements OnClickListener {
 
-	private OnClickListener mListener;
+	private CodeMapFunction codeMapFunction;
+	private String url;
+	
+	private float yOffset;
 
-	public FunctionLinkSpan(OnClickListener listener) {
-		this.mListener = listener;
+	public FunctionLinkSpan(CodeMapFunction codeMapFunction, String url) {
+		this.codeMapFunction = codeMapFunction;
+		this.url = url;
 	}
+
+	public void setYOffset(float yOffset) {
+		this.yOffset = yOffset;
+	}
+
 
 	@Override
 	public void onClick(View widget) {
-		if (mListener != null)
-			mListener.onClick();
+		onClick();
 	}
-
 	
-	public static class SpanClickListener implements OnClickListener {
-
-		private CodeMapFunction codeMapFunction;
-		private String url;
-
-		public SpanClickListener (CodeMapFunction codeMapFunction, String url) {
-			this.codeMapFunction = codeMapFunction;
-			this.url = url;
-		}
-		
-		public void onClick() {
-			codeMapFunction.addChildFragment(url);
-		}
+	public void onClick() {
+		codeMapFunction.addChildFragment(url, yOffset);
 	}
 	
 	
@@ -48,9 +44,7 @@ public class FunctionLinkSpan extends ClickableSpan {
 		}
 
 		public FunctionLinkSpan convert(URLSpan span) {
-			SpanClickListener listener = new SpanClickListener(
-					codeMapFunction, span.getURL());
-			return (new FunctionLinkSpan(listener));
+			return (new FunctionLinkSpan(codeMapFunction, span.getURL()));
 		}
 	}
 }

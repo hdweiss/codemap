@@ -158,13 +158,13 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 	
 
-	public CodeMapItem openFragmentFromUrl(String url, CodeMapItem parent) {
+	public CodeMapItem openFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
 		CodeMapPoint position = new CodeMapPoint();
 		position.x = parent.getX() + parent.getWidth() + 30;
 		position.y = parent.getY() + 20;
 
 		CodeMapItem item = createFunctionFragment(url, position);
-		links.add(new CodeMapLink(parent, item));
+		links.add(new CodeMapLink(parent, item, yOffset + parent.getTitleViewOffset()));
 		refresh();
 		return item;
 	}
@@ -235,5 +235,6 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	public void clear() {
 		removeAllViews();
 		views.clear();
+		links.clear();
 	}
 }

@@ -7,17 +7,20 @@ public class CodeMapLink {
 
 	private CodeMapItem parent;
 	private CodeMapItem child;
+	
+	private float yOffset = 0;
 
-	public CodeMapLink(CodeMapItem parent, CodeMapItem child) {
+	public CodeMapLink(CodeMapItem parent, CodeMapItem child, float yOffset) {
 		this.parent = parent;
 		this.child = child;
+		this.yOffset = yOffset;
 	}
 	
 	public void doDraw(Canvas canvas) {
 		Paint paint = new Paint();
 		
 		float startX = parent.getX() + parent.getWidth();
-		float startY = parent.getY();
+		float startY = parent.getY() + yOffset;
 		
 		float endX = child.getX();
 		float endY = child.getY();

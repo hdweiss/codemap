@@ -114,4 +114,8 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 	public String getName() {
 		return this.titleView.getText().toString();
 	}
+	
+	public float getTitleViewOffset() {
+		return titleView.getHeight();
+	}
 }
