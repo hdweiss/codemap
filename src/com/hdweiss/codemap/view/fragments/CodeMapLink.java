@@ -2,6 +2,7 @@ package com.hdweiss.codemap.view.fragments;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 public class CodeMapLink {
 
@@ -14,6 +15,8 @@ public class CodeMapLink {
 		this.parent = parent;
 		this.child = child;
 		this.yOffset = yOffset;
+		
+		Log.d("CodeMap", "Added " + toString() + " : " + yOffset);
 	}
 	
 	public void doDraw(Canvas canvas) {
