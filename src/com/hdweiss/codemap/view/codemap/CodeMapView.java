@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.view.codemap;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -72,7 +73,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 			ArrayList<CodeMapObject> items = objects[0];
 			
 			for (int i = 0; i < items.size(); i++) {
-				CodeMapFunction fragment = instatiateFunctionFragment(items.get(i).name, new CodeMapPoint(items.get(i).point));
+				CodeMapFunction fragment = instantiateFunctionFragment(items.get(i).name, new CodeMapPoint(items.get(i).point));
 				//fragment.setPosition();
 				this.publishProgress(fragment);
 			}
@@ -143,7 +144,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		return createFunctionFragment(functionName, position);
 	}
 	
-	public CodeMapFunction instatiateFunctionFragment(String functionName, CodeMapPoint position) {
+	public CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
 		final SpannableString content = controller.getFunctionSource(functionName);
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
@@ -152,7 +153,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 	
 	public CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
-		CodeMapFunction functionView = instatiateFunctionFragment(functionName, position);
+		CodeMapFunction functionView = instantiateFunctionFragment(functionName, position);
 		addMapItem(functionView);
 		return functionView;
 	}
@@ -226,10 +227,17 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		invalidate();
 	}
 	
-	public void remove(CodeMapItem view) {
-		removeView(view);
-		views.remove(view);
-		view.setCodeMapView(null);
+	public void remove(CodeMapItem item) {
+		removeView(item);
+		views.remove(item);
+		item.setCodeMapView(null);
+		
+		Iterator<CodeMapLink> linksIt = links.iterator();
+		while(linksIt.hasNext()) {
+			CodeMapLink link = linksIt.next();
+			if(link.hasItem(item))
+				linksIt.remove();
+		}
 	}
 	
 	public void clear() {
