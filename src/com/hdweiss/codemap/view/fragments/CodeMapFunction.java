@@ -59,7 +59,7 @@ public class CodeMapFunction extends CodeMapItem {
 	private float yOffset = 0;
 
 	public void addChildFragment(String url) {
-		this.codeMapView.openFragmentFromUrl(url, this, yOffset);
+		this.codeMapView.openChildFragmentFromUrl(url, this, yOffset);
 		this.yOffset = 0;
 	}
 }

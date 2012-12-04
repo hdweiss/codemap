@@ -1,5 +1,7 @@
 package com.hdweiss.codemap.view.fragments;
 
+import java.util.UUID;
+
 import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -14,12 +16,14 @@ import com.hdweiss.codemap.util.ZoomableLinearLayout;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 public abstract class CodeMapItem extends ZoomableLinearLayout {
+	public UUID id = UUID.randomUUID();
 
 	private TextView titleView;
 	private ImageButton removeButton;
 	
-	private View content;
+	private View contentView;
 	private CodeMapView codeMapView;
+	
 		
 	public CodeMapItem(Context context, AttributeSet attrs) {
 		this(context, attrs, "");
@@ -57,13 +61,13 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 	
 
 	protected void setContentView(View view) {
-		this.content = view;
+		this.contentView = view;
 		
 		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 				LinearLayout.LayoutParams.MATCH_PARENT,
 				LinearLayout.LayoutParams.WRAP_CONTENT);
 		view.setLayoutParams(params);
-		addView(content);
+		addView(contentView);
 	}
 	
 
@@ -115,7 +119,13 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 		return this.titleView.getText().toString();
 	}
 	
-	public float getTitleViewOffset() {
-		return titleView.getHeight();
+	public float getContentViewYOffset() {
+		return titleView.getHeight() + titleView.getPaddingTop()
+				+ titleView.getPaddingBottom() + contentView.getPaddingTop()
+				+ contentView.getPaddingBottom() + 5;
+	}
+	
+	public float getTitleViewYMid() {
+		return this.getY() + (titleView.getHeight() / 2);
 	}
 }

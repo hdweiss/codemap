@@ -1,24 +1,25 @@
 package com.hdweiss.codemap.view.codemap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.UUID;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.data.CodeMapObject;
 import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.data.SerializableItem;
+import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.ZoomableAbsoluteLayout;
@@ -33,8 +34,9 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleDetector;
 	private Scroller scroller;
-		
-	private ArrayList<CodeMapItem> views = new ArrayList<CodeMapItem>();
+	
+	private HashMap<UUID, CodeMapItem> items2 = new HashMap<UUID, CodeMapItem>();
+	private ArrayList<CodeMapItem> items = new ArrayList<CodeMapItem>();
 	private ArrayList<CodeMapLink> links = new ArrayList<CodeMapLink>();
 	private ProjectController controller;
 
@@ -51,51 +53,41 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	
 	@SuppressWarnings("unchecked")
 	public void setState(CodeMapState state) {
-		new LoadState().execute(state.drawables);
+		if(state == null)
+			return;
+		
+		new LoadState(state).execute(state.items);
 		setScrollX(state.scrollX);
 		setScrollY(state.scrollY);
 		//setZoom(state.zoom, new CodeMapPoint());
 	}
 
+	private CodeMapFunction loadObjectState(SerializableItem item) {
+		CodeMapFunction functionFragment = instantiateFunctionFragment(item.name, new CodeMapPoint(
+				item.point));
+		functionFragment.id = item.id;
+		return functionFragment;
+	}
 	
-	private class LoadState extends AsyncTask<ArrayList<CodeMapObject>, CodeMapItem, Long> {
-		private ProgressDialog dialog;
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+	private void loadLinksState(CodeMapState state) {
+		for(SerializableLink link: state.links) {
+			CodeMapItem parent = items2.get(link.parent);
+			CodeMapItem child = items2.get(link.child);
 			
-			this.dialog = ProgressDialog.show(getContext(), "Loading",
-					"Loading state...");
-		}
-
-		protected Long doInBackground(ArrayList<CodeMapObject>... objects) {
-			ArrayList<CodeMapObject> items = objects[0];
-			
-			for (int i = 0; i < items.size(); i++) {
-				CodeMapFunction fragment = instantiateFunctionFragment(items.get(i).name, new CodeMapPoint(items.get(i).point));
-				//fragment.setPosition();
-				this.publishProgress(fragment);
-			}
-
-			return (long) 0;
-		}
-
-		protected void onProgressUpdate(CodeMapItem... progress) {
-			for(int i = 0; i < progress.length; i++)
-				addMapItem(progress[i]);
-		}
-
-		protected void onPostExecute(Long result) {
-			dialog.dismiss();
+			addMapLink(new CodeMapLink(parent, child, link.offset));
 		}
 	}
+
 	
 	public CodeMapState getState() {
 		CodeMapState state = new CodeMapState(controller.project.getName());
 		
-		for(CodeMapItem view: views)
-			state.drawables.add(new CodeMapObject(view.getName(), view.getPosition()));
+		for(CodeMapItem item: items)
+			state.items.add(new SerializableItem(item));
+		
+		for(CodeMapLink link: links) {
+			state.links.add(new SerializableLink(link));
+		}
 		
 		//state.zoom = zoom;
 		state.scrollX = getScrollX();
@@ -159,55 +151,39 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 	
 
-	public CodeMapItem openFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
+	public CodeMapItem openChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
+		float offset = yOffset + parent.getContentViewYOffset();
+
 		CodeMapPoint position = new CodeMapPoint();
 		position.x = parent.getX() + parent.getWidth() + 30;
-		position.y = parent.getY() + 20;
+		position.y = parent.getY() + offset;
 
 		CodeMapItem item = createFunctionFragment(url, position);
-		links.add(new CodeMapLink(parent, item, yOffset + parent.getTitleViewOffset()));
-		refresh();
+		addMapLink(new CodeMapLink(parent, item, offset));
 		return item;
+	}
+	
+	public void addMapLink(CodeMapLink link) {
+		if(link.parent != null && link.child != null) {
+			links.add(link);
+			refresh();
+		}
 	}
 	
 	
 	public void addMapItem(CodeMapItem item) {
 		addView(item);
-		views.add(item);
+		items.add(item);
+		items2.put(item.id, item);
 		item.setCodeMapView(this);
-		moveMapItemToEmptyPosition(item);
-	}
-	
-	public boolean moveMapItemToEmptyPosition(CodeMapItem item) {
-		Rect rect = item.getBounds();
-		rect.bottom += 1;
-		rect.right += 1;
-		final int offset = 5;
+		//CollisionManager.moveMapItemToEmptyPosition(item, this.items);
 		
-		boolean foundEmpty = false;
-		while (foundEmpty == false) {
-			foundEmpty = true;
-			for (CodeMapItem view : views) {
-				//Log.d("CodeMap", "Comparing " + item.getBounds().toString() + " " + view.getBounds().toString());
-				if (view != item && Rect.intersects(view.getBounds(), rect)) {
-					Log.d("CodeMap", item.getName() + " collieded with " + view.getName());
-					int height = rect.bottom - rect.top;
-					rect.top = view.getBounds().bottom + offset;
-					rect.bottom = rect.top + height;
-					foundEmpty = false;
-					break;
-				}
-			}
-		}
-		
-		item.setX(rect.left);
-		item.setY(rect.top);
-		return true;
+		CollisionManager.moveFragmentsToAllowItem(item, this.items);
 	}
 	
 	public CodeMapItem getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {
 		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
-		for (CodeMapItem view : views) {
+		for (CodeMapItem view : items) {
 			if (view.contains(point))
 				return view;
 		}
@@ -229,7 +205,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	
 	public void remove(CodeMapItem item) {
 		removeView(item);
-		views.remove(item);
+		items.remove(item);
 		item.setCodeMapView(null);
 		
 		Iterator<CodeMapLink> linksIt = links.iterator();
@@ -242,7 +218,46 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	
 	public void clear() {
 		removeAllViews();
-		views.clear();
+		items.clear();
 		links.clear();
+	}
+	
+	
+	private class LoadState extends AsyncTask<ArrayList<SerializableItem>, CodeMapItem, Long> {
+		private ProgressDialog dialog;
+		private CodeMapState state;
+		
+		public LoadState(CodeMapState state) {
+			this.state = state;
+		}
+		
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			
+			this.dialog = ProgressDialog.show(getContext(), "Loading",
+					"Loading state...");
+		}
+
+		protected Long doInBackground(ArrayList<SerializableItem>... objects) {
+			ArrayList<SerializableItem> items = objects[0];
+			
+			for (int i = 0; i < items.size(); i++) {
+				CodeMapFunction fragment = loadObjectState(items.get(i));
+				this.publishProgress(fragment);
+			}
+
+			return (long) 0;
+		}
+
+		protected void onProgressUpdate(CodeMapItem... progress) {
+			for(int i = 0; i < progress.length; i++)
+				addMapItem(progress[i]);
+		}
+
+		protected void onPostExecute(Long result) {
+			loadLinksState(state);
+			dialog.dismiss();
+		}
 	}
 }

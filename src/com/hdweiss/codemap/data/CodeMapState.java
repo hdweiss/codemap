@@ -12,10 +12,12 @@ import android.content.Context;
 import com.hdweiss.codemap.util.Utils;
 
 public class CodeMapState implements Serializable {
-	private static final long serialVersionUID = 2L;
+	private static final long serialVersionUID = 3L;
 	
 	public String projectName;
-	public ArrayList<CodeMapObject> drawables = new ArrayList<CodeMapObject>();
+
+	public ArrayList<SerializableItem> items = new ArrayList<SerializableItem>();
+	public ArrayList<SerializableLink> links = new ArrayList<SerializableLink>();
 
 	public int scrollX = 0;
 	public int scrollY = 0;

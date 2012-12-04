@@ -5,10 +5,10 @@ import android.graphics.Paint;
 
 public class CodeMapLink {
 
-	private CodeMapItem parent;
-	private CodeMapItem child;
+	public CodeMapItem parent;
+	public CodeMapItem child;
 	
-	private float yOffset = 0;
+	public float yOffset = 0;
 
 	public CodeMapLink(CodeMapItem parent, CodeMapItem child, float yOffset) {
 		this.parent = parent;
@@ -27,7 +27,7 @@ public class CodeMapLink {
 		float startY = parent.getY() + yOffset;
 		
 		float endX = child.getX();
-		float endY = child.getY();
+		float endY = child.getTitleViewYMid();
 
 		float midX = (startX + endX) / 2;
 		
