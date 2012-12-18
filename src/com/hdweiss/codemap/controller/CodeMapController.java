@@ -16,6 +16,7 @@ import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
+import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 import com.hdweiss.codemap.view.fragments.CodeMapLink;
@@ -49,7 +50,7 @@ public class CodeMapController extends ProjectController {
 		if(state == null)
 			return;
 		
-		LoadState loadState = new LoadState(state);
+		CodeMapStateLoader loadState = new CodeMapStateLoader(state);
 		loadState.execute(state.items);
 		
 		codeMapView.setScrollX(state.scrollX);
@@ -67,15 +68,16 @@ public class CodeMapController extends ProjectController {
     }
     
     
-	public void addFunctionView(String functionName) {
+	public void addAnnotationView(String content) {
 		if(codeMapView != null) {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
 			
-			CodeMapFunction functionView = instantiateFunctionFragment(functionName, position);
-			codeMapView.addMapItem(functionView);
+			CodeMapAnnotation annotationView = new CodeMapAnnotation(codeMapView.getContext(),
+					position, content);
+			codeMapView.addMapItem(annotationView);
 		}
 	}
-	
+    
 	public void addFileView(String fileName) {
 		if(codeMapView != null) {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
@@ -86,10 +88,26 @@ public class CodeMapController extends ProjectController {
 			codeMapView.addMapItem(functionView);
 		}
 	}
-
 	
-
-	public CodeMapItem openChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
+    
+	public void addFunctionView(String functionName) {
+		if(codeMapView != null) {
+			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
+			
+			CodeMapFunction functionView = instantiateFunctionFragment(functionName, position);
+			codeMapView.addMapItem(functionView);
+		}
+	}
+	
+	private CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
+		final SpannableString content = getFunctionSource(functionName);
+		
+		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
+				position, functionName, content);
+		return functionView;
+	}
+	
+	public CodeMapItem addChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
 		float offset = yOffset + parent.getContentViewYOffset();
 
 		CodeMapPoint position = new CodeMapPoint();
@@ -103,23 +121,15 @@ public class CodeMapController extends ProjectController {
 		return item;
 	}
 	
+
 	
-	
-	public CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
-		final SpannableString content = getFunctionSource(functionName);
-		
-		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
-				position, functionName, content);
-		return functionView;
-	}
-	
-	private class LoadState extends AsyncTask<ArrayList<SerializableItem>, CodeMapItem, Long> {
+	private class CodeMapStateLoader extends AsyncTask<ArrayList<SerializableItem>, CodeMapItem, Long> {
 		private ProgressDialog dialog;
 		private CodeMapState state;
 		
 		private HashMap<UUID, CodeMapItem> codeMapItems = new HashMap<UUID, CodeMapItem>();
 		
-		public LoadState(CodeMapState state) {
+		public CodeMapStateLoader(CodeMapState state) {
 			this.state = state;
 		}
 		
@@ -135,7 +145,7 @@ public class CodeMapController extends ProjectController {
 			ArrayList<SerializableItem> items = objects[0];
 			
 			for (int i = 0; i < items.size(); i++) {
-				CodeMapFunction fragment = loadObjectState(items.get(i));
+				CodeMapItem fragment = loadObjectState(items.get(i));
 				this.publishProgress(fragment);
 				codeMapItems.put(fragment.id, fragment);
 			}
@@ -158,11 +168,11 @@ public class CodeMapController extends ProjectController {
 		}
 		
 
-		private CodeMapFunction loadObjectState(SerializableItem item) {
-			CodeMapFunction functionFragment = instantiateFunctionFragment(
-					item.name, item.point);
-			functionFragment.id = item.id;
-			return functionFragment;
+		private CodeMapItem loadObjectState(SerializableItem item) {
+			CodeMapItem itemView = item.createCodeMapItem(
+					CodeMapController.this, codeMapView.getContext());
+			itemView.id = item.id;
+			return itemView;
 		}
 		
 		private void loadLinksState(CodeMapState state) {

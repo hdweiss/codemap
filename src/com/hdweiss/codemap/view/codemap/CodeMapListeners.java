@@ -36,6 +36,7 @@ public class CodeMapListeners {
 		}
 		
 		public void onLongPress(MotionEvent e) {
+			codeMapView.getController().addAnnotationView("");
 		}
 
 		public void onShowPress(MotionEvent e) {

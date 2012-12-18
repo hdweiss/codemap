@@ -56,7 +56,7 @@ public class CodeMapFunction extends CodeMapItem {
 
 	public void addChildFragment(String url) {
 		if (this.codeMapView != null) {
-			this.codeMapView.getController().openChildFragmentFromUrl(url,
+			this.codeMapView.getController().addChildFragmentFromUrl(url,
 					this, yOffset);
 			this.yOffset = 0;
 		}
