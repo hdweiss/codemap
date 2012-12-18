@@ -126,7 +126,6 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 
 
-	
 	public void setController(CodeMapController controller) {
 		this.controller = controller;
 	}

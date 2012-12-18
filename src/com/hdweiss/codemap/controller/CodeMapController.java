@@ -1,18 +1,11 @@
 package com.hdweiss.codemap.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.UUID;
 
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.text.SpannableString;
 
 import com.hdweiss.codemap.data.CodeMapState;
-import com.hdweiss.codemap.data.SerializableItem;
-import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
@@ -50,12 +43,12 @@ public class CodeMapController extends ProjectController {
 		if(state == null)
 			return;
 		
-		CodeMapStateLoader loadState = new CodeMapStateLoader(state);
+		CodeMapStateLoader loadState = new CodeMapStateLoader(state, codeMapView, this);
 		loadState.execute(state.items);
 		
 		codeMapView.setScrollX(state.scrollX);
 		codeMapView.setScrollY(state.scrollY);
-		//codeMapView.setScaleFactor(state.zoom, new CodeMapPoint());
+		codeMapView.setScaleFactor(state.zoom, new CodeMapPoint());
 	}
     
     
@@ -119,70 +112,5 @@ public class CodeMapController extends ProjectController {
 		codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
 		
 		return item;
-	}
-	
-
-	
-	private class CodeMapStateLoader extends AsyncTask<ArrayList<SerializableItem>, CodeMapItem, Long> {
-		private ProgressDialog dialog;
-		private CodeMapState state;
-		
-		private HashMap<UUID, CodeMapItem> codeMapItems = new HashMap<UUID, CodeMapItem>();
-		
-		public CodeMapStateLoader(CodeMapState state) {
-			this.state = state;
-		}
-		
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-			
-			this.dialog = ProgressDialog.show(codeMapView.getContext(), "Loading",
-					"Loading state...");
-		}
-
-		protected Long doInBackground(ArrayList<SerializableItem>... objects) {
-			ArrayList<SerializableItem> items = objects[0];
-			
-			for (int i = 0; i < items.size(); i++) {
-				CodeMapItem fragment = loadObjectState(items.get(i));
-				this.publishProgress(fragment);
-				codeMapItems.put(fragment.id, fragment);
-			}
-
-			return (long) 0;
-		}
-
-		@Override
-		protected void onProgressUpdate(CodeMapItem... progress) {
-			super.onProgressUpdate(progress);
-			for(int i = 0; i < progress.length; i++)
-				codeMapView.addMapItem(progress[i]);
-		}
-
-		@Override
-		protected void onPostExecute(Long result) {
-			super.onPostExecute(result);
-			loadLinksState(state);
-			dialog.dismiss();
-		}
-		
-
-		private CodeMapItem loadObjectState(SerializableItem item) {
-			CodeMapItem itemView = item.createCodeMapItem(
-					CodeMapController.this, codeMapView.getContext());
-			itemView.id = item.id;
-			return itemView;
-		}
-		
-		private void loadLinksState(CodeMapState state) {
-			for (SerializableLink link : state.links) {
-				CodeMapItem parent = codeMapItems.get(link.parent);
-				CodeMapItem child = codeMapItems.get(link.child);
-
-				codeMapView.addMapLink(new CodeMapLink(parent, child,
-						link.offset));
-			}
-		}
 	}
 }
