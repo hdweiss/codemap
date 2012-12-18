@@ -20,9 +20,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.data.Project;
-import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.view.codemap.CodeMapActivity;
 
 public class ProjectBrowser extends FragmentActivity implements OnItemClickListener {

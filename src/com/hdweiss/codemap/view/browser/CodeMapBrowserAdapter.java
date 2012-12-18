@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.controller.ProjectController;
 
 public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 

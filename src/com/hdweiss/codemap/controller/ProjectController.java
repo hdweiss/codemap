@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.data;
+package com.hdweiss.codemap.controller;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,20 +10,16 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.hdweiss.codemap.util.CodeMapCursorPoint;
-import com.hdweiss.codemap.util.CodeMapPoint;
+import com.hdweiss.codemap.data.Cscope;
+import com.hdweiss.codemap.data.JGitWrapper;
+import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.SyntaxHighlighter;
-import com.hdweiss.codemap.view.codemap.CodeMapView;
-import com.hdweiss.codemap.view.fragments.CodeMapFunction;
-import com.hdweiss.codemap.view.fragments.CodeMapItem;
-import com.hdweiss.codemap.view.fragments.CodeMapLink;
 
 public class ProjectController {
 	
-	private Context context;
+	protected Context context;
 	
 	public Project project;
-	private CodeMapView codeMapView;	
 	private Cscope cscope;
 	
 	public ProjectController(String name, Context context) {
@@ -31,11 +27,7 @@ public class ProjectController {
 		this.cscope = new Cscope(context);
 		loadProject(name);
 	}
-	
-	
-/***************
- * Project 
- * ************/	
+
 	
 	public void loadProject(String name) {
 		if(TextUtils.isEmpty(name))
@@ -112,70 +104,6 @@ public class ProjectController {
 		}
 	}
 	
-/***************
- * View 
- * ************/	
-	
-	public void setView(CodeMapView codeMapView) {
-		this.codeMapView = codeMapView;
-		codeMapView.setController(this);
-		loadCodeMapState();
-	}
-	
-    public void loadCodeMapState() {
-    	try {
-			CodeMapState state = CodeMapState.readState(project.getName(), context);
-			codeMapView.setState(state);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-    
-    public void saveCodeMapState() {
-    	try {
-			codeMapView.getState().writeState(context);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-    }
-	
-    
-	public void addFunctionView(String functionName) {
-		if(codeMapView != null) {
-			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
-			
-			CodeMapFunction functionView = codeMapView.instantiateFunctionFragment(functionName, position);
-			codeMapView.addMapItem(functionView);
-		}
-	}
-	
-	public void addFileView(String fileName) {
-		if(codeMapView != null) {
-			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
-			final SpannableString content = getFileSource(fileName);
-			
-			CodeMapFunction functionView = new CodeMapFunction(context,
-					position, fileName, content, codeMapView);
-			codeMapView.addMapItem(functionView);
-		}
-	}
-
-	
-
-	public CodeMapItem openChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
-		float offset = yOffset + parent.getContentViewYOffset();
-
-		CodeMapPoint position = new CodeMapPoint();
-		position.x = parent.getX() + parent.getWidth() + 30;
-		position.y = parent.getY() + offset;
-		
-		CodeMapFunction item = codeMapView.instantiateFunctionFragment(url, position);
-		codeMapView.addMapItem(item);
-		codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
-		
-		return item;
-	}
-	
 	
 	public SpannableString getFunctionSource(String functionName) {
 		try {
@@ -204,12 +132,5 @@ public class ProjectController {
 			e.printStackTrace();
 			return new SpannableString("");
 		}
-	}
-	
-	
-	public void saveState() {
-		if(this.codeMapView == null)
-			return;
-		
 	}
 }

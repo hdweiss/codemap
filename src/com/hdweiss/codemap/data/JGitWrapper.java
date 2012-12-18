@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.util.Utils;
 
 public class JGitWrapper {

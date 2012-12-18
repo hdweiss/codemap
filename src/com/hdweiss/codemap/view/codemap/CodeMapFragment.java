@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.browser.CodeMapBrowser;
 
@@ -21,7 +21,7 @@ public class CodeMapFragment extends Fragment {
 	
 	private CodeMapView codeMapView;
 	private CodeMapBrowser codeMapBrowser;
-	private ProjectController controller;
+	private CodeMapController controller;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

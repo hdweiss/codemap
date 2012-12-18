@@ -2,21 +2,23 @@ package com.hdweiss.codemap.data;
 
 import java.util.HashMap;
 
+import com.hdweiss.codemap.controller.CodeMapController;
+
 import android.app.Activity;
 import android.app.Application;
 import android.text.TextUtils;
 
 public class CodeMapApp extends Application {
 
-	private HashMap<String, ProjectController> controllers = new HashMap<String, ProjectController>();
+	private HashMap<String, CodeMapController> controllers = new HashMap<String, CodeMapController>();
 	
-	public ProjectController getProjectController(String projectName) {
+	public CodeMapController getProjectController(String projectName) {
 		checkProjectName(projectName);
 		
-		ProjectController controller = controllers.get(projectName);
+		CodeMapController controller = controllers.get(projectName);
 		
 		if(controller == null) {
-			controller = new ProjectController(projectName, this);
+			controller = new CodeMapController(projectName, this);
 			controllers.put(projectName, controller);
 		}
 		

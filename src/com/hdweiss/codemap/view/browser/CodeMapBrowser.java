@@ -7,13 +7,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
-import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.view.browser.CodeMapBrowserItem.TYPE;
 
 public class CodeMapBrowser extends ListView implements OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
 	private CodeMapBrowserAdapter adapter;
-	private ProjectController controller;
+	private CodeMapController controller;
 
 	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -21,7 +21,7 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 		setOnItemLongClickListener(this);
 	}
 
-	public void setController(ProjectController controller) {
+	public void setController(CodeMapController controller) {
 		this.controller = controller;
 		refresh();
 	}

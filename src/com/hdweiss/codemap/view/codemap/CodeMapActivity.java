@@ -5,13 +5,13 @@ import android.os.Bundle;
 import android.view.Menu;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.data.CodeMapApp;
-import com.hdweiss.codemap.data.ProjectController;
 
 public class CodeMapActivity extends Activity {
 	public final static String PROJECT_NAME = "projectName";
 	
-    private ProjectController controller;
+    private CodeMapController controller;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,7 +29,7 @@ public class CodeMapActivity extends Activity {
         return true;
     }
     
-    public ProjectController getController() {
+    public CodeMapController getController() {
     	return this.controller;
     }
 }
