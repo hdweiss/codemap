@@ -136,7 +136,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		return createFunctionFragment(functionName, position);
 	}
 	
-	public CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
+	private CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
 		final SpannableString content = controller.getFunctionSource(functionName);
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
@@ -144,7 +144,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		return functionView;
 	}
 	
-	public CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
+	private CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
 		CodeMapFunction functionView = instantiateFunctionFragment(functionName, position);
 		addMapItem(functionView);
 		return functionView;
@@ -176,9 +176,11 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		items.add(item);
 		items2.put(item.id, item);
 		item.setCodeMapView(this);
+	}
+	
+	public void moveFragment(CodeMapItem item) {
 		//CollisionManager.moveMapItemToEmptyPosition(item, this.items);
-		
-		CollisionManager.moveFragmentsToAllowItem(item, this.items);
+		CollisionManager.moveFragmentsToAllowItem(item, this.items);		
 	}
 	
 	public CodeMapItem getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {

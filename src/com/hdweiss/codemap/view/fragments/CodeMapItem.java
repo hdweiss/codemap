@@ -24,6 +24,7 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 	private View contentView;
 	private CodeMapView codeMapView;
 	
+	private boolean moveItem = true;
 		
 	public CodeMapItem(Context context, AttributeSet attrs) {
 		this(context, attrs, "");
@@ -33,6 +34,17 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 		this.codeMapView = codeMapView;
 	}
 	
+
+	@Override
+	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+		super.onSizeChanged(w, h, oldw, oldh);
+
+		if(this.codeMapView != null && moveItem) {
+			this.moveItem = false;
+			this.codeMapView.moveFragment(this);
+		}
+	}
+
 	public CodeMapItem(Context context, AttributeSet attrs, String name) {
 		super(context, attrs);
 		
