@@ -44,29 +44,20 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		setWillNotDraw(false);
 		setFocusable(false);
 	}
-
 	
-	public CodeMapState getState() {
-		CodeMapState state = new CodeMapState(controller.project.getName());
-		
-		for(CodeMapItem item: items)
-			state.items.add(new SerializableItem(item));
-		
-		for(CodeMapLink link: links) {
-			state.links.add(new SerializableLink(link));
-		}
-		
-		//state.zoom = zoom;
-		state.scrollX = getScrollX();
-		state.scrollY = getScrollY();
-		return state;
+	
+	@Override
+	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+
+		for(CodeMapLink link: links)
+			link.doDraw(canvas);
+	}
+
+	public void refresh() {
+		invalidate();
 	}
 	
-	public void setController(CodeMapController controller) {
-		this.controller = controller;
-	}
-	
-
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		super.onTouchEvent(event);
@@ -87,45 +78,17 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 
 	
-	public void addMapLink(CodeMapLink link) {
-		if(link.parent != null && link.child != null) {
-			links.add(link);
-			refresh();
-		}
-	}
-	
-	
 	public void addMapItem(CodeMapItem item) {
 		addView(item);
 		items.add(item);
 		item.setCodeMapView(this);
 	}
-	
-	public void moveFragment(CodeMapItem item) {
-		//CollisionManager.moveMapItemToEmptyPosition(item, this.items);
-		CollisionManager.moveFragmentsToAllowItem(item, this.items);		
-	}
-	
-	public CodeMapItem getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {
-		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
-		for (CodeMapItem view : items) {
-			if (view.contains(point))
-				return view;
+
+	public void addMapLink(CodeMapLink link) {
+		if(link.parent != null && link.child != null) {
+			links.add(link);
+			refresh();
 		}
-		return null;
-	}
-
-	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-
-		for(CodeMapLink link: links)
-			link.doDraw(canvas);
-	}
-
-	public void refresh() {
-		invalidate();
 	}
 	
 	public void remove(CodeMapItem item) {
@@ -146,9 +109,44 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		items.clear();
 		links.clear();
 	}
+	
+	
+	public void moveFragment(CodeMapItem item) {
+		//CollisionManager.moveMapItemToEmptyPosition(item, this.items);
+		CollisionManager.moveFragmentsToAllowItem(item, this.items);		
+	}
+	
+	public CodeMapItem getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {
+		CodeMapPoint point = cursorPoint.getCodeMapPoint(this);
+		for (CodeMapItem view : items) {
+			if (view.contains(point))
+				return view;
+		}
+		return null;
+	}
 
 
+	
+	public void setController(CodeMapController controller) {
+		this.controller = controller;
+	}
+	
 	public CodeMapController getController() {
 		return this.controller;
+	}
+	
+	public CodeMapState getState() {
+		CodeMapState state = new CodeMapState(controller.project.getName());
+		
+		for(CodeMapItem item: items)
+			state.items.add(new SerializableItem(item));
+		
+		for(CodeMapLink link: links)
+			state.links.add(new SerializableLink(link));
+		
+		state.zoom = getScaleFactor();
+		state.scrollX = getScrollX();
+		state.scrollY = getScrollY();
+		return state;
 	}
 }

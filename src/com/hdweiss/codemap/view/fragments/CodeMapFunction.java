@@ -12,24 +12,22 @@ import android.widget.TextView;
 
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.SpanUtils;
-import com.hdweiss.codemap.view.codemap.CodeMapView;
 import com.hdweiss.codemap.view.fragments.FunctionLinkSpan.FunctionLinkSpanConverter;
 
 public class CodeMapFunction extends CodeMapItem {
 
 	private TextView sourceView;
-	private CodeMapView codeMapView;
+	
+	private float yOffset = 0;
 	
 	public CodeMapFunction(Context context, AttributeSet attrs) {
-		this(context, new CodeMapPoint(0, 0), "", new SpannableString(""), null);
+		this(context, new CodeMapPoint(0, 0), "", new SpannableString(""));
 	}
 	
 	public CodeMapFunction(Context context, CodeMapPoint point, String name,
-			SpannableString content, CodeMapView codeMapView) {
+			SpannableString content) {
 		super(context, null, name);
-		
-		this.codeMapView = codeMapView;
-		
+				
 		sourceView = new TextView(getContext());
 		setContentView(sourceView);
 		
@@ -56,10 +54,11 @@ public class CodeMapFunction extends CodeMapItem {
 		});
 	}
 
-	private float yOffset = 0;
-
 	public void addChildFragment(String url) {
-		this.codeMapView.getController().openChildFragmentFromUrl(url, this, yOffset);
-		this.yOffset = 0;
+		if (this.codeMapView != null) {
+			this.codeMapView.getController().openChildFragmentFromUrl(url,
+					this, yOffset);
+			this.yOffset = 0;
+		}
 	}
 }

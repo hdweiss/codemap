@@ -30,7 +30,7 @@ public class CodeMapController extends ProjectController {
 	
 	public void setView(CodeMapView codeMapView) {
 		this.codeMapView = codeMapView;
-		codeMapView.setController(this);
+		this.codeMapView.setController(this);
 		loadCodeMapState();
 	}
 	
@@ -54,7 +54,7 @@ public class CodeMapController extends ProjectController {
 		
 		codeMapView.setScrollX(state.scrollX);
 		codeMapView.setScrollY(state.scrollY);
-		codeMapView.setScaleFactor(state.zoom, new CodeMapPoint());
+		//codeMapView.setScaleFactor(state.zoom, new CodeMapPoint());
 	}
     
     
@@ -81,8 +81,8 @@ public class CodeMapController extends ProjectController {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
 			final SpannableString content = getFileSource(fileName);
 			
-			CodeMapFunction functionView = new CodeMapFunction(context,
-					position, fileName, content, codeMapView);
+			CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
+					position, fileName, content);
 			codeMapView.addMapItem(functionView);
 		}
 	}
@@ -108,8 +108,8 @@ public class CodeMapController extends ProjectController {
 	public CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
 		final SpannableString content = getFunctionSource(functionName);
 		
-		CodeMapFunction functionView = new CodeMapFunction(context,
-				position, functionName, content, codeMapView);
+		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
+				position, functionName, content);
 		return functionView;
 	}
 	
@@ -127,7 +127,7 @@ public class CodeMapController extends ProjectController {
 		protected void onPreExecute() {
 			super.onPreExecute();
 			
-			this.dialog = ProgressDialog.show(context, "Loading",
+			this.dialog = ProgressDialog.show(codeMapView.getContext(), "Loading",
 					"Loading state...");
 		}
 
@@ -143,12 +143,16 @@ public class CodeMapController extends ProjectController {
 			return (long) 0;
 		}
 
+		@Override
 		protected void onProgressUpdate(CodeMapItem... progress) {
+			super.onProgressUpdate(progress);
 			for(int i = 0; i < progress.length; i++)
 				codeMapView.addMapItem(progress[i]);
 		}
 
+		@Override
 		protected void onPostExecute(Long result) {
+			super.onPostExecute(result);
 			loadLinksState(state);
 			dialog.dismiss();
 		}
@@ -156,7 +160,7 @@ public class CodeMapController extends ProjectController {
 
 		private CodeMapFunction loadObjectState(SerializableItem item) {
 			CodeMapFunction functionFragment = instantiateFunctionFragment(
-					item.name, new CodeMapPoint(item.point));
+					item.name, item.point);
 			functionFragment.id = item.id;
 			return functionFragment;
 		}
