@@ -10,8 +10,13 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.hdweiss.codemap.util.CodeMapCursorPoint;
+import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.SyntaxHighlighter;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
+import com.hdweiss.codemap.view.fragments.CodeMapFunction;
+import com.hdweiss.codemap.view.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.fragments.CodeMapLink;
 
 public class ProjectController {
 	
@@ -136,14 +141,41 @@ public class ProjectController {
 	
     
 	public void addFunctionView(String functionName) {
-		if(codeMapView != null)
-			codeMapView.createFunctionFragment(functionName);
+		if(codeMapView != null) {
+			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
+			
+			CodeMapFunction functionView = codeMapView.instantiateFunctionFragment(functionName, position);
+			codeMapView.addMapItem(functionView);
+		}
 	}
 	
 	public void addFileView(String fileName) {
-		if(codeMapView != null)
-			codeMapView.createFileFragment(fileName);
+		if(codeMapView != null) {
+			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
+			final SpannableString content = getFileSource(fileName);
+			
+			CodeMapFunction functionView = new CodeMapFunction(context,
+					position, fileName, content, codeMapView);
+			codeMapView.addMapItem(functionView);
+		}
 	}
+
+	
+
+	public CodeMapItem openChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
+		float offset = yOffset + parent.getContentViewYOffset();
+
+		CodeMapPoint position = new CodeMapPoint();
+		position.x = parent.getX() + parent.getWidth() + 30;
+		position.y = parent.getY() + offset;
+		
+		CodeMapFunction item = codeMapView.instantiateFunctionFragment(url, position);
+		codeMapView.addMapItem(item);
+		codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
+		
+		return item;
+	}
+	
 	
 	public SpannableString getFunctionSource(String functionName) {
 		try {

@@ -118,25 +118,9 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 			scrollBy(-(int)dx, -(int)dy);	    
 		}
 	}
-	
-
-	public CodeMapFunction createFileFragment(String fileName) {
-		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
-		final SpannableString content = controller.getFileSource(fileName);
-		
-		CodeMapFunction functionView = new CodeMapFunction(getContext(),
-				position, fileName, content, this);
-		addMapItem(functionView);
-		return functionView;
-	}
 
 	
-	public CodeMapFunction createFunctionFragment(String functionName) {
-		CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(this);
-		return createFunctionFragment(functionName, position);
-	}
-	
-	private CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
+	public CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
 		final SpannableString content = controller.getFunctionSource(functionName);
 		
 		CodeMapFunction functionView = new CodeMapFunction(getContext(),
@@ -144,24 +128,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		return functionView;
 	}
 	
-	private CodeMapFunction createFunctionFragment(String functionName, CodeMapPoint position) {
-		CodeMapFunction functionView = instantiateFunctionFragment(functionName, position);
-		addMapItem(functionView);
-		return functionView;
-	}
 	
-
-	public CodeMapItem openChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
-		float offset = yOffset + parent.getContentViewYOffset();
-
-		CodeMapPoint position = new CodeMapPoint();
-		position.x = parent.getX() + parent.getWidth() + 30;
-		position.y = parent.getY() + offset;
-
-		CodeMapItem item = createFunctionFragment(url, position);
-		addMapLink(new CodeMapLink(parent, item, offset));
-		return item;
-	}
 	
 	public void addMapLink(CodeMapLink link) {
 		if(link.parent != null && link.child != null) {
@@ -261,5 +228,10 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 			loadLinksState(state);
 			dialog.dismiss();
 		}
+	}
+
+
+	public ProjectController getController() {
+		return this.controller;
 	}
 }
