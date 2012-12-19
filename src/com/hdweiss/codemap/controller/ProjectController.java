@@ -104,12 +104,32 @@ public class ProjectController {
 		}
 	}
 	
+	public static String getFileFromUrl(String url) {
+		int colonIndex = url.indexOf(":");
+		
+		if (colonIndex < 0)
+			return "";
+		else
+			return url.substring(0, colonIndex);
+	}
 	
-	public SpannableString getFunctionSource(String functionName) {
+	public static String getFunctionFromUrl(String url) {
+		int colonIndex = url.indexOf(":");
+		
+		if (colonIndex < 0)
+			return url;
+		
+		return url.substring(colonIndex + 1);
+	}
+	
+	public SpannableString getFunctionSource(String url) {
 		try {
-			String content = cscope.getFunction(project, functionName).trim();
+			final String fileName = getFileFromUrl(url);
+			final String functionName = getFunctionFromUrl(url);
+			
+			String content = cscope.getFunction(project, functionName, fileName).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
-			highlighter.markupReferences(cscope.getReferences(project, functionName));
+			highlighter.markupReferences(cscope.getReferences(project, functionName, fileName));
 
 			return highlighter.formatToHtml();
 		} catch (IllegalArgumentException e) {

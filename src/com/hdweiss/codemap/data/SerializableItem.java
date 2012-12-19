@@ -17,7 +17,7 @@ public class SerializableItem implements Serializable {
 	private static final long serialVersionUID = 2L;
 	
 	public UUID id;
-	public String name;
+	public String url;
 	public String contents;
 	public TYPE type;
 	public CodeMapPoint point;
@@ -26,14 +26,14 @@ public class SerializableItem implements Serializable {
 		function, annotation, image
 	}
 	
-	public SerializableItem(String name, CodeMapPoint point, UUID id) {
-		this.name = name;
+	public SerializableItem(String url, CodeMapPoint point, UUID id) {
+		this.url = url;
 		this.point = point;
 		this.id = id;
 	}
 	
 	public SerializableItem(CodeMapItem item) {
-		this(item.getName(), item.getPosition(), item.id);
+		this(item.getUrl(), item.getPosition(), item.id);
 		setupType(item);
 	}
 	
@@ -58,10 +58,10 @@ public class SerializableItem implements Serializable {
 	public CodeMapItem createCodeMapItem(ProjectController controller, Context context) {
 		switch (type) {
 		case function:
-			final SpannableString content = controller.getFunctionSource(this.name);
+			final SpannableString content = controller.getFunctionSource(this.url);
 
 			CodeMapFunction functionView = new CodeMapFunction(context,
-					this.point, this.name, content);
+					this.point, this.url, content);
 			return functionView;
 			
 		case annotation:
@@ -75,6 +75,6 @@ public class SerializableItem implements Serializable {
 	}
 	
 	public String toString() {
-		return this.name + " @ " + point.x + ":" + point.y;
+		return this.url + " @ " + point.x + ":" + point.y;
 	}
 }

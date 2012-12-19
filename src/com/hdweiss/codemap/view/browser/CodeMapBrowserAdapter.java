@@ -183,16 +183,16 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 		return 0;
 	}
 
-//	public int findParent(int position) {
-//		if(position >= getCount() || position < 0)
-//			return -1;
-//
-//		long currentLevel = getItem(position).level;
-//		for(int activePos = position - 1; activePos >= 0; activePos--) {
-//			if(getItem(activePos).level < currentLevel)
-//				return activePos;
-//		}
-//
-//		return -1;
-//	}
+	public int findParent(int position) {
+		if(position >= getCount() || position < 0)
+			return -1;
+
+		long currentLevel = getItem(position).level;
+		for(int activePos = position - 1; activePos >= 0; activePos--) {
+			if(getItem(activePos).level < currentLevel)
+				return activePos;
+		}
+
+		return -1;
+	}
 }

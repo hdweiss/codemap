@@ -25,8 +25,8 @@ public class CollisionManager {
 				// " " + view.getBounds().toString());
 				if (view != item && Rect.intersects(view.getBounds(), rect)) {
 					Log.d("CodeMap",
-							item.getName() + " collieded with "
-									+ view.getName());
+							item.getUrl() + " collieded with "
+									+ view.getUrl());
 					int height = rect.bottom - rect.top;
 					rect.top = view.getBounds().bottom + padding;
 					rect.bottom = rect.top + height;

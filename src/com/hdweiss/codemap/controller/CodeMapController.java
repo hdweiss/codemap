@@ -83,31 +83,31 @@ public class CodeMapController extends ProjectController {
 	}
 	
     
-	public void addFunctionView(String functionName) {
+	public void addFunctionView(String url) {
 		if(codeMapView != null) {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
 			
-			CodeMapFunction functionView = instantiateFunctionFragment(functionName, position);
+			CodeMapFunction functionView = instantiateFunctionFragment(url, position);
 			codeMapView.addMapItem(functionView);
 		}
 	}
 	
-	private CodeMapFunction instantiateFunctionFragment(String functionName, CodeMapPoint position) {
-		final SpannableString content = getFunctionSource(functionName);
+	private CodeMapFunction instantiateFunctionFragment(String url, CodeMapPoint position) {
+		final SpannableString content = getFunctionSource(url);
 		
 		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
-				position, functionName, content);
+				position, url, content);
 		return functionView;
 	}
 	
-	public CodeMapItem addChildFragmentFromUrl(String url, CodeMapItem parent, float yOffset) {
+	public CodeMapItem addChildFragmentFromUrl(String functionName, CodeMapItem parent, float yOffset) {
 		float offset = yOffset + parent.getContentViewYOffset();
 
 		CodeMapPoint position = new CodeMapPoint();
 		position.x = parent.getX() + parent.getWidth() + 30;
 		position.y = parent.getY() + offset;
 		
-		CodeMapFunction item = instantiateFunctionFragment(url, position);
+		CodeMapFunction item = instantiateFunctionFragment(functionName, position);
 		codeMapView.addMapItem(item);
 		codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
 		

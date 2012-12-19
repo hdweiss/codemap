@@ -83,7 +83,7 @@ public class CscopeTest extends AndroidTestCase {
 	public void testGetFunction() {
 		cscope.generateNamefile(project);
 		cscope.generateReffile(project);
-		String contents = cscope.getFunction(project, "addTotals");
+		String contents = cscope.getFunction(project, "addTotals", "");
 		assertTrue(contents.contains(ADDTOTALS_FIRSTLINE));
 	}
 	

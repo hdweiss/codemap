@@ -37,6 +37,6 @@ public class CodeMapLink {
 	}
 	
 	public String toString() {
-		return parent.getName() + "->" + child.getName();
+		return parent.getUrl() + "->" + child.getUrl();
 	}
 }

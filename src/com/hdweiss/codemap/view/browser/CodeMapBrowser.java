@@ -41,14 +41,29 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 		
         return false;
     }
+	
+	public String getItemUrl(int position) {
+		CodeMapBrowserItem item = adapter.getItem(position);
+
+		int parentId = adapter.findParent(position);
+
+		if (parentId != -1) {
+			CodeMapBrowserItem parentItem = adapter.getItem(parentId);
+			String url = parentItem.name + ":" + item.name;
+			return url;
+		}
+
+		return "";
+	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		boolean changed = adapter.collapseExpand(position);
 
 		if(changed == false) {
 			CodeMapBrowserItem item = adapter.getItem(position);
-			if(item.type == CodeMapBrowserItem.TYPE.SYMBOL)
-				controller.addFunctionView(item.name);
+			if(item.type == CodeMapBrowserItem.TYPE.SYMBOL) {
+				controller.addFunctionView(getItemUrl(position));
+			}
 		}
 	}
 }

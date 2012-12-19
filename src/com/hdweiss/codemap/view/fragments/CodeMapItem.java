@@ -126,7 +126,7 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 			codeMapView.remove(this);
 	}
 	
-	public String getName() {
+	public String getUrl() {
 		return this.titleView.getText().toString();
 	}
 	

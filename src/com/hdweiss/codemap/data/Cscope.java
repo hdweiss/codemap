@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.NoSuchElementException;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.hdweiss.codemap.util.Utils;
@@ -164,12 +165,22 @@ public class Cscope {
 	
 	/******************/
 	
-	private CscopeEntry getFunctionEntry(Project project, String functionName) {
+	private CscopeEntry getFunctionEntry(Project project, String functionName, String fileName) {
 		String output = runCommand(project, "-L -1 " + functionName);
 		String[] entries = output.trim().split("\n");
 		
-		CscopeEntry cscopeEntry = new CscopeEntry(entries[0]);
-		return cscopeEntry;
+		if (TextUtils.isEmpty(fileName))
+			return new CscopeEntry(entries[0]);
+		
+		String absoluteFilePath = new File(project.getSourcePath(context), fileName).getAbsolutePath();
+		for (String entry: entries) {
+			CscopeEntry cscopeEntry = new CscopeEntry(entry);
+			
+			if (cscopeEntry.file.equals(absoluteFilePath))
+				return cscopeEntry;
+		}
+		
+		throw new IllegalArgumentException("Url " + fileName + ":" + functionName + " not found");
 	}
 	
 	private int getFunctionEndLine(Project project, CscopeEntry cscopeEntry) {	
@@ -199,8 +210,8 @@ public class Cscope {
 	}
 	
 	
-	public String getFunction (Project project, String functionName) {
-		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName);
+	public String getFunction (Project project, String functionName, String fileName) {
+		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName, fileName);
 		int endLine = getFunctionEndLine(project, cscopeEntry);
 		
 		String source = Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, endLine);
@@ -219,8 +230,8 @@ public class Cscope {
 		return content;
 	}
 	
-	public ArrayList<CscopeEntry> getReferences(Project project, String functionName) {
-		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName);
+	public ArrayList<CscopeEntry> getReferences(Project project, String functionName, String fileName) {
+		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName, fileName);
 		int endLine = getFunctionEndLine(project, cscopeEntry);
 		
 		String options = "-L -2 '" + functionName + "'";
