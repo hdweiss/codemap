@@ -1,35 +1,72 @@
 package com.hdweiss.codemap.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
 public class CollisionManager {
 
 	private static final int padding = 5;
+	private static final int maxIterations = 5;
 	
-	
-	public static boolean moveFragmentsToAllowItem(CodeMapItem masterItem,
-			ArrayList<CodeMapItem> items) {		
-		boolean foundEmpty = false;
-		while (foundEmpty == false) {
-			foundEmpty = true;
-			for (CodeMapItem item : items) {
-				if (item == masterItem)
-					continue;
-				
-				Point pushOffset = getPushOffset(masterItem.getBounds(),
-						item.getBounds(), padding, false);
-				item.setX(item.getX() + pushOffset.x);
-				item.setY(item.getY() + pushOffset.y);
+	public static boolean pushItems(CodeMapItem pushingItem,
+			ArrayList<CodeMapItem> items) {
+			
+		for (CodeMapItem item : items) {
+			if (item == pushingItem)
+				continue;
+
+			Point pushOffset = getPushOffset(pushingItem.getBounds(),
+					item.getBounds(), padding, false);
+			
+			if (pushOffset.equals(0, 0) == false) {
+				pushingItem.push(pushOffset);
+				fixPush(item, new ArrayList<CodeMapItem>(items), pushOffset);
 			}
 		}
 
 		return true;
 	}
+	
+	private static void fixPush(CodeMapItem pushingItem,
+			ArrayList<CodeMapItem> items, Point pushOffset) {
+		items.remove(pushingItem);
+		Iterator<CodeMapItem> iterator = items.iterator();
+		
+		while (iterator.hasNext()) {
+			CodeMapItem item = iterator.next();
+			if (pushingItem == item)
+				continue;
+			
+			if (Rect.intersects(pushingItem.getBounds(), item.getBounds())) {
+				Log.d("collision", "fixPush: " + pushingItem.getUrl() + " collided " + item.getUrl());
+				item.push(pushOffset);
+				iterator.remove();
+				fixPush(item, items, pushOffset);
+			}
+		}
+	}
+	
+//	private static ArrayList<CodeMapItem> getOverlappingItems(CodeMapItem pushingItem,
+//			ArrayList<CodeMapItem> items) {
+//		ArrayList<CodeMapItem> overlappingItems = new ArrayList<CodeMapItem>();
+//		
+//		for (CodeMapItem item: items) {
+//			if (pushingItem == item)
+//				continue;
+//			
+//			if (Rect.intersects(pushingItem.getBounds(), item.getBounds()))
+//				overlappingItems.add(item);
+//		}
+//		
+//		return overlappingItems;
+//	}
+	
 	
 	public static Point getPushOffset(Rect pusher, Rect pushed) {
 		return getPushOffset(pusher, pushed, 0, true);

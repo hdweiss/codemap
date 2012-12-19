@@ -3,6 +3,7 @@ package com.hdweiss.codemap.view.fragments;
 import java.util.UUID;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -106,6 +107,11 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 		final int right = left + getWidth();
 				
 		return new Rect(left, top, right, bottom);
+	}
+	
+	public void push(Point offset) {
+		setX(getX() + offset.x);
+		setY(getY() + offset.y);
 	}
 
 	public boolean contains(CodeMapPoint point) {
