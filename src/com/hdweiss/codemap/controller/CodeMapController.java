@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import android.content.Context;
 import android.text.SpannableString;
+import android.util.Log;
 
 import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
@@ -84,6 +85,7 @@ public class CodeMapController extends ProjectController {
 	
     
 	public void addFunctionView(String url) {
+		Log.d("Controller", "addFunctionView: " + url);
 		if(codeMapView != null) {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
 			

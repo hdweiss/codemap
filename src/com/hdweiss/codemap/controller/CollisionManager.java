@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.controller;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 
 import android.graphics.Point;
@@ -39,7 +40,13 @@ public class CollisionManager {
 		Iterator<CodeMapItem> iterator = items.iterator();
 		
 		while (iterator.hasNext()) {
-			CodeMapItem item = iterator.next();
+			CodeMapItem item;
+			try {
+				item = iterator.next();
+			} catch (ConcurrentModificationException e) {
+				Log.e("CodeMap", e.getLocalizedMessage());
+				return;
+			}
 			if (pushingItem == item)
 				continue;
 			

@@ -78,6 +78,7 @@ public class Cscope {
 		}
 		
 		String command = getCscopeCommand(project, options, includeIndex);
+		Log.d("Cscope", "runCommand: " + command);
 		
 		File tmpdir = context.getFilesDir();
 		String[] environment = {"TMPDIR=" + tmpdir.getAbsolutePath()};
@@ -88,9 +89,10 @@ public class Cscope {
 	private String getCscopeCommand(Project project, String options, boolean includeIndex) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.cscopeExecPath).append(" ");
-		if(includeIndex)
+		if(includeIndex) {
 			builder.append("-i ").append(getNamefilePath(project.getName())).append(" ");
-		builder.append("-f ").append(getReffilePath(project.getName())).append(" ");
+			builder.append("-f ").append(getReffilePath(project.getName())).append(" ");
+		}
 		builder.append("-P ").append(project.getSourcePath(context)).append(" ");
 		builder.append(options);
 		return builder.toString();
@@ -166,7 +168,9 @@ public class Cscope {
 	/******************/
 	
 	private CscopeEntry getFunctionEntry(Project project, String functionName, String fileName) {
-		String output = runCommand(project, "-L -1 " + functionName);
+		Log.d("Cscope", "getFunctionEntry(): running command");
+		String output = runCommand(project, "-d -L -1 " + functionName);
+		Log.d("Cscope", "getFunctionEntry(): got output:\n" + output);
 		String[] entries = output.trim().split("\n");
 		
 		if (TextUtils.isEmpty(fileName))
@@ -211,7 +215,9 @@ public class Cscope {
 	
 	
 	public String getFunction (Project project, String functionName, String fileName) {
+		Log.d("Cscope", "Getting function " + fileName + ":" + functionName);
 		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName, fileName);
+		Log.d("Cscope", "Got function " + fileName + ":" + functionName);
 		int endLine = getFunctionEndLine(project, cscopeEntry);
 		
 		String source = Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, endLine);
@@ -231,8 +237,11 @@ public class Cscope {
 	}
 	
 	public ArrayList<CscopeEntry> getReferences(Project project, String functionName, String fileName) {
+		Log.d("Cscope", "Getting references");
 		CscopeEntry cscopeEntry = getFunctionEntry(project, functionName, fileName);
+		Log.d("Cscope", "Got entry for reference");
 		int endLine = getFunctionEndLine(project, cscopeEntry);
+		Log.d("Cscope", "Got reference endline");
 		
 		String options = "-L -2 '" + functionName + "'";
 		String symbols = runCommand(project, options);
@@ -308,8 +317,8 @@ public class Cscope {
 	public HashMap<String,ArrayList<CscopeEntry>> getAllDeclarations(Project project) {
 		HashMap<String, ArrayList<CscopeEntry>> result = new HashMap<String, ArrayList<CscopeEntry>>();
 		
-		String options = "-k -L -1 '.*' ";
-		String symbols = runCommand(project, options, true);
+		String options = "-d -k -L -1 '.*' ";
+		String symbols = runCommand(project, options);
 				
 		for(CscopeEntry entry: parseReferences(symbols, 0, 0)) {
 			ArrayList<CscopeEntry> list = result.get(entry.file);
