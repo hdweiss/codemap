@@ -28,7 +28,7 @@ public class CodeMapController extends ProjectController {
 		this.codeMapView.setController(this);
 		loadCodeMapState();
 	}
-	
+	 
 	
     public void loadCodeMapState() {
     	try {

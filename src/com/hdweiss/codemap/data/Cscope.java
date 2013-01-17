@@ -25,6 +25,11 @@ public class Cscope {
 	private final static String CSCOPE_NAMEFILE = "cscope.files";
 	private final static String CSCOPE_REFFILE = "cscope.out";
 	
+	private final static boolean WITH_INDEX = true;
+	private final static boolean NO_INDEX = false;
+	private final static boolean WITH_REFFILE = true;
+	private final static boolean NO_REFFILE = false;	
+	
 	private Context context;
 	private String cscopeExecPath = "";
 
@@ -66,18 +71,13 @@ public class Cscope {
 		}
 	}
 	
-	public String runCommand(Project project, String options) {
-		return runCommand(project, options, true);
-	}
-	
-	
-	public String runCommand(Project project, String options, boolean includeIndex) {
+	public String runCommand(Project project, String options, boolean includeIndex, boolean includeReffile) {
 		if (this.cscopeExecPath == null || this.cscopeExecPath.isEmpty()) {
 			Log.e("CodeMap", "Could not get path to" + EXE_FILENAME + "executable");
 			return "";
 		}
 		
-		String command = getCscopeCommand(project, options, includeIndex);
+		String command = getCscopeCommand(project, options, includeIndex, includeReffile);
 		Log.d("Cscope", "runCommand: " + command);
 		
 		File tmpdir = context.getFilesDir();
@@ -86,13 +86,18 @@ public class Cscope {
 		return output;
 	}
 	
-	private String getCscopeCommand(Project project, String options, boolean includeIndex) {
+	private String getCscopeCommand(Project project, String options, boolean includeIndex, boolean includeReffile) {
 		StringBuilder builder = new StringBuilder();
 		builder.append(this.cscopeExecPath).append(" ");
-		if(includeIndex) {
+		if(includeIndex)
 			builder.append("-i ").append(getNamefilePath(project.getName())).append(" ");
+		
+		if(includeReffile)
 			builder.append("-f ").append(getReffilePath(project.getName())).append(" ");
-		}
+		else
+			builder.append("-f ").append(getReffilePath(project.getName())).append(".temp ");
+
+			
 		builder.append("-P ").append(project.getSourcePath(context)).append(" ");
 		builder.append(options);
 		return builder.toString();
@@ -146,7 +151,7 @@ public class Cscope {
 	/******************/
 
 	public String generateReffile(Project project) {
-		return runCommand(project, BUILDINDEX_OPTIONS);
+		return runCommand(project, BUILDINDEX_OPTIONS, WITH_INDEX, WITH_REFFILE);
 	}
 
 	public void deleteReffile(String projectName) {
@@ -167,10 +172,8 @@ public class Cscope {
 	
 	/******************/
 	
-	private CscopeEntry getFunctionEntry(Project project, String functionName, String fileName) {
-		Log.d("Cscope", "getFunctionEntry(): running command");
-		String output = runCommand(project, "-d -L -1 " + functionName);
-		Log.d("Cscope", "getFunctionEntry(): got output:\n" + output);
+	public CscopeEntry getFunctionEntry(Project project, String functionName, String fileName) {
+		String output = runCommand(project, "-k -L -1 " + functionName, WITH_INDEX, WITH_REFFILE);
 		String[] entries = output.trim().split("\n");
 		
 		if (TextUtils.isEmpty(fileName))
@@ -187,9 +190,9 @@ public class Cscope {
 		throw new IllegalArgumentException("Url " + fileName + ":" + functionName + " not found");
 	}
 	
-	private int getFunctionEndLine(Project project, CscopeEntry cscopeEntry) {	
-		String options = "-L -1 '.*' " + cscopeEntry.file;
-		String symbols = runCommand(project, options, false);
+	public int getFunctionEndLine(Project project, CscopeEntry cscopeEntry) {
+		String options = "-k -L -1 '.*' " + cscopeEntry.file;
+		String symbols = runCommand(project, options, NO_INDEX, NO_REFFILE);
 		
 		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
 		
@@ -244,14 +247,14 @@ public class Cscope {
 		Log.d("Cscope", "Got reference endline");
 		
 		String options = "-L -2 '" + functionName + "'";
-		String symbols = runCommand(project, options);
+		String symbols = runCommand(project, options, WITH_INDEX, WITH_REFFILE);
 		ArrayList<CscopeEntry> references = parseReferences(symbols, cscopeEntry.lineNumber, endLine);
 		return references;
 	}
 	
 	public ArrayList<CscopeEntry> getFileReferences(Project project, String fileName) {
 		String options = "-L -2 '.*' " + project.getSourcePath(context) + fileName;
-		String symbols = runCommand(project, options, false);
+		String symbols = runCommand(project, options, NO_INDEX, WITH_REFFILE);
 		ArrayList<CscopeEntry> references = parseReferences(symbols, 0, Integer.MAX_VALUE);
 		return references;
 	}
@@ -280,7 +283,7 @@ public class Cscope {
 		ArrayList<String> result = new ArrayList<String>();
 		
 		String options = "-k -L -1 '.*' " + project.getSourcePath(context) + "/" + filename;
-		String symbols = runCommand(project, options, false);
+		String symbols = runCommand(project, options, NO_INDEX, NO_REFFILE);
 				
 		for(CscopeEntry entry: parseReferences(symbols, 0, 0))
 			result.add(entry.name);
@@ -318,7 +321,7 @@ public class Cscope {
 		HashMap<String, ArrayList<CscopeEntry>> result = new HashMap<String, ArrayList<CscopeEntry>>();
 		
 		String options = "-d -k -L -1 '.*' ";
-		String symbols = runCommand(project, options);
+		String symbols = runCommand(project, options, WITH_INDEX, WITH_REFFILE);
 				
 		for(CscopeEntry entry: parseReferences(symbols, 0, 0)) {
 			ArrayList<CscopeEntry> list = result.get(entry.file);
