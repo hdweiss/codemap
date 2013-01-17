@@ -11,6 +11,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.data.Cscope;
+import com.hdweiss.codemap.data.CscopeEntry;
+import com.hdweiss.codemap.data.CscopeWrapper;
 import com.hdweiss.codemap.data.JGitWrapper;
 import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.SyntaxHighlighter;
@@ -21,11 +23,14 @@ public class ProjectController {
 	
 	public Project project;
 	private Cscope cscope;
+	private CscopeWrapper cscopeWrapper;
+
 	
 	public ProjectController(String name, Context context) {
 		this.context = context;
-		this.cscope = new Cscope(context);
 		loadProject(name);
+		this.cscope = new Cscope(context);
+		this.cscopeWrapper = new CscopeWrapper(cscope, project, context);
 	}
 
 	
@@ -98,7 +103,7 @@ public class ProjectController {
 		if(symbolList != null)
 			return symbolList;
 		else {
-			ArrayList<String> declarations = cscope.getDeclarations(filename, project);
+			ArrayList<String> declarations = cscopeWrapper.getDeclarations(filename);
 			project.symbols.put(filename, declarations);
 			return declarations;
 		}
@@ -127,9 +132,10 @@ public class ProjectController {
 			final String fileName = getFileFromUrl(url);
 			final String functionName = getFunctionFromUrl(url);
 			
-			String content = cscope.getFunction(project, functionName, fileName).trim();
+			CscopeEntry entry = cscopeWrapper.getFunctionEntry(functionName, fileName);
+			String content = cscopeWrapper.getFunction(entry).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
-			highlighter.markupReferences(cscope.getReferences(project, functionName, fileName));
+			highlighter.markupReferences(cscopeWrapper.getReferences(entry));
 
 			return highlighter.formatToHtml();
 		} catch (IllegalArgumentException e) {
@@ -139,9 +145,9 @@ public class ProjectController {
 	
 	public SpannableString getFileSource(String fileName) {
 		try {
-			String content = cscope.getFile(project, fileName).trim();
+			String content = cscopeWrapper.getFile(fileName).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
-			highlighter.markupReferences(cscope.getFileReferences(project, fileName));
+			highlighter.markupReferences(cscopeWrapper.getFileReferences( fileName));
 			Log.d("CodeMap", "Content : \n" + highlighter.formatToHtml());
 
 			return highlighter.formatToHtml();

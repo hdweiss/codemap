@@ -44,7 +44,7 @@ public class CollisionManager {
 			try {
 				item = iterator.next();
 			} catch (ConcurrentModificationException e) {
-				Log.e("CodeMap", e.getLocalizedMessage());
+				Log.e("CodeMap", "Collision manager caught ConcurrentModificationException");
 				return;
 			}
 			if (pushingItem == item)

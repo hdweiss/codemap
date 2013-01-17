@@ -3,27 +3,16 @@ package com.hdweiss.codemap.test;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.test.AndroidTestCase;
 
 import com.hdweiss.codemap.data.Cscope;
-import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.Utils;
 
-@SuppressLint("SdCardPath")
 public class CscopeTest extends AndroidTestCase {
 	private static final String PROJECT_NAME = "Testproject";
-	private static final int NUMBER_OF_FILES = 87;
-	
-	private static final String ADDTOTALS_FIRSTLINE = "extern void addTotals";
-	private static final int declarationsInMain = 29;
-	private static final int declarationsInMainClean = 17;
-
 
 	private Context context;
 	private Cscope cscope;
@@ -78,32 +67,5 @@ public class CscopeTest extends AndroidTestCase {
 			fail("Couldn't generate reffile");
 		}
 	}
-	
-	
-	public void testGetFunction() {
-		cscope.generateNamefile(project);
-		cscope.generateReffile(project);
-		String contents = cscope.getFunction(project, "addTotals", "");
-		assertTrue(contents.contains(ADDTOTALS_FIRSTLINE));
-	}
-	
-	public void testGetDeclarations() {
-		cscope.generateNamefile(project);
-		cscope.generateReffile(project);
-		
-		ArrayList<String> declarations = cscope.getDeclarations("main.c", project);
-		assertEquals(declarationsInMainClean, declarations.size());
-	}
-	
-	public void testGetAllDeclarations() {
-		cscope.generateNamefile(project);
-		cscope.generateReffile(project);
-		
-		HashMap<String,ArrayList<CscopeEntry>> declarations = cscope.getAllDeclarations(project);
-		assertEquals(NUMBER_OF_FILES, declarations.size());
-		
-		ArrayList<CscopeEntry> mainDeclarations = declarations.get(project.getSourcePath(context) + "/main.c");
-		assertNotNull(mainDeclarations);
-		assertEquals(declarationsInMain, mainDeclarations.size());
-	}
+
 }
