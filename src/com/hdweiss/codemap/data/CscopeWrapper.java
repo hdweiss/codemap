@@ -38,7 +38,7 @@ public class CscopeWrapper {
 	public CscopeEntry getFunctionEntry(String functionName, String fileName) {
 		Log.d("Cscope", "-> getFunctionEntry()");
 		
-		final String options = "-k -L -1 " + functionName;
+		final String options = "-k -L -1 '" + functionName + "'";
 		String output;
 		if (TextUtils.isEmpty(fileName))
 			output = cscope.runCommand(project, options);
@@ -101,7 +101,8 @@ public class CscopeWrapper {
 	public ArrayList<CscopeEntry> getFileReferences(String fileName) {
 		Log.d("Cscope", "-> getFileReferences()");
 		String options = "-L -2 '.*' ";
-		String symbols = cscope.runCommand(project, options, project.getSourcePath(context) + fileName);
+		String symbols = cscope.runCommand(project, options,
+				project.getSourcePath(context) + File.separator + fileName);
 		Log.d("Cscope", "getFileReferences(): cscope returned");
 		ArrayList<CscopeEntry> references = parseReferences(symbols, 0, Integer.MAX_VALUE);
 		return references;

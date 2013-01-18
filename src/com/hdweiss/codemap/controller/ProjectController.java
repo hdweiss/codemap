@@ -133,6 +133,8 @@ public class ProjectController {
 			final String functionName = getFunctionFromUrl(url);
 			
 			CscopeEntry entry = cscopeWrapper.getFunctionEntry(functionName, fileName);
+			Log.d("CodeMap", "getFunctionSource(): got entry " + entry.toString() + "->" + entry.endLine);
+			
 			String content = cscopeWrapper.getFunction(entry).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
 			highlighter.markupReferences(cscopeWrapper.getReferences(entry));
@@ -148,7 +150,6 @@ public class ProjectController {
 			String content = cscopeWrapper.getFile(fileName).trim();
 			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
 			highlighter.markupReferences(cscopeWrapper.getFileReferences( fileName));
-			Log.d("CodeMap", "Content : \n" + highlighter.formatToHtml());
 
 			return highlighter.formatToHtml();
 		} catch (IllegalArgumentException e) {

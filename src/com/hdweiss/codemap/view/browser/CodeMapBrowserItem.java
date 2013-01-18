@@ -23,6 +23,9 @@ public class CodeMapBrowserItem {
 	public ArrayList<CodeMapBrowserItem> getChildren(ProjectController controller, Context context) {
 		ArrayList<CodeMapBrowserItem> items = new ArrayList<CodeMapBrowserItem>();
 
+		if (this.type == TYPE.SYMBOL)
+			return items;
+		
 		File file = new File(controller.project.getSourcePath(context)
 				+ File.separator + this.name);
 		
