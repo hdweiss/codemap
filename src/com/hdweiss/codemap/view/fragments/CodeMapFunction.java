@@ -52,6 +52,8 @@ public class CodeMapFunction extends CodeMapItem {
 				return false;
 			}
 		});
+		
+		this.titleView.setText(name);
 	}
 
 	public void addChildFragment(String url) {

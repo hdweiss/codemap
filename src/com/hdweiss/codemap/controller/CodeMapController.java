@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.CscopeEntry;
@@ -97,7 +98,8 @@ public class CodeMapController extends ProjectController {
 		}
 	}
 	
-	private CodeMapFunction instantiateFunctionFragment(String url, CodeMapPoint position) {
+	private CodeMapFunction instantiateFunctionFragment(String url,
+			CodeMapPoint position) throws IllegalArgumentException {
 		ArrayList<CscopeEntry> entries;
 		try {
 			entries = getUrlEntries(url);
@@ -114,9 +116,10 @@ public class CodeMapController extends ProjectController {
 				
 		if (entries.size() > 1)
 			popup(entries, functionView);
-		else {
-			final SpannableString content = getFunctionSource(entries.get(0));
-			functionView.init(url, content);
+		else if (entries.size() == 1) {
+			CscopeEntry entry = entries.get(0);
+			final SpannableString content = getFunctionSource(entry);
+			functionView.init(entry.getUrl(project.getSourcePath(context)), content);
 		}
 		
 		return functionView;
@@ -127,9 +130,8 @@ public class CodeMapController extends ProjectController {
 				
 		for (int i = 0; i < entries.size(); i++) {
 			CscopeEntry entry = entries.get(i);
-			String url = entry.getUrl();
+			String url = entry.getUrl(project.getSourcePath(context));
 			if (TextUtils.isEmpty(url) == false) {
-				url = url.substring(project.getSourcePath(context).length());
 				popupMenu.getMenu().add(Menu.NONE, i, Menu.NONE, url);
 			}
 		}
@@ -139,7 +141,8 @@ public class CodeMapController extends ProjectController {
 					public boolean onMenuItemClick(MenuItem item) {
 						CscopeEntry entry = entries.get(item.getItemId());
 						final SpannableString content = getFunctionSource(entry);
-						functionView.init(entry.actualName, content);
+						String url = entry.getUrl(project.getSourcePath(context));
+						functionView.init(url, content);
 						return true;
 					}
 
@@ -149,17 +152,24 @@ public class CodeMapController extends ProjectController {
 	}
 
 
-	public CodeMapItem addChildFragmentFromUrl(String functionName, CodeMapItem parent, float yOffset) {
+	public void addChildFragmentFromUrl(String functionName, CodeMapItem parent, float yOffset) {
 		float offset = yOffset + parent.getContentViewYOffset();
 
 		CodeMapPoint position = new CodeMapPoint();
 		position.x = parent.getX() + parent.getWidth() + 30;
 		position.y = parent.getY() + offset;
 		
-		CodeMapFunction item = instantiateFunctionFragment(functionName, position);
-		codeMapView.addMapItem(item);
-		codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
-		
-		return item;
+		try {
+			CodeMapFunction item = instantiateFunctionFragment(functionName,
+					position);
+			codeMapView.addMapItem(item);
+			codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
+		} catch (IllegalArgumentException e) {
+			Log.e("CodeMap",
+					"addChildFragmentFromUrl() couldn't create fragment");
+			Toast.makeText(context,
+					"Didn't find declaration for: " + functionName,
+					Toast.LENGTH_LONG).show();
+		}
 	}
 }

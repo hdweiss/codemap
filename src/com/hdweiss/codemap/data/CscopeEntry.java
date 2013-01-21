@@ -34,8 +34,12 @@ public class CscopeEntry {
 		return endLine;
 	}
 	
-	public String getUrl() {
-		return file + ":" + name;
+	public String getUrl(String projectPath) {
+		if (file.length() > projectPath.length()) {
+			String relativeFilename = file.substring(projectPath.length() + 1);
+			return relativeFilename + ":" + actualName;
+		} else
+			return file + ":" + actualName;
 	}
 	
 	public String toString() {
