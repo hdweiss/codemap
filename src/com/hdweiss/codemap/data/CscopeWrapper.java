@@ -164,6 +164,10 @@ public class CscopeWrapper {
 			
 			String funcName = substring.substring(funcNameStart,
 					substring.length()).trim();
+			
+			if (funcName.startsWith("*"))
+				funcName = funcName.substring(1);
+			
 			result.add(funcName);
 		}
 		

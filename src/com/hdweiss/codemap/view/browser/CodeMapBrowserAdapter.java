@@ -168,6 +168,7 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	public boolean expand(int position) {
 		CodeMapBrowserItem item = getItem(position);
 		ArrayList<CodeMapBrowserItem> children = item.getChildren(controller, getContext());
+		Collections.sort(children, new CodeMapBrowserItemComparator());
 		
 		if(children == null || children.size() == 0)
 			return false;
