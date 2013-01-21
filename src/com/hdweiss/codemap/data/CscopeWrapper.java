@@ -25,7 +25,8 @@ public class CscopeWrapper {
 	}
 	
 	public String getFunction (CscopeEntry cscopeEntry) {
-		String source = Utils.getFileFragment(cscopeEntry.file, cscopeEntry.lineNumber, cscopeEntry.endLine);
+		String source = Utils.getFileFragment(cscopeEntry.file,
+				cscopeEntry.lineNumber, cscopeEntry.getEndLine(this));
 		int index = source.lastIndexOf("}");
 		
 		if(index != -1)
@@ -52,12 +53,12 @@ public class CscopeWrapper {
 		if (TextUtils.isEmpty(fileName))
 			return new CscopeEntry(entries[0]);
 		
-		String absoluteFilePath = new File(project.getSourcePath(context), fileName).getAbsolutePath();
+		String absoluteFilePath = new File(project.getSourcePath(context),
+				fileName).getAbsolutePath();
 		for (String entry: entries) {
 			CscopeEntry cscopeEntry = new CscopeEntry(entry);
 			
 			if (cscopeEntry.file.equals(absoluteFilePath)) {
-				cscopeEntry.endLine = getFunctionEndLine(cscopeEntry);
 				Log.d("Cscope", "<- getFunctionEntry(): returning");
 				return cscopeEntry;
 			}
@@ -93,7 +94,8 @@ public class CscopeWrapper {
 			symbols = cscope.runCommand(project, options, cscopeEntry.file);
 		
 		Log.d("Cscope", "getReferences(): cscope returned");
-		ArrayList<CscopeEntry> references = parseReferences(symbols, cscopeEntry.lineNumber, cscopeEntry.endLine);
+		ArrayList<CscopeEntry> references = parseReferences(symbols,
+				cscopeEntry.lineNumber, cscopeEntry.getEndLine(this));
 		return references;
 	}
 	
@@ -108,7 +110,8 @@ public class CscopeWrapper {
 		return references;
 	}
 	
-	private ArrayList<CscopeEntry> parseReferences(String symbols, int startLine, int endLine) {
+	private ArrayList<CscopeEntry> parseReferences(String symbols,
+			int startLine, int endLine) {
 		ArrayList<CscopeEntry> references = new ArrayList<CscopeEntry>();
 		
 		String[] entries = symbols.trim().split("\n");
@@ -131,7 +134,8 @@ public class CscopeWrapper {
 		ArrayList<String> result = new ArrayList<String>();
 		
 		String options = "-k -L -1 '.*' ";
-		String symbols = cscope.runCommand(project, options, project.getSourcePath(context) + "/" + filename);
+		String symbols = cscope.runCommand(project, options,
+				project.getSourcePath(context) + "/" + filename);
 		Log.d("Cscope", "getDeclarations(): cscope returned");
 				
 		for(CscopeEntry entry: parseReferences(symbols, 0, 0))
@@ -158,34 +162,49 @@ public class CscopeWrapper {
 			if(funcNameStart == -1)
 				funcNameStart = 0;
 			
-			String funcName = substring.substring(funcNameStart, substring.length()).trim();
+			String funcName = substring.substring(funcNameStart,
+					substring.length()).trim();
 			result.add(funcName);
 		}
 		
 		return result;
 	}
+
 	
-	public HashMap<String,ArrayList<CscopeEntry>> getAllDeclarations() {
-		HashMap<String, ArrayList<CscopeEntry>> result = new HashMap<String, ArrayList<CscopeEntry>>();
+	
+	
+	public ArrayList<CscopeEntry> getAllEntries(String functionName,
+			String fileName) throws IllegalArgumentException {
+		ArrayList<CscopeEntry> entries = new ArrayList<CscopeEntry>();
 		
-		String options = "-d -k -L -1 '.*' ";
-		String symbols = cscope.runCommand(project, options);
+		final String options = "-k -L -1 '" + functionName + "'";
+		String output;
+		if (TextUtils.isEmpty(fileName))
+			output = cscope.runCommand(project, options);
+		else
+			output = cscope.runCommand(project, options,
+					project.getSourcePath(context) + File.separator + fileName);
 				
-		for(CscopeEntry entry: parseReferences(symbols, 0, 0)) {
-			ArrayList<CscopeEntry> list = result.get(entry.file);
-			
-			if(list == null) {
-				list = new ArrayList<CscopeEntry>();
-				result.put(entry.file, list);
-			}
-			
-			list.add(entry);
+		String[] entrySymbols = output.trim().split("\n");
+		
+		if (entrySymbols.length == 1 && TextUtils.isEmpty(entrySymbols[0])) {
+			throw new IllegalArgumentException("Couldn't find entry for "
+					+ fileName + ":" + functionName);
 		}
 		
-		return result;
+		for(int i = 0; i < entrySymbols.length; i++) {
+			try {
+				CscopeEntry entry = new CscopeEntry(entrySymbols[i]);
+				entries.add(entry);
+				
+			} catch (IllegalArgumentException e) {
+				if (TextUtils.isEmpty(entrySymbols[i]) == false)
+					Log.e("CodeMap", "Couldn't parse entry " + entrySymbols[i]);
+			}
+		}
+		
+		return entries;
 	}
-	
-	
 	
 	private CscopeEntry getNextEntry(String symbols, CscopeEntry entry) {
 		String[] entries = symbols.trim().split("\n");
@@ -206,5 +225,27 @@ public class CscopeWrapper {
 				project.getSourcePath(context) + File.separator + fileName);
 		String content = Utils.inputStreamToString(stream);
 		return content;
+	}
+	
+	
+	
+	public HashMap<String,ArrayList<CscopeEntry>> getAllDeclarations() {
+		HashMap<String, ArrayList<CscopeEntry>> result = new HashMap<String, ArrayList<CscopeEntry>>();
+		
+		String options = "-d -k -L -1 '.*' ";
+		String symbols = cscope.runCommand(project, options);
+				
+		for(CscopeEntry entry: parseReferences(symbols, 0, 0)) {
+			ArrayList<CscopeEntry> list = result.get(entry.file);
+			
+			if(list == null) {
+				list = new ArrayList<CscopeEntry>();
+				result.put(entry.file, list);
+			}
+			
+			list.add(entry);
+		}
+		
+		return result;
 	}
 }

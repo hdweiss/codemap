@@ -19,7 +19,7 @@ import com.hdweiss.codemap.view.codemap.CodeMapView;
 public abstract class CodeMapItem extends ZoomableLinearLayout {
 	public UUID id = UUID.randomUUID();
 
-	private TextView titleView;
+	public TextView titleView;
 	private ImageButton removeButton;
 	
 	private View contentView;

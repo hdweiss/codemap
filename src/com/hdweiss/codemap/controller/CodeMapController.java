@@ -1,11 +1,18 @@
 package com.hdweiss.codemap.controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.PopupMenu;
 
 import com.hdweiss.codemap.data.CodeMapState;
+import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
@@ -86,20 +93,62 @@ public class CodeMapController extends ProjectController {
 	public void addFunctionView(String url) {
 		if(codeMapView != null) {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
-			
-			CodeMapFunction functionView = instantiateFunctionFragment(url, position);
-			codeMapView.addMapItem(functionView);
+			instantiateFunctionFragment(url, position);
 		}
 	}
 	
 	private CodeMapFunction instantiateFunctionFragment(String url, CodeMapPoint position) {
-		final SpannableString content = getFunctionSource(url);
-		
+		ArrayList<CscopeEntry> entries;
+		try {
+			entries = getUrlEntries(url);
+		} catch (IllegalArgumentException e) {
+			Log.e("CodeMap",
+					"Error creating function fragment: "
+							+ e.getLocalizedMessage());
+			throw(e);
+		}
+
 		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
-				position, url, content);
+				position, url, new SpannableString(""));
+		codeMapView.addMapItem(functionView);
+				
+		if (entries.size() > 1)
+			popup(entries, functionView);
+		else {
+			final SpannableString content = getFunctionSource(entries.get(0));
+			functionView.init(url, content);
+		}
+		
 		return functionView;
 	}
 	
+	private void popup(final ArrayList<CscopeEntry> entries, final CodeMapFunction functionView) {
+		PopupMenu popupMenu = new PopupMenu(context, functionView);
+				
+		for (int i = 0; i < entries.size(); i++) {
+			CscopeEntry entry = entries.get(i);
+			String url = entry.getUrl();
+			if (TextUtils.isEmpty(url) == false) {
+				url = url.substring(project.getSourcePath(context).length());
+				popupMenu.getMenu().add(Menu.NONE, i, Menu.NONE, url);
+			}
+		}
+
+		popupMenu
+				.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+					public boolean onMenuItemClick(MenuItem item) {
+						CscopeEntry entry = entries.get(item.getItemId());
+						final SpannableString content = getFunctionSource(entry);
+						functionView.init(entry.actualName, content);
+						return true;
+					}
+
+				});
+
+		popupMenu.show();
+	}
+
+
 	public CodeMapItem addChildFragmentFromUrl(String functionName, CodeMapItem parent, float yOffset) {
 		float offset = yOffset + parent.getContentViewYOffset();
 

@@ -127,23 +127,47 @@ public class ProjectController {
 		return url.substring(colonIndex + 1);
 	}
 	
-	public SpannableString getFunctionSource(String url) {
-		try {
-			final String fileName = getFileFromUrl(url);
-			final String functionName = getFunctionFromUrl(url);
-			
-			CscopeEntry entry = cscopeWrapper.getFunctionEntry(functionName, fileName);
-			Log.d("CodeMap", "getFunctionSource(): got entry " + entry.toString() + "->" + entry.endLine);
-			
-			String content = cscopeWrapper.getFunction(entry).trim();
-			SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
-			highlighter.markupReferences(cscopeWrapper.getReferences(entry));
+	
+	
+	public ArrayList<CscopeEntry> getUrlEntries(String url)
+			throws IllegalArgumentException {
+		final String fileName = getFileFromUrl(url);
+		final String functionName = getFunctionFromUrl(url);
 
-			return highlighter.formatToHtml();
+		ArrayList<CscopeEntry> allEntries = cscopeWrapper.getAllEntries(
+				functionName, fileName);
+		
+		return allEntries;
+	}
+	
+	
+	/**
+	 * Call in case of full url.
+	 */
+	// TODO Refactor, only createCodeMapItem() calls this
+	public SpannableString getFunctionSource(String url) {
+		final String fileName = getFileFromUrl(url);
+		final String functionName = getFunctionFromUrl(url);
+
+		try {
+			ArrayList<CscopeEntry> allEntries = cscopeWrapper.getAllEntries(
+					functionName, fileName);
+			return getFunctionSource(allEntries.get(0));
 		} catch (IllegalArgumentException e) {
+			Log.e("CodeMap", e.getLocalizedMessage());
 			return new SpannableString("");
 		}
 	}
+	
+	public SpannableString getFunctionSource(CscopeEntry entry) {
+		String content = cscopeWrapper.getFunction(entry).trim();
+		SyntaxHighlighter highlighter = new SyntaxHighlighter(content);
+		highlighter.markupReferences(cscopeWrapper.getReferences(entry));
+
+		return highlighter.formatToHtml();
+	}
+	
+
 	
 	public SpannableString getFileSource(String fileName) {
 		try {

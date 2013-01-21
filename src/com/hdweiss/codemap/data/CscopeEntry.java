@@ -13,7 +13,7 @@ public class CscopeEntry {
 	public String name = "";
 	public String file = "";
 	public int lineNumber = -1;
-	public int endLine = -1;
+	private int endLine = -2;
 	
 	private static Pattern CscopeEntryPattern = Pattern.compile("(\\S*)\\s(\\S*)\\s(\\d*)\\s(.*)");
 	public CscopeEntry(String line) {
@@ -26,6 +26,16 @@ public class CscopeEntry {
 			this.lineNumber = Integer.parseInt(matcher.group(CSCOPE_LINENUMBER));
 		} else
 			throw new IllegalArgumentException("Couldn't parse " + line);
+	}
+	
+	public int getEndLine(CscopeWrapper cscopeWrapper) {
+		if (endLine == -2)
+			endLine = cscopeWrapper.getFunctionEndLine(this);
+		return endLine;
+	}
+	
+	public String getUrl() {
+		return file + ":" + name;
 	}
 	
 	public String toString() {

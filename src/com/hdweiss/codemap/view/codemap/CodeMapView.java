@@ -79,6 +79,9 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 
 	
 	public void addMapItem(CodeMapItem item) {
+		if (items.contains(item))
+			return;
+		
 		addView(item);
 		items.add(item);
 		item.setCodeMapView(this);

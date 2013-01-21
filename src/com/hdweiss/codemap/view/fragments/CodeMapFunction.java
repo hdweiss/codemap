@@ -35,7 +35,7 @@ public class CodeMapFunction extends CodeMapItem {
 		setPosition(point);
 	}
 	
-	private void init(String name, SpannableString content) {
+	public void init(String name, SpannableString content) {
 		sourceView.setText(content);
 		
 		Spannable span = SpanUtils.replaceAll(content,
