@@ -181,7 +181,7 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	
 	@Override
 	public long getItemId(int position) {
-		return 0;
+		return position;
 	}
 
 	public int findParent(int position) {

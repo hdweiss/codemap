@@ -36,18 +36,20 @@ public class CodeMapBrowserItemView extends LinearLayout {
 		switch(item.type) {
 		case SYMBOL:
 			this.textView.setTextColor(getResources().getColor(color.gray));
-			this.declarationView.setVisibility(VISIBLE);
 			setDeclarations(0);
 			break;
 		default:
 			this.textView.setTextColor(getResources().getColor(color.black));
-			this.declarationView.setVisibility(INVISIBLE);
 			break;
 		}
 	}
 	
 	public void setDeclarations(int numberOfDeclarations) {
-		this.declarationView.setText(Integer.toString(numberOfDeclarations));
+		if (numberOfDeclarations > 0) {
+			this.declarationView.setText(Integer.toString(numberOfDeclarations));
+			this.declarationView.setVisibility(VISIBLE);
+		} else
+			this.declarationView.setVisibility(GONE);
 	}
 	
 	public void setDirectory(boolean isDirectory) {
