@@ -3,8 +3,11 @@ package com.hdweiss.codemap.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
@@ -99,6 +102,47 @@ public class CodeMapController extends ProjectController {
 			instantiateFunctionFragment(url, position);
 		}
 	}
+	
+	private class FindDeclarationTask extends AsyncTask<Object, Object, Object>
+    {
+		private String functionName;
+
+		private ProgressDialog dialog;
+
+		private float yOffset;
+
+		private CodeMapItem parent;
+		
+		public void setup(String functionName, CodeMapItem parent, float yOffset) {
+			this.functionName = functionName;
+			this.parent = parent;
+			this.yOffset = yOffset;
+		}
+		
+		@Override
+		protected Object doInBackground(final Object... urls) {
+			// TODO Implement
+			return null;
+		}
+
+        @Override
+        protected void onPostExecute(final Object result)
+        {
+        	super.onPostExecute(result);
+        	dialog.dismiss();
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+        	super.onPreExecute();
+        	this.dialog = new ProgressDialog(context);
+        	dialog.setMessage("Finding symbol");
+        	dialog.setIndeterminate(false);
+        	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        	dialog.show();
+        }
+    }
 	
 	private CodeMapFunction instantiateFunctionFragment(String url,
 			CodeMapPoint position) throws IllegalArgumentException {
