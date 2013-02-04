@@ -20,15 +20,19 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 		setOnItemClickListener(this);
 		setOnItemLongClickListener(this);
 	}
-
+	
 	public void setController(CodeMapController controller) {
 		this.controller = controller;
-		refresh();
+		update();
+	}
+	
+	public void update() {
+		this.adapter = new CodeMapBrowserAdapter(getContext(), controller);
+		setAdapter(adapter);
 	}
 	
 	public void refresh() {
-		this.adapter = new CodeMapBrowserAdapter(getContext(), controller);
-		setAdapter(adapter);
+		adapter.refresh();
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
@@ -41,20 +45,6 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 		
         return false;
     }
-	
-	public String getItemUrl(int position) {
-		CodeMapBrowserItem item = adapter.getItem(position);
-
-		int parentId = adapter.findParent(position);
-
-		if (parentId != -1) {
-			CodeMapBrowserItem parentItem = adapter.getItem(parentId);
-			String url = parentItem.name + ":" + item.name;
-			return url;
-		}
-
-		return "";
-	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		boolean changed = adapter.collapseExpand(position);
@@ -62,7 +52,7 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 		if(changed == false) {
 			CodeMapBrowserItem item = adapter.getItem(position);
 			if(item.type == CodeMapBrowserItem.TYPE.SYMBOL) {
-				final String url = getItemUrl(position);
+				final String url = adapter.getItemUrl(position);
 				controller.addFunctionView(url);
 			}
 		}

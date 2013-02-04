@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.SpannableString;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
+import com.hdweiss.codemap.view.codemap.CodeMapFragment;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
@@ -109,7 +111,7 @@ public class CodeMapController extends ProjectController {
 							+ e.getLocalizedMessage());
 			throw(e);
 		}
-
+		
 		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
 				position, url, new SpannableString(""));
 		codeMapView.addMapItem(functionView);
@@ -171,5 +173,16 @@ public class CodeMapController extends ProjectController {
 					"Didn't find declaration for: " + functionName,
 					Toast.LENGTH_LONG).show();
 		}
+	}
+	
+	public int getOpenDeclarations(String url) {
+		int numberOfDeclarations = codeMapView.getDeclarations(url).size();
+		Log.d("CodeMap", "Getting declarations for " + url + " = " + numberOfDeclarations);
+		return numberOfDeclarations;
+	}
+
+	public void updateCodeBrowser() {
+		Intent intent = new Intent(CodeMapFragment.INTENT_REFRESH);
+		context.sendBroadcast(intent);
 	}
 }

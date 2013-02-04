@@ -51,7 +51,7 @@ public class CollisionManager {
 				continue;
 			
 			if (Rect.intersects(pushingItem.getBounds(), item.getBounds())) {
-				Log.d("collision", "fixPush: " + pushingItem.getUrl() + " collided " + item.getUrl());
+				Log.d("Collision", "fixPush: " + pushingItem.getUrl() + " collided " + item.getUrl());
 				item.push(pushOffset);
 				iterator.remove();
 				fixPush(item, items, pushOffset);

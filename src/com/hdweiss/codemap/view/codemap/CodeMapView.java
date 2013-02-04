@@ -6,6 +6,7 @@ import java.util.Iterator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -85,6 +86,7 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		addView(item);
 		items.add(item);
 		item.setCodeMapView(this);
+		controller.updateCodeBrowser();
 	}
 
 	public void addMapLink(CodeMapLink link) {
@@ -105,6 +107,8 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 			if(link.hasItem(item))
 				linksIt.remove();
 		}
+
+		controller.updateCodeBrowser();
 	}
 	
 	public void clear() {
@@ -149,5 +153,22 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		state.scrollX = getScrollX();
 		state.scrollY = getScrollY();
 		return state;
+	}
+	
+	// TODO Make more efficient
+	public ArrayList<CodeMapItem> getDeclarations(String url) {
+		ArrayList<CodeMapItem> result = new ArrayList<CodeMapItem>();
+		Iterator<CodeMapItem> i = this.items.iterator();
+		while (i.hasNext()) {
+			CodeMapItem item = i.next();
+			
+			if (item.getUrl().contains("clock"));
+				Log.d("CodeMap", "one of clocks urls: " + item.getUrl());
+				
+			if (item.getUrl().equals(url))
+				result.add(item);
+		}
+		
+		return result;
 	}
 }

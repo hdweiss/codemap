@@ -11,15 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.hdweiss.codemap.controller.ProjectController;
+import com.hdweiss.codemap.controller.CodeMapController;
 
 public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 
 	private ArrayList<Boolean> expanded = new ArrayList<Boolean>();
-	private ProjectController controller;
+	private CodeMapController controller;
 	private File projectDirectory;
 	
-	public CodeMapBrowserAdapter(Context context, ProjectController controller) {
+	public CodeMapBrowserAdapter(Context context, CodeMapController controller) {
 		super(context, android.R.layout.simple_list_item_1);
 		this.controller = controller;
 		this.projectDirectory = controller.project.getSourceDirectory(getContext());
@@ -90,16 +90,16 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	public View getView(int position, View convertView, ViewGroup parent) {				
 		CodeMapBrowserItemView listItem = (CodeMapBrowserItemView) convertView;
 		
-		if (convertView == null) {
+		if (convertView == null)
 			listItem = new CodeMapBrowserItemView(getContext());
-		}
 
 		CodeMapBrowserItem item = getItem(position);
 		listItem.setItem(item);
 
 		File file = new File(projectDirectory.getAbsolutePath() + File.separator + item.name);
-		listItem.setDirectory(file.isDirectory());		
-		
+		listItem.setDirectory(file.isDirectory());
+		listItem.setDeclarations(controller.getOpenDeclarations(getItemUrl(position)));
+				
 		return listItem;
 	}
 
@@ -195,5 +195,19 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 		}
 
 		return -1;
+	}
+	
+	public String getItemUrl(int position) {
+		CodeMapBrowserItem item = getItem(position);
+
+		int parentId = findParent(position);
+
+		if (parentId != -1) {
+			CodeMapBrowserItem parentItem = getItem(parentId);
+			String url = parentItem.name + ":" + item.name;
+			return url;
+		}
+
+		return "";
 	}
 }

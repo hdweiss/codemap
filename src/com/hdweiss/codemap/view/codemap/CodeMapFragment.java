@@ -1,6 +1,10 @@
 package com.hdweiss.codemap.view.codemap;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -71,6 +75,19 @@ public class CodeMapFragment extends Fragment {
 
 
 	@Override
+	public void onResume() {
+		super.onResume();
+		this.getActivity().registerReceiver(receiver, filter);
+	}
+
+	@Override
+	public void onPause() {
+		this.getActivity().unregisterReceiver(receiver);
+		super.onPause();
+	}
+
+	
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
 		inflater.inflate(R.menu.codemap, menu);
@@ -99,4 +116,14 @@ public class CodeMapFragment extends Fragment {
 		controller.saveCodeMapState();
 		super.onDestroy();
 	}
+	
+	
+	public static final String INTENT_REFRESH = "com.hdweiss.codemap.codebrowser.refresh";
+	private IntentFilter filter = new IntentFilter(INTENT_REFRESH);
+	private BroadcastReceiver receiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context c, Intent i) {
+			codeMapBrowser.refresh();
+		}
+	};
 }
