@@ -13,9 +13,7 @@ public class CodeMapBrowserItem {
 	public String name = "";
 	public int level = 0;
 	public TYPE type = TYPE.FILE;
-	
-	private int declarationsOpen = 0;
-	
+		
 	public CodeMapBrowserItem(String name, int level, TYPE type) {
 		this.name = name;
 		this.level = level;
@@ -42,14 +40,5 @@ public class CodeMapBrowserItem {
 		}
 		
 		return items;
-	}
-	
-	public void addDeclaration() {
-		declarationsOpen++;
-	}
-	
-	public void closeDeclaration() {
-		if (declarationsOpen > 0)
-			declarationsOpen--;
 	}
 }
