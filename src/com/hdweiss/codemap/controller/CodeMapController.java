@@ -183,7 +183,7 @@ public class CodeMapController extends ProjectController {
 		else if (entries.size() == 1) {
 			CscopeEntry entry = entries.get(0);
 			final SpannableString content = getFunctionSource(entry);
-			functionView.init(entry.getUrl(project.getSourcePath(context)), content);
+			functionView.init(entry.getActualUrl(project.getSourcePath(context)), content);
 		}
 		
 		return functionView;
@@ -205,7 +205,7 @@ public class CodeMapController extends ProjectController {
 					public boolean onMenuItemClick(MenuItem item) {
 						CscopeEntry entry = entries.get(item.getItemId());
 						final SpannableString content = getFunctionSource(entry);
-						String url = entry.getUrl(project.getSourcePath(context));
+						String url = entry.getActualUrl(project.getSourcePath(context));
 						functionView.init(url, content);
 						return true;
 					}
