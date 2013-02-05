@@ -20,6 +20,7 @@ import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
+import com.hdweiss.codemap.view.browser.CodeMapBrowserItem;
 import com.hdweiss.codemap.view.codemap.CodeMapFragment;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
@@ -101,6 +102,23 @@ public class CodeMapController extends ProjectController {
 			CodeMapPoint position = new CodeMapCursorPoint(100, 100).getCodeMapPoint(codeMapView);
 			instantiateFunctionFragment(url, position);
 		}
+	}
+	
+	
+	private static final int YScrollOffset = 200;
+	private static final int XScrollOffset = 200;
+	public void symbolClicked(String url, CodeMapBrowserItem item) {
+		ArrayList<CodeMapItem> declarations = codeMapView.getDeclarations(url);
+
+		if (declarations.size() > 0) {
+			int index = item.declarationCycle % declarations.size();
+			item.declarationCycle++;
+			CodeMapItem codeMapItem = declarations.get(index);
+			float x = codeMapItem.getX() - XScrollOffset;
+			float y = codeMapItem.getY() - YScrollOffset;
+			codeMapView.setScroll(x, y);
+		} else
+			addFunctionView(url);
 	}
 	
 	private class FindDeclarationTask extends AsyncTask<Object, Object, Object>

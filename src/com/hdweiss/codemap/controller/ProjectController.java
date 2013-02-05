@@ -167,7 +167,6 @@ public class ProjectController {
 		return highlighter.formatToHtml();
 	}
 	
-
 	
 	public SpannableString getFileSource(String fileName) {
 		try {

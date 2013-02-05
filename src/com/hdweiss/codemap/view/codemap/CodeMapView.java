@@ -171,4 +171,9 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		
 		return result;
 	}
+	
+	public void setScroll(float x, float y) {
+		setScrollX((int) x);
+		setScrollY((int) y);
+	}
 }

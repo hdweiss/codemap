@@ -13,7 +13,9 @@ public class CodeMapBrowserItem {
 	public String name = "";
 	public int level = 0;
 	public TYPE type = TYPE.FILE;
-		
+	
+	public int declarationCycle = 0;
+	
 	public CodeMapBrowserItem(String name, int level, TYPE type) {
 		this.name = name;
 		this.level = level;

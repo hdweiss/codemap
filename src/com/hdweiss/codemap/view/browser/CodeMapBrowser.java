@@ -42,6 +42,10 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 			controller.addFileView(item.name);
 			return true;
 		}
+		else if (item.type == TYPE.SYMBOL) {
+			final String url = adapter.getItemUrl(position);
+			controller.addFunctionView(url);
+		}
 		
         return false;
     }
@@ -53,7 +57,7 @@ public class CodeMapBrowser extends ListView implements OnItemClickListener, and
 			CodeMapBrowserItem item = adapter.getItem(position);
 			if(item.type == CodeMapBrowserItem.TYPE.SYMBOL) {
 				final String url = adapter.getItemUrl(position);
-				controller.addFunctionView(url);
+				controller.symbolClicked(url, item);
 			}
 		}
 	}
