@@ -254,7 +254,7 @@ public class CodeMapController extends ProjectController {
         
         private void showDialog() {
         	this.dialog = new ProgressDialog(codeMapView.getContext());
-        	dialog.setMessage("Finding symbol");
+        	dialog.setMessage("Finding declarations for: \"" + url + "\"");
         	dialog.setIndeterminate(false);
         	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         	dialog.show();
