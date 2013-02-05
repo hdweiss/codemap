@@ -46,7 +46,6 @@ public class CodeMapFunction extends CodeMapItem {
 		sourceView.setMovementMethod(LinkMovementMethod.getInstance());
 		
 		sourceView.setOnTouchListener(new OnTouchListener() {
-			
 			public boolean onTouch(View v, MotionEvent event) {
 				yOffset = event.getY();
 				return false;

@@ -13,35 +13,27 @@ import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.util.ZoomableLinearLayout;
+import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 
-public abstract class CodeMapItem extends ZoomableLinearLayout {
+public abstract class CodeMapItem extends LinearLayout {
 	public UUID id = UUID.randomUUID();
 
 	public TextView titleView;
 	private ImageButton removeButton;
+	private LinearLayout containerView;
 	
 	private View contentView;
 	protected CodeMapView codeMapView;
 	
 	private boolean moveItem = true;
-
 	
 	public CodeMapItem(Context context, AttributeSet attrs, String name) {
 		super(context, attrs);
 		
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.WRAP_CONTENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
-		setLayoutParams(params);
-		
-		setOrientation(VERTICAL);
-		setBackgroundResource(R.drawable.codebrowser_bg);
-		setPadding(5, 5, 5, 5);
-		
-		
 		inflate(context, R.layout.codemap_item, this);
+				
+		containerView = (LinearLayout) findViewById(R.id.codemap_item_container);
 		
 		titleView = (TextView) findViewById(R.id.title);
 		titleView.setText(name);
@@ -52,8 +44,10 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 				remove();
 			}
 		});
+
+		this.post(Utils.getTouchDelegateAction(this, removeButton, 50, 50, 50, 50));
 	}
-	
+
 	
 	public void setCodeMapView(CodeMapView codeMapView) {
 		this.codeMapView = codeMapView;
@@ -74,12 +68,7 @@ public abstract class CodeMapItem extends ZoomableLinearLayout {
 
 	protected void setContentView(View view) {
 		this.contentView = view;
-		
-		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT,
-				LinearLayout.LayoutParams.WRAP_CONTENT);
-		view.setLayoutParams(params);
-		addView(contentView);
+		containerView.addView(view);
 	}
 	
 

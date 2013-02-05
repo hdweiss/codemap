@@ -16,8 +16,11 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.TouchDelegate;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
@@ -175,4 +178,32 @@ public class Utils {
 		intent.putExtra(SynchServiceReceiver.SYNC_STATUS, status);
 		context.sendBroadcast(intent);
 	}
+	
+	
+	public static Runnable getTouchDelegateAction(final View parent,
+			final View delegate, final int topPadding, final int bottomPadding,
+			final int leftPadding, final int rightPadding) {
+        return new Runnable() {
+            public void run() {
+                
+                //Construct a new Rectangle and let the Delegate set its values
+                Rect touchRect = new Rect();
+                delegate.getHitRect(touchRect);
+                
+                //Modify the dimensions of the Rectangle
+                //Padding values below zero are replaced by zeros
+                touchRect.top-=Math.max(0, topPadding);
+                touchRect.bottom+=Math.max(0, bottomPadding);
+                touchRect.left-=Math.max(0, leftPadding);
+                touchRect.right+=Math.max(0, rightPadding);
+                
+                //Now we are going to construct the TouchDelegate
+                TouchDelegate touchDelegate = new TouchDelegate(touchRect, delegate);
+                
+                //And set it on the parent
+                parent.setTouchDelegate(touchDelegate);
+                
+            }
+        };
+    }
 }
