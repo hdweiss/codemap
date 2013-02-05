@@ -152,18 +152,10 @@ public class CodeMapController extends ProjectController {
 		position.x = parent.getX() + parent.getWidth() + 30;
 		position.y = parent.getY() + offset;
 		
-		try {
-			CodeMapFunction item = instantiateFunctionFragment(functionName,
-					position);
-			codeMapView.addMapItem(item);
-			codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
-		} catch (IllegalArgumentException e) {
-			Log.e("CodeMap",
-					"addChildFragmentFromUrl() couldn't create fragment");
-			Toast.makeText(context,
-					"Didn't find declaration for: " + functionName,
-					Toast.LENGTH_LONG).show();
-		}
+		CodeMapFunction item = instantiateFunctionFragment(functionName,
+				position);
+		codeMapView.addMapItem(item);
+		codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
 	}
 	
 	
@@ -231,19 +223,20 @@ public class CodeMapController extends ProjectController {
 				Log.e("CodeMap",
 						"Error creating function fragment: "
 								+ e.getLocalizedMessage());
-				throw (e);
 			}
 			return null;
 		}
 
-        @Override
-        protected void onPostExecute(final Object result)
-        {
-        	super.onPostExecute(result);
-        	hideDialog();
-        	if (this.entries != null)
-        		populateFragment(entries, codeMapFunction);
-        }
+		@Override
+		protected void onPostExecute(final Object result) {
+			super.onPostExecute(result);
+			hideDialog();
+			if (this.entries != null)
+				populateFragment(entries, codeMapFunction);
+			else
+				Toast.makeText(context, "Didn't find declaration for: " + url,
+						Toast.LENGTH_LONG).show();
+		}
 
         @Override
         protected void onPreExecute()
