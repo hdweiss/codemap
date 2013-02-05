@@ -29,6 +29,7 @@ public class CodeMapFunction extends CodeMapItem {
 		super(context, null, name);
 				
 		sourceView = new TextView(getContext());
+		sourceView.setTextSize(15);
 		setContentView(sourceView);
 		
 		init(name, content);

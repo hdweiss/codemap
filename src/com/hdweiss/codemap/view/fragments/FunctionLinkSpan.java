@@ -32,7 +32,9 @@ public class FunctionLinkSpan extends ClickableSpan {
 		}
 
 		public FunctionLinkSpan convert(URLSpan span) {
-			return (new FunctionLinkSpan(codeMapFunction, span.getURL()));
+			FunctionLinkSpan linkSpan = new FunctionLinkSpan(codeMapFunction,
+					span.getURL());
+			return linkSpan;
 		}
 	}
 }
