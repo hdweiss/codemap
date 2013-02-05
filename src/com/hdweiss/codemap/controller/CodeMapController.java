@@ -103,6 +103,17 @@ public class CodeMapController extends ProjectController {
 		}
 	}
 	
+	public int getOpenDeclarations(String url) {
+		int numberOfDeclarations = codeMapView.getDeclarations(url).size();
+		return numberOfDeclarations;
+	}
+	
+	
+	public void updateCodeBrowser() {
+		Intent intent = new Intent(CodeMapFragment.INTENT_REFRESH);
+		context.sendBroadcast(intent);
+	}
+	
 	
 	private static final int YScrollOffset = 200;
 	private static final int XScrollOffset = 200;
@@ -119,9 +130,7 @@ public class CodeMapController extends ProjectController {
 		} else
 			addFunctionView(url);
 	}
-	
-	
-	
+
 	
 	private CodeMapFunction instantiateFunctionFragment(String url,
 			CodeMapPoint position) throws IllegalArgumentException {
@@ -134,8 +143,29 @@ public class CodeMapController extends ProjectController {
 		findDeclarationTask.execute();		
 		return functionView;
 	}
-	
 
+
+	public void addChildFragmentFromUrl(String functionName, CodeMapItem parent, float yOffset) {
+		float offset = yOffset + parent.getContentViewYOffset();
+
+		CodeMapPoint position = new CodeMapPoint();
+		position.x = parent.getX() + parent.getWidth() + 30;
+		position.y = parent.getY() + offset;
+		
+		try {
+			CodeMapFunction item = instantiateFunctionFragment(functionName,
+					position);
+			codeMapView.addMapItem(item);
+			codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
+		} catch (IllegalArgumentException e) {
+			Log.e("CodeMap",
+					"addChildFragmentFromUrl() couldn't create fragment");
+			Toast.makeText(context,
+					"Didn't find declaration for: " + functionName,
+					Toast.LENGTH_LONG).show();
+		}
+	}
+	
 	
 	private void populateFragment(ArrayList<CscopeEntry> entries,
 			CodeMapFunction functionView) {
@@ -177,40 +207,7 @@ public class CodeMapController extends ProjectController {
 
 		popupMenu.show();
 	}
-
-
-	public void addChildFragmentFromUrl(String functionName, CodeMapItem parent, float yOffset) {
-		float offset = yOffset + parent.getContentViewYOffset();
-
-		CodeMapPoint position = new CodeMapPoint();
-		position.x = parent.getX() + parent.getWidth() + 30;
-		position.y = parent.getY() + offset;
-		
-		try {
-			CodeMapFunction item = instantiateFunctionFragment(functionName,
-					position);
-			codeMapView.addMapItem(item);
-			codeMapView.addMapLink(new CodeMapLink(parent, item, offset));
-		} catch (IllegalArgumentException e) {
-			Log.e("CodeMap",
-					"addChildFragmentFromUrl() couldn't create fragment");
-			Toast.makeText(context,
-					"Didn't find declaration for: " + functionName,
-					Toast.LENGTH_LONG).show();
-		}
-	}
 	
-	public int getOpenDeclarations(String url) {
-		int numberOfDeclarations = codeMapView.getDeclarations(url).size();
-		Log.d("CodeMap", "Getting declarations for " + url + " = " + numberOfDeclarations);
-		return numberOfDeclarations;
-	}
-
-	
-	public void updateCodeBrowser() {
-		Intent intent = new Intent(CodeMapFragment.INTENT_REFRESH);
-		context.sendBroadcast(intent);
-	}
 	
 	private class FindDeclarationTask extends AsyncTask<Object, Object, Object>
     {
@@ -267,5 +264,4 @@ public class CodeMapController extends ProjectController {
         	dialog.dismiss();
         }
     }
-
 }
