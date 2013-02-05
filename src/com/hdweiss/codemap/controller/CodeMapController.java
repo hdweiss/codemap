@@ -3,7 +3,6 @@ package com.hdweiss.codemap.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -121,77 +120,40 @@ public class CodeMapController extends ProjectController {
 			addFunctionView(url);
 	}
 	
-	private class FindDeclarationTask extends AsyncTask<Object, Object, Object>
-    {
-		private String functionName;
-
-		private ProgressDialog dialog;
-
-		private float yOffset;
-
-		private CodeMapItem parent;
-		
-		public void setup(String functionName, CodeMapItem parent, float yOffset) {
-			this.functionName = functionName;
-			this.parent = parent;
-			this.yOffset = yOffset;
-		}
-		
-		@Override
-		protected Object doInBackground(final Object... urls) {
-			// TODO Implement
-			return null;
-		}
-
-        @Override
-        protected void onPostExecute(final Object result)
-        {
-        	super.onPostExecute(result);
-        	dialog.dismiss();
-        }
-
-        @Override
-        protected void onPreExecute()
-        {
-        	super.onPreExecute();
-        	this.dialog = new ProgressDialog(context);
-        	dialog.setMessage("Finding symbol");
-        	dialog.setIndeterminate(false);
-        	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        	dialog.show();
-        }
-    }
+	
+	
 	
 	private CodeMapFunction instantiateFunctionFragment(String url,
 			CodeMapPoint position) throws IllegalArgumentException {
-		ArrayList<CscopeEntry> entries;
-		try {
-			entries = getUrlEntries(url);
-		} catch (IllegalArgumentException e) {
-			Log.e("CodeMap",
-					"Error creating function fragment: "
-							+ e.getLocalizedMessage());
-			throw(e);
-		}
-		
 		CodeMapFunction functionView = new CodeMapFunction(codeMapView.getContext(),
 				position, url, new SpannableString(""));
 		codeMapView.addMapItem(functionView);
-				
-		if (entries.size() > 1)
-			popup(entries, functionView);
-		else if (entries.size() == 1) {
-			CscopeEntry entry = entries.get(0);
-			final SpannableString content = getFunctionSource(entry);
-			functionView.init(entry.getActualUrl(project.getSourcePath(context)), content);
-		}
 		
+		FindDeclarationTask findDeclarationTask = new FindDeclarationTask();
+		findDeclarationTask.setup(functionView, url);
+		findDeclarationTask.execute();		
 		return functionView;
 	}
 	
-	private void popup(final ArrayList<CscopeEntry> entries, final CodeMapFunction functionView) {
+
+	
+	private void populateFragment(ArrayList<CscopeEntry> entries,
+			CodeMapFunction functionView) {
+		if (entries.size() > 1)
+			showDeclarationPopup(entries, functionView);
+		else if (entries.size() == 1) {
+			CscopeEntry entry = entries.get(0);
+			final SpannableString content = getFunctionSource(entry);
+			functionView
+					.init(entry.getActualUrl(project.getSourcePath(context)),
+							content);
+		}
+	}
+
+	private void showDeclarationPopup(final ArrayList<CscopeEntry> entries,
+			final CodeMapFunction functionView) {
 		PopupMenu popupMenu = new PopupMenu(context, functionView);
-				
+
 		for (int i = 0; i < entries.size(); i++) {
 			CscopeEntry entry = entries.get(i);
 			String url = entry.getUrl(project.getSourcePath(context));
@@ -205,7 +167,8 @@ public class CodeMapController extends ProjectController {
 					public boolean onMenuItemClick(MenuItem item) {
 						CscopeEntry entry = entries.get(item.getItemId());
 						final SpannableString content = getFunctionSource(entry);
-						String url = entry.getActualUrl(project.getSourcePath(context));
+						String url = entry.getActualUrl(project
+								.getSourcePath(context));
 						functionView.init(url, content);
 						return true;
 					}
@@ -243,8 +206,66 @@ public class CodeMapController extends ProjectController {
 		return numberOfDeclarations;
 	}
 
+	
 	public void updateCodeBrowser() {
 		Intent intent = new Intent(CodeMapFragment.INTENT_REFRESH);
 		context.sendBroadcast(intent);
 	}
+	
+	private class FindDeclarationTask extends AsyncTask<Object, Object, Object>
+    {
+		private ProgressDialog dialog;
+
+		private CodeMapFunction codeMapFunction;
+		private String url;
+
+		private ArrayList<CscopeEntry> entries;
+		
+		public void setup(CodeMapFunction codeMapItem, String url) {
+			this.codeMapFunction = codeMapItem;
+			this.url = url;
+		}
+		
+		@Override
+		protected Object doInBackground(final Object... urls) {
+			try {
+				this.entries = getUrlEntries(url);
+			} catch (IllegalArgumentException e) {
+				Log.e("CodeMap",
+						"Error creating function fragment: "
+								+ e.getLocalizedMessage());
+				throw (e);
+			}
+			return null;
+		}
+
+        @Override
+        protected void onPostExecute(final Object result)
+        {
+        	super.onPostExecute(result);
+        	hideDialog();
+        	if (this.entries != null)
+        		populateFragment(entries, codeMapFunction);
+        }
+
+        @Override
+        protected void onPreExecute()
+        {
+        	super.onPreExecute();
+        	showDialog();
+        }
+        
+        private void showDialog() {
+        	this.dialog = new ProgressDialog(codeMapView.getContext());
+        	dialog.setMessage("Finding symbol");
+        	dialog.setIndeterminate(false);
+        	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        	dialog.show();
+        }
+        
+        private void hideDialog() {
+        	dialog.dismiss();
+        }
+    }
+
 }
