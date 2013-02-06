@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.util;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -48,14 +49,15 @@ public class ZoomableAbsoluteLayout extends AbsoluteLayout {
 	
 	public void setScaleFactor(float scaleFactor, CodeMapPoint pivot) {
 		this.mScaleFactor = scaleFactor;
-		
-		for(int i = 0; i < getChildCount(); i++) {
-			View child = getChildAt(i);
-			child.setScaleX(mScaleFactor);
-			child.setScaleY(mScaleFactor);
-		}
-		
 		invalidate();
-		requestLayout();
+	}
+	
+	protected void dispatchDraw(Canvas canvas) {
+	    canvas.save();
+	  //  canvas.translate(mPosX, mPosY);
+	   // canvas.scale(mScaleFactor, mScaleFactor, mFocusX, mFocusY);
+	    canvas.scale(mScaleFactor, mScaleFactor);
+	    super.dispatchDraw(canvas);
+	    canvas.restore();
 	}
 }

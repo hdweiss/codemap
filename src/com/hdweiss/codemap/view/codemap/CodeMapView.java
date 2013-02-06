@@ -48,10 +48,15 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
+		super.onDraw(canvas);
+
+		canvas.save();
+	    canvas.scale(getScaleFactor(), getScaleFactor());
+		
 		for(CodeMapLink link: links)
 			link.doDraw(canvas);
 		
-		super.onDraw(canvas);
+		canvas.restore();
 	}
 
 	public void refresh() {
