@@ -45,14 +45,14 @@ public class CollisionManager {
 			try {
 				item = iterator.next();
 			} catch (ConcurrentModificationException e) {
-				Log.e("CodeMap", "Collision manager caught ConcurrentModificationException");
+				Log.e("Collision", "Collision manager caught ConcurrentModificationException");
 				return;
 			}
 			if (pushingItem == item)
 				continue;
 			
 			if (Rect.intersects(pushingItem.getBounds(), item.getBounds())) {
-				Log.d("Collision", "fixPush: " + pushingItem.getUrl() + " collided " + item.getUrl());
+				Log.d("Collision", "fixPush(): " + pushingItem.getUrl() + " collided " + item.getUrl());
 				item.push(pushOffset);
 				iterator.remove();
 				fixPush(item, items, pushOffset);

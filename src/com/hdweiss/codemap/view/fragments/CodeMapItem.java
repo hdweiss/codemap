@@ -26,7 +26,7 @@ public abstract class CodeMapItem extends LinearLayout {
 	private View contentView;
 	protected CodeMapView codeMapView;
 	
-	private boolean moveItem = true;
+	private boolean moveItem = false;
 	
 	public CodeMapItem(Context context, AttributeSet attrs, String name) {
 		super(context, attrs);
@@ -57,12 +57,10 @@ public abstract class CodeMapItem extends LinearLayout {
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
 		super.onSizeChanged(w, h, oldw, oldh);
-
-		if(this.codeMapView != null && moveItem) {
+				
+		if (this.codeMapView != null && moveItem) {
+			this.codeMapView.moveFragment(this);
 			this.moveItem = false;
-						
-			if (this.codeMapView != null)
-				this.codeMapView.moveFragment(this);
 		}
 	}
 
@@ -116,6 +114,10 @@ public abstract class CodeMapItem extends LinearLayout {
 			return false;
 	}
 
+	public void makeItemMoveable() {
+		this.moveItem = true;
+	}
+	
 	public void remove() {
 		if(codeMapView != null)
 			codeMapView.remove(this);

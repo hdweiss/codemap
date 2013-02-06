@@ -54,6 +54,7 @@ public class CodeMapFunction extends CodeMapItem {
 		});
 		
 		this.titleView.setText(name);
+		makeItemMoveable();
 	}
 
 	public void addChildFragment(String url) {

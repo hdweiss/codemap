@@ -1,6 +1,5 @@
 package com.hdweiss.codemap.view.codemap;
 
-import android.util.Log;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -44,7 +43,6 @@ public class CodeMapListeners {
 								
 				dragXoffset = drawablePosition.x - clickedPosition.x;
 				dragYoffset = drawablePosition.y - clickedPosition.y;
-				Log.d("CodeMap", "Drag Offset - " + dragXoffset + ":" + dragYoffset);
 			}
 		}
 		
