@@ -73,12 +73,16 @@ public class CscopeWrapper {
 		String symbols = cscope.runCommand(project, options, cscopeEntry.file);
 		Log.d("Cscope", "getFunctionEndLine(): cscope returned");
 		
-		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
 		
-		if(nextEntry == null)
-			return Integer.MAX_VALUE;
+		CscopeEntry nextEntry = getNextEntry(symbols, cscopeEntry);
+		while (nextEntry != null) {
+			if (nextEntry.name.startsWith("#") == false)
+				return nextEntry.lineNumber - 2;
 			
-		return nextEntry.lineNumber - 2;
+			nextEntry = getNextEntry(symbols, nextEntry);
+		}
+		
+		return Integer.MAX_VALUE;			
 	}
 
 	
