@@ -3,6 +3,7 @@ package com.hdweiss.codemap.util;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 
 public class ZoomableAbsoluteLayout extends AbsoluteLayout {
@@ -38,7 +39,12 @@ public class ZoomableAbsoluteLayout extends AbsoluteLayout {
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-		event.setLocation(event.getX() * this.mScaleFactor, event.getY() * this.mScaleFactor);
+		float translatedX = event.getX() / this.mScaleFactor;
+		float translatedY = event.getY() / this.mScaleFactor;
+		Log.d("CodeMap",
+				"dispatchTouchEvent(): " + (int) event.getX() + ":" + (int) event.getY()
+						+ "->" + (int) translatedX + ":" + (int) translatedY + " @ " + getScrollX() + ":" + getScrollY());
+		event.setLocation(translatedX, translatedY);
 		return super.dispatchTouchEvent(event);
 	}
 
