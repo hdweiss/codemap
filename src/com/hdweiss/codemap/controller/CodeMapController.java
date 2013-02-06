@@ -140,7 +140,7 @@ public class CodeMapController extends ProjectController {
 		
 		FindDeclarationTask findDeclarationTask = new FindDeclarationTask();
 		findDeclarationTask.setup(functionView, url);
-		findDeclarationTask.execute();		
+		findDeclarationTask.execute();
 		return functionView;
 	}
 

@@ -3,4 +3,5 @@
     <issue id="ContentDescription" severity="ignore" />
     <issue id="HardcodedText" severity="ignore" />
     <issue id="NewApi" severity="ignore" />
+    <issue id="ViewConstructor" severity="ignore" />
 </lint>

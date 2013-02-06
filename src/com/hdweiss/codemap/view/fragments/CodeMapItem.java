@@ -60,7 +60,7 @@ public abstract class CodeMapItem extends LinearLayout {
 
 		if(this.codeMapView != null && moveItem) {
 			this.moveItem = false;
-			
+						
 			if (this.codeMapView != null)
 				this.codeMapView.moveFragment(this);
 		}

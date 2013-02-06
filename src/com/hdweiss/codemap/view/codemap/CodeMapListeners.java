@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.view.codemap;
 
+import android.util.Log;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -7,14 +8,18 @@ import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.widget.Scroller;
 
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
+import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
 public class CodeMapListeners {
 	
 	public static class CodeMapGestureListener implements OnGestureListener {
-		private CodeMapItem selectedDrawable = null;
 		private CodeMapView codeMapView;
 		private Scroller scroller;
+		
+		private CodeMapItem selectedDrawable = null;
+		private float dragYoffset = 0;
+		private float dragXoffset = 0;
 		
 		public CodeMapGestureListener(CodeMapView codeMapView, Scroller scroller) {
 			this.codeMapView = codeMapView;
@@ -25,10 +30,22 @@ public class CodeMapListeners {
 			if (!scroller.isFinished())
 				scroller.forceFinished(true);
 
-			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
-			selectedDrawable = codeMapView.getMapFragmentAtPoint(point);
-			
+			prepareDrag(e);
 			return true;
+		}
+		
+		private void prepareDrag(MotionEvent e) {
+			CodeMapCursorPoint point = new CodeMapCursorPoint(e.getX(), e.getY());
+			this.selectedDrawable = codeMapView.getMapFragmentAtPoint(point);
+			
+			if (this.selectedDrawable != null) {
+				CodeMapPoint drawablePosition = selectedDrawable.getPosition();
+				CodeMapPoint clickedPosition = point.getCodeMapPoint(codeMapView);
+								
+				dragXoffset = drawablePosition.x - clickedPosition.x;
+				dragYoffset = drawablePosition.y - clickedPosition.y;
+				Log.d("CodeMap", "Drag Offset - " + dragXoffset + ":" + dragYoffset);
+			}
 		}
 		
 		public boolean onSingleTapUp(MotionEvent e) {
@@ -48,8 +65,10 @@ public class CodeMapListeners {
 			float startY = e2.getY() + distanceY;
 			
 			if(selectedDrawable != null) {
-				CodeMapCursorPoint point = new CodeMapCursorPoint(startX, startY);
-				selectedDrawable.setPosition(point.getCodeMapPoint(codeMapView));
+				CodeMapCursorPoint cursorPoint = new CodeMapCursorPoint(startX, startY);
+				CodeMapPoint point = cursorPoint.getCodeMapPoint(codeMapView);
+				point.offset(dragXoffset, dragYoffset);
+				codeMapView.moveFragment(selectedDrawable, point);
 				codeMapView.refresh();
 			}
 			else

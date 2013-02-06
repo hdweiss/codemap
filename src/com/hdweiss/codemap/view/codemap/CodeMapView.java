@@ -117,8 +117,13 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 	
 	
-	public void moveFragment(CodeMapItem item) {
-		CollisionManager.pushItems(item, this.items);		
+	public void moveFragment(CodeMapItem item, CodeMapPoint position) {
+		item.setPosition(position);
+		moveFragment(item);
+	}
+	
+	public void moveFragment(CodeMapItem item) {		
+		CollisionManager.pushItems(item, this.items);	
 	}
 	
 	public CodeMapItem getMapFragmentAtPoint(CodeMapCursorPoint cursorPoint) {

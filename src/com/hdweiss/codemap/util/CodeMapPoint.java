@@ -5,6 +5,9 @@ import java.io.Serializable;
 
 import android.graphics.PointF;
 
+/**
+ * Absolute point on the CodeMap canvas.
+ */
 public class CodeMapPoint extends PointF implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

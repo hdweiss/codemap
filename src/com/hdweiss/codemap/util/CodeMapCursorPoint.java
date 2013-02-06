@@ -4,6 +4,9 @@ import com.hdweiss.codemap.view.codemap.CodeMapView;
 
 import android.graphics.PointF;
 
+/**
+ * Wrapper for points that are clicked on canvas.
+ */
 public class CodeMapCursorPoint extends PointF {
 	
 	public CodeMapCursorPoint() {

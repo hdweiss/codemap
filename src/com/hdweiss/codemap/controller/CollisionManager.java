@@ -13,20 +13,21 @@ import com.hdweiss.codemap.view.fragments.CodeMapItem;
 public class CollisionManager {
 
 	private static final int padding = 5;
-	private static final int maxIterations = 5;
 	
 	public static boolean pushItems(CodeMapItem pushingItem,
 			ArrayList<CodeMapItem> items) {
-			
+		Log.d("Collision", "-> pushItems(): " + pushingItem.getUrl());	
+		
 		for (CodeMapItem item : items) {
 			if (item == pushingItem)
 				continue;
 
 			Point pushOffset = getPushOffset(pushingItem.getBounds(),
-					item.getBounds(), padding, false);
+					item.getBounds(), padding, true);
 			
 			if (pushOffset.equals(0, 0) == false) {
-				pushingItem.push(pushOffset);
+				item.push(pushOffset);
+				Log.d("Collision", "pushItems(): pushed " + item.getUrl());	
 				fixPush(item, new ArrayList<CodeMapItem>(items), pushOffset);
 			}
 		}
@@ -59,21 +60,6 @@ public class CollisionManager {
 		}
 	}
 	
-//	private static ArrayList<CodeMapItem> getOverlappingItems(CodeMapItem pushingItem,
-//			ArrayList<CodeMapItem> items) {
-//		ArrayList<CodeMapItem> overlappingItems = new ArrayList<CodeMapItem>();
-//		
-//		for (CodeMapItem item: items) {
-//			if (pushingItem == item)
-//				continue;
-//			
-//			if (Rect.intersects(pushingItem.getBounds(), item.getBounds()))
-//				overlappingItems.add(item);
-//		}
-//		
-//		return overlappingItems;
-//	}
-	
 	
 	public static Point getPushOffset(Rect pusher, Rect pushed) {
 		return getPushOffset(pusher, pushed, 0, true);
@@ -102,6 +88,8 @@ public class CollisionManager {
 		else
 			pushX = pushRight;
 		
+		if (pushX == 0 && pushY == 0)
+			return new Point(0, 0);
 		
 		if (allowXPush && Math.abs(pushX) < Math.abs(pushY))
 			return new Point(pushX + padding, 0);
