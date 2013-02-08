@@ -52,20 +52,23 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 		
 		new FindDeclarationTask(searchString, searchCallback, controller,
 				getContext()).execute();
-		
+	}
+	
+	public void showSearchResults(ArrayList<CscopeEntry> entries) {
+		// TODO Implement
 	}
 	
 	FindDeclarationCallback searchCallback = new FindDeclarationCallback() {
 		public void onSuccess(ArrayList<CscopeEntry> entries) {
-			Toast.makeText(getContext(), "Error finding entries",
-					Toast.LENGTH_SHORT).show();
+			showSearchResults(entries);
 		}
 
 		public void onFailure() {
 			Toast.makeText(getContext(), "Error finding entries",
 					Toast.LENGTH_SHORT).show();
-		}		
+		}
 	};
+	
 	
 	public void setController(CodeMapController controller) {
 		this.controller = controller;
