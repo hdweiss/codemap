@@ -3,18 +3,16 @@ package com.hdweiss.codemap.controller;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.text.SpannableString;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.hdweiss.codemap.controller.FindDeclarationTask.FindDeclarationCallback;
 import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
@@ -138,10 +136,27 @@ public class CodeMapController extends ProjectController {
 				position, url, new SpannableString(""));
 		codeMapView.addMapItem(functionView);
 		
-		FindDeclarationTask findDeclarationTask = new FindDeclarationTask();
-		findDeclarationTask.setup(functionView, url);
-		findDeclarationTask.execute();
+		new FindDeclarationTask(url, new SearchCallback(functionView), this,
+				codeMapView.getContext()).execute();
+		
 		return functionView;
+	}
+	
+	private class SearchCallback implements FindDeclarationCallback {
+		private CodeMapFunction functionView;
+
+		public SearchCallback(CodeMapFunction functionView) {
+			this.functionView = functionView;
+		}
+		
+		public void onSuccess(ArrayList<CscopeEntry> entries) {
+			populateFragment(entries, functionView);
+		}
+
+		public void onFailure() {
+			Toast.makeText(context, "Error finding entries",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 
@@ -199,62 +214,4 @@ public class CodeMapController extends ProjectController {
 
 		popupMenu.show();
 	}
-	
-	
-	private class FindDeclarationTask extends AsyncTask<Object, Object, Object>
-    {
-		private ProgressDialog dialog;
-
-		private CodeMapFunction codeMapFunction;
-		private String url;
-
-		private ArrayList<CscopeEntry> entries;
-		
-		public void setup(CodeMapFunction codeMapItem, String url) {
-			this.codeMapFunction = codeMapItem;
-			this.url = url;
-		}
-		
-		@Override
-		protected Object doInBackground(final Object... urls) {
-			try {
-				this.entries = getUrlEntries(url);
-			} catch (IllegalArgumentException e) {
-				Log.e("CodeMap",
-						"Error creating function fragment: "
-								+ e.getLocalizedMessage());
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(final Object result) {
-			super.onPostExecute(result);
-			hideDialog();
-			if (this.entries != null)
-				populateFragment(entries, codeMapFunction);
-			else
-				Toast.makeText(context, "Didn't find declaration for: " + url,
-						Toast.LENGTH_LONG).show();
-		}
-
-        @Override
-        protected void onPreExecute()
-        {
-        	super.onPreExecute();
-        	showDialog();
-        }
-        
-        private void showDialog() {
-        	this.dialog = new ProgressDialog(codeMapView.getContext());
-        	dialog.setMessage("Finding declarations for: \"" + url + "\"");
-        	dialog.setIndeterminate(false);
-        	dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        	dialog.show();
-        }
-        
-        private void hideDialog() {
-        	dialog.dismiss();
-        }
-    }
 }
