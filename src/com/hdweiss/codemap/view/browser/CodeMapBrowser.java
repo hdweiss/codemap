@@ -3,15 +3,19 @@ package com.hdweiss.codemap.view.browser;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.R;
@@ -28,6 +32,7 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 	private CodeMapController controller;
 	private ListView browserListView;
 	private EditText searchbarView;
+	private ImageButton cancelButton;
 
 	public CodeMapBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -35,32 +40,75 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 		LayoutInflater.from(getContext()).inflate(R.layout.browser, this);
 		
 		this.browserListView = (ListView) findViewById(R.id.browser_list);
-		browserListView.setOnItemClickListener(this);
-		browserListView.setOnItemLongClickListener(this);
-		
 		this.searchbarView = (EditText) findViewById(R.id.browser_search_input);
-		Button searchButton = (Button) findViewById(R.id.browser_search_button);
+		searchbarView.setOnEditorActionListener(new OnEditorActionListener() {
+			public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+				search();
+				return false;
+			}
+		});
+		
+		ImageButton searchButton = (ImageButton) findViewById(R.id.browser_search_button);
 		searchButton.setOnClickListener(new OnClickListener() {
-			public void onClick(View v) {
+			public void onClick(View v) {	
 				search();
 			}
 		});
+		
+		this.cancelButton = (ImageButton) findViewById(R.id.browser_search_cancel);
+		cancelButton.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				searchbarView.setText("");
+				showDeclarations();
+			}
+		});
+		
+		showDeclarations();
+	}
+	
+	public void setController(CodeMapController controller) {
+		this.controller = controller;
+		this.adapter = new CodeMapBrowserAdapter(getContext(), controller);
+		browserListView.setAdapter(adapter);
+	}
+
+	
+	private void showDeclarations() {
+		browserListView.setOnItemClickListener(this);
+		browserListView.setOnItemLongClickListener(this);
+		browserListView.setAdapter(adapter);
+		cancelButton.setVisibility(GONE);
 	}
 	
 	public void search() {
 		String searchString = searchbarView.getText().toString();
 		
+		if (TextUtils.isEmpty(searchString))
+			return;
+		
 		new FindDeclarationTask(searchString, searchCallback, controller,
 				getContext()).execute();
 	}
 	
-	public void showSearchResults(ArrayList<CscopeEntry> entries) {
-		// TODO Implement
+	public void showSearch(ArrayList<CscopeEntry> entries) {
+		final CodeMapCscopeEntryAdapter searchAdapter = new CodeMapCscopeEntryAdapter(
+				getContext());
+		searchAdapter.addAll(entries);
+		browserListView.setAdapter(searchAdapter);
+		browserListView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parentView, View view, int position,
+					long id) {
+				CscopeEntry item = searchAdapter.getItem(position);
+				controller.addFunctionView(item.file + ":" + item.actualName);
+			}
+		});
+		cancelButton.setVisibility(VISIBLE);
 	}
+
 	
 	FindDeclarationCallback searchCallback = new FindDeclarationCallback() {
 		public void onSuccess(ArrayList<CscopeEntry> entries) {
-			showSearchResults(entries);
+			showSearch(entries);
 		}
 
 		public void onFailure() {
@@ -68,21 +116,7 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 					Toast.LENGTH_SHORT).show();
 		}
 	};
-	
-	
-	public void setController(CodeMapController controller) {
-		this.controller = controller;
-		update();
-	}
-	
-	public void update() {
-		this.adapter = new CodeMapBrowserAdapter(getContext(), controller);
-		browserListView.setAdapter(adapter);
-	}
-	
-	public void refresh() {
-		adapter.refresh();
-	}
+
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 		CodeMapBrowserItem item = adapter.getItem(position);
@@ -109,5 +143,9 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 				controller.symbolClicked(url, item);
 			}
 		}
+	}
+	
+	public void refresh() {
+		adapter.refresh();
 	}
 }
