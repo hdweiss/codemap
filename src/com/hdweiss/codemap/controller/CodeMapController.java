@@ -154,6 +154,7 @@ public class CodeMapController extends ProjectController {
 		}
 
 		public void onFailure() {
+			functionView.remove();
 			Toast.makeText(context, "Error finding entries",
 					Toast.LENGTH_SHORT).show();
 		}
