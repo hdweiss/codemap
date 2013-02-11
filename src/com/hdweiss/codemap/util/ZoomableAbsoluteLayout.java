@@ -13,29 +13,6 @@ public class ZoomableAbsoluteLayout extends AbsoluteLayout {
 	public ZoomableAbsoluteLayout(Context context, AttributeSet attrs) {
 		super(context, attrs);
 	}
-
-//    @Override
-//	protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//		int count = getChildCount();
-//
-//		for (int i = 0; i < count; i++) {
-//			View child = getChildAt(i);
-//			if (child.getVisibility() != GONE) {
-//
-//				AbsoluteLayout.LayoutParams lp = (AbsoluteLayout.LayoutParams) child
-//						.getLayoutParams();
-//
-//				int childLeft = getPaddingLeft() + lp.x;
-//				int childTop = getPaddingTop() + lp.y;
-//				child.layout(
-//						(int) ((float)childLeft * mScaleFactor),
-//						(int) ((float)childTop * mScaleFactor),
-//						(int) ((float)(childLeft + child.getMeasuredWidth()) * mScaleFactor),
-//						(int) ((float)(childTop + child.getMeasuredHeight()) * mScaleFactor));
-//			}
-//		}
-//	}
-    
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
