@@ -39,12 +39,12 @@ public class ZoomableAbsoluteLayout extends AbsoluteLayout {
 	
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-//		float translatedX = event.getX() / this.mScaleFactor;
-//		float translatedY = event.getY() / this.mScaleFactor;
-//		Log.d("CodeMap",
-//				"dispatchTouchEvent(): " + (int) event.getX() + ":" + (int) event.getY()
-//						+ "->" + (int) translatedX + ":" + (int) translatedY + " @ " + getScrollX() + ":" + getScrollY());
-//		event.setLocation(translatedX, translatedY);
+		float translatedX = event.getX() / this.mScaleFactor;
+		float translatedY = event.getY() / this.mScaleFactor;
+		Log.d("CodeMap",
+				"dispatchTouchEvent(): " + (int) event.getX() + ":" + (int) event.getY()
+						+ "->" + (int) translatedX + ":" + (int) translatedY + " @ " + getScrollX() + ":" + getScrollY());
+		event.setLocation(translatedX, translatedY);
 		return super.dispatchTouchEvent(event);
 	}
 
