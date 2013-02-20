@@ -182,4 +182,10 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 		setScrollX((int) x);
 		setScrollY((int) y);
 	}
+	
+	public void setFontSize(int fontSize) {
+		for (CodeMapItem item: this.items) {
+			item.setFontSize(fontSize);
+		}
+	}
 }

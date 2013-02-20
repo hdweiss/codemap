@@ -6,7 +6,7 @@
             android:dialogTitle="Choose the font size"
             android:entries="@array/fontsizes"
             android:entryValues="@array/fontsizes"
-            android:key="list_preference"
+            android:key="sourceFontSize"
             android:summary="Size of font used in source code fragments"
             android:title="Font size"
             android:defaultValue="15" />

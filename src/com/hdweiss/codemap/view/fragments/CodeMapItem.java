@@ -136,4 +136,8 @@ public abstract class CodeMapItem extends LinearLayout {
 	public float getTitleViewYMid() {
 		return this.getY() + (titleView.getHeight() / 2);
 	}
+	
+	public void setFontSize(int fontSize) {
+		// Do nothing
+	}
 }

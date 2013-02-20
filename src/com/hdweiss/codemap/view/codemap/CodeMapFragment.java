@@ -5,7 +5,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,9 +18,11 @@ import android.view.ViewGroup;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.util.CodeMapPoint;
+import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.browser.CodeMapBrowser;
 
-public class CodeMapFragment extends Fragment {
+public class CodeMapFragment extends Fragment implements
+		SharedPreferences.OnSharedPreferenceChangeListener {
 	private static final String ZOOM = "zoom";
 	private static final String SCROLL_X = "scrollX";
 	private static final String SCROLL_Y = "scrollY";
@@ -37,7 +41,11 @@ public class CodeMapFragment extends Fragment {
 		View view = inflater.inflate(R.layout.codemap_view, container, false);
 		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
 		codeMapBrowser = (CodeMapBrowser) view.findViewById(R.id.codemap_browser);
-				
+		
+		SharedPreferences prefs = PreferenceManager
+				.getDefaultSharedPreferences(getActivity());
+		prefs.registerOnSharedPreferenceChangeListener(this);
+		
 		return view;
 	}
 
@@ -126,4 +134,13 @@ public class CodeMapFragment extends Fragment {
 			codeMapBrowser.refresh();
 		}
 	};
+	
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		if (key.equals("sourceFontSize")) {
+			int fontSize = Utils.getSourceFontsize(getActivity());
+			codeMapView.setFontSize(fontSize);
+		}
+	}
+
 }

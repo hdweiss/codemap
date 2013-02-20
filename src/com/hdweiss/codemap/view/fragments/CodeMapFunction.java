@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.SpanUtils;
+import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.fragments.FunctionLinkSpan.FunctionLinkSpanConverter;
 
 public class CodeMapFunction extends CodeMapItem {
@@ -29,7 +30,7 @@ public class CodeMapFunction extends CodeMapItem {
 		super(context, null, name);
 				
 		sourceView = new TextView(getContext());
-		sourceView.setTextSize(15);
+		sourceView.setTextSize(Utils.getSourceFontsize(getContext()));
 		setContentView(sourceView);
 		
 		init(name, content);
@@ -64,4 +65,10 @@ public class CodeMapFunction extends CodeMapItem {
 			this.yOffset = 0;
 		}
 	}
+	
+	@Override
+	public void setFontSize(int fontSize) {
+		this.sourceView.setTextSize(fontSize);
+	}
 }
+

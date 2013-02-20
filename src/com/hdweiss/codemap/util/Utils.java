@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.TouchDelegate;
@@ -27,6 +28,8 @@ import android.widget.Spinner;
 import com.hdweiss.codemap.view.ProjectBrowser.SynchServiceReceiver;
 
 public class Utils {
+
+	private static final int DEFAULT_FONTSIZE = 15;
 
 	public static String runCommand(String command) {
 		return runCommand(command, null);
@@ -206,4 +209,16 @@ public class Utils {
             }
         };
     }
+	
+	public static int getSourceFontsize(Context context) {
+		try {
+			int fontSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
+					context).getString("sourceFontSize", "15"));
+
+			if (fontSize > 6)
+				return fontSize;
+		} catch (NumberFormatException e) {
+		}
+
+		return DEFAULT_FONTSIZE;	}
 }
