@@ -1,0 +1,8 @@
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <header
+        android:fragment="com.hdweiss.codemap.view.Preferences$Prefs1FragmentInner"
+        android:summary="Configuration of fontsize, etc."
+        android:title="Interface" />
+
+</preference-headers>

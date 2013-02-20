@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Source" >
+        <ListPreference
+            android:dialogTitle="Choose the font size"
+            android:entries="@array/fontsizes"
+            android:entryValues="@array/fontsizes"
+            android:key="list_preference"
+            android:summary="Size of font used in source code fragments"
+            android:title="Font size"
+            android:defaultValue="15" />
+    </PreferenceCategory>
+
+</PreferenceScreen>

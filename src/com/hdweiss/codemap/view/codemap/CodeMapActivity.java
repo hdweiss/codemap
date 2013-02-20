@@ -1,12 +1,15 @@
 package com.hdweiss.codemap.view.codemap;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.data.CodeMapApp;
+import com.hdweiss.codemap.view.Preferences;
 
 public class CodeMapActivity extends Activity {
 	public final static String PROJECT_NAME = "projectName";
@@ -32,4 +35,17 @@ public class CodeMapActivity extends Activity {
     public CodeMapController getController() {
     	return this.controller;
     }
+
+	@Override
+	public boolean onMenuItemSelected(int featureId, MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_settings:
+			startActivity(new Intent(this, Preferences.class));
+			return true;
+
+		default:
+			return super.onMenuItemSelected(featureId, item);
+		}
+	}
+    
 }
