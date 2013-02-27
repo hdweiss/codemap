@@ -8,6 +8,7 @@
     <TextView
         android:id="@+id/codemap_function"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginRight="8dp" />
 
 </ScrollView>
