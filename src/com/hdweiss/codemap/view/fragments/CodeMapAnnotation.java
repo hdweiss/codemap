@@ -20,6 +20,7 @@ public class CodeMapAnnotation extends CodeMapItem {
 		
 		this.editText = new EditText(getContext());
 		this.editText.setBackgroundColor(Color.YELLOW);
+		this.editText.setMaxWidth(300);
 		setContentView(editText);
 		
 		init(contents);
@@ -27,7 +28,10 @@ public class CodeMapAnnotation extends CodeMapItem {
 	}
 	
 	public void init(String contents) {
-		editText.setText(contents);
+		if (contents.isEmpty())
+			editText.setHint("Click to add note");
+		else
+			editText.setText(contents);
 	}
 	
 	public String getContents() {
