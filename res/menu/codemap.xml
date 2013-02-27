@@ -3,7 +3,7 @@
 
     <item
         android:id="@+id/codemap_clear"
-        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:icon="@android:drawable/ic_menu_delete"
         android:showAsAction="ifRoom"
         android:title="Clear">
     </item>
