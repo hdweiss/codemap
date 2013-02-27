@@ -19,7 +19,7 @@ import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
-import com.hdweiss.codemap.view.browser.CodeMapBrowser;
+import com.hdweiss.codemap.view.browser.Browser;
 
 public class CodeMapFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
@@ -28,7 +28,7 @@ public class CodeMapFragment extends Fragment implements
 	private static final String SCROLL_Y = "scrollY";
 	
 	private CodeMapView codeMapView;
-	private CodeMapBrowser codeMapBrowser;
+	private Browser codeMapBrowser;
 	private CodeMapController controller;
 	
 	@Override
@@ -40,7 +40,7 @@ public class CodeMapFragment extends Fragment implements
 		
 		View view = inflater.inflate(R.layout.codemap_view, container, false);
 		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
-		codeMapBrowser = (CodeMapBrowser) view.findViewById(R.id.codemap_browser);
+		codeMapBrowser = (Browser) view.findViewById(R.id.codemap_browser);
 		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());

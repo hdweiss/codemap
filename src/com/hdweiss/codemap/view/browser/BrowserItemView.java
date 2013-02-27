@@ -7,21 +7,21 @@ import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.R.color;
-import com.hdweiss.codemap.view.browser.CodeMapBrowserItem.TYPE;
+import com.hdweiss.codemap.view.browser.BrowserItem.TYPE;
 
-public class CodeMapBrowserItemView extends LinearLayout {
+public class BrowserItemView extends LinearLayout {
 
 	private TextView textView;
 	private TextView declarationView;
 	
-	public CodeMapBrowserItemView(Context context) {
+	public BrowserItemView(Context context) {
 		super(context);
 		LayoutInflater.from(context).inflate(R.layout.browser_item, this);
 		this.textView = (TextView) findViewById(R.id.browser_item);
 		this.declarationView = (TextView) findViewById(R.id.browser_declare);
 	}
 
-	public void setItem(CodeMapBrowserItem item) {
+	public void setItem(BrowserItem item) {
 		String text = item.name;
 		if(item.type == TYPE.FILE) {
 			if(text.lastIndexOf("/") >= 0)

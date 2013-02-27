@@ -17,7 +17,7 @@ import com.hdweiss.codemap.data.CodeMapState;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.view.browser.CodeMapBrowserItem;
+import com.hdweiss.codemap.view.browser.BrowserItem;
 import com.hdweiss.codemap.view.codemap.CodeMapFragment;
 import com.hdweiss.codemap.view.codemap.CodeMapView;
 import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
@@ -115,7 +115,7 @@ public class CodeMapController extends ProjectController {
 	
 	private static final int YScrollOffset = 200;
 	private static final int XScrollOffset = 200;
-	public void symbolClicked(String url, CodeMapBrowserItem item) {
+	public void symbolClicked(String url, BrowserItem item) {
 		ArrayList<CodeMapItem> declarations = codeMapView.getDeclarations(url);
 
 		if (declarations.size() > 0) {

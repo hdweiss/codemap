@@ -23,18 +23,18 @@ import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.controller.FindDeclarationTask;
 import com.hdweiss.codemap.controller.FindDeclarationTask.FindDeclarationCallback;
 import com.hdweiss.codemap.data.CscopeEntry;
-import com.hdweiss.codemap.view.browser.CodeMapBrowserItem.TYPE;
+import com.hdweiss.codemap.view.browser.BrowserItem.TYPE;
 
-public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
+public class Browser extends LinearLayout implements OnItemClickListener,
 		android.widget.AdapterView.OnItemLongClickListener {
 
-	private CodeMapBrowserAdapter adapter;
+	private BrowserAdapter adapter;
 	private CodeMapController controller;
 	private ListView browserListView;
 	private EditText searchbarView;
 	private ImageButton cancelButton;
 
-	public CodeMapBrowser(Context context, AttributeSet attrs) {
+	public Browser(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		LayoutInflater.from(getContext()).inflate(R.layout.browser, this);
@@ -68,7 +68,7 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 	
 	public void setController(CodeMapController controller) {
 		this.controller = controller;
-		this.adapter = new CodeMapBrowserAdapter(getContext(), controller);
+		this.adapter = new BrowserAdapter(getContext(), controller);
 		browserListView.setAdapter(adapter);
 	}
 
@@ -91,7 +91,7 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 	}
 	
 	public void showSearch(ArrayList<CscopeEntry> entries) {
-		final CodeMapCscopeEntryAdapter searchAdapter = new CodeMapCscopeEntryAdapter(
+		final CscopeEntryAdapter searchAdapter = new CscopeEntryAdapter(
 				getContext());
 		searchAdapter.addAll(entries);
 		browserListView.setAdapter(searchAdapter);
@@ -119,7 +119,7 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		CodeMapBrowserItem item = adapter.getItem(position);
+		BrowserItem item = adapter.getItem(position);
 		
 		if(item.type == TYPE.FILE) {
 			controller.addFileView(item.name);
@@ -137,8 +137,8 @@ public class CodeMapBrowser extends LinearLayout implements OnItemClickListener,
 		boolean changed = adapter.collapseExpand(position);
 
 		if(changed == false) {
-			CodeMapBrowserItem item = adapter.getItem(position);
-			if(item.type == CodeMapBrowserItem.TYPE.SYMBOL) {
+			BrowserItem item = adapter.getItem(position);
+			if(item.type == BrowserItem.TYPE.SYMBOL) {
 				final String url = adapter.getItemUrl(position);
 				controller.symbolClicked(url, item);
 			}

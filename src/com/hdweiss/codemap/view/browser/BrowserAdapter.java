@@ -13,13 +13,13 @@ import android.widget.ArrayAdapter;
 
 import com.hdweiss.codemap.controller.CodeMapController;
 
-public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
+public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 
 	private ArrayList<Boolean> expanded = new ArrayList<Boolean>();
 	private CodeMapController controller;
 	private File projectDirectory;
 	
-	public CodeMapBrowserAdapter(Context context, CodeMapController controller) {
+	public BrowserAdapter(Context context, CodeMapController controller) {
 		super(context, android.R.layout.simple_list_item_1);
 		this.controller = controller;
 		this.projectDirectory = controller.project.getSourceDirectory(getContext());
@@ -38,7 +38,7 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 		Collections.sort(filelist);
 		
 		for(String name: filelist)
-			add(new CodeMapBrowserItem(name, 0, CodeMapBrowserItem.TYPE.FILE));
+			add(new BrowserItem(name, 0, BrowserItem.TYPE.FILE));
 				
 		notifyDataSetInvalidated();
 	}
@@ -93,12 +93,12 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {				
-		CodeMapBrowserItemView listItem = (CodeMapBrowserItemView) convertView;
+		BrowserItemView listItem = (BrowserItemView) convertView;
 		
 		if (convertView == null)
-			listItem = new CodeMapBrowserItemView(getContext());
+			listItem = new BrowserItemView(getContext());
 
-		CodeMapBrowserItem item = getItem(position);
+		BrowserItem item = getItem(position);
 		listItem.setItem(item);
 
 		File file = new File(projectDirectory.getAbsolutePath() + File.separator + item.name);
@@ -116,26 +116,26 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	}
 
 	@Override
-	public void add(CodeMapBrowserItem item) {
+	public void add(BrowserItem item) {
 		super.add(item);
 		this.expanded.add(false);
 	}
 
 	@Override
-	public void insert(CodeMapBrowserItem item, int index) {
+	public void insert(BrowserItem item, int index) {
 		super.insert(item, index);
 		this.expanded.add(index, false);
 	}
 
-	public void insertAll(ArrayList<CodeMapBrowserItem> nodes, int position) {
+	public void insertAll(ArrayList<BrowserItem> nodes, int position) {
 		Collections.reverse(nodes);
-		for(CodeMapBrowserItem node: nodes)
+		for(BrowserItem node: nodes)
 			insert(node, position);
 		notifyDataSetInvalidated();
 	}
 
 	@Override
-	public void remove(CodeMapBrowserItem node) {
+	public void remove(BrowserItem node) {
 		int position = getPosition(node);
 		this.expanded.remove(position);
 		super.remove(node);
@@ -158,7 +158,7 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 			return expand(position);
 	}
 
-	public boolean collapse(CodeMapBrowserItem node, int position) {
+	public boolean collapse(BrowserItem node, int position) {
 		int activePos = position + 1;
 		while(activePos < this.expanded.size()) {
 			if(getItem(activePos).level <= node.level)
@@ -171,9 +171,9 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	}
 
 	public boolean expand(int position) {
-		CodeMapBrowserItem item = getItem(position);
-		ArrayList<CodeMapBrowserItem> children = item.getChildren(controller, getContext());
-		Collections.sort(children, new CodeMapBrowserItemComparator());
+		BrowserItem item = getItem(position);
+		ArrayList<BrowserItem> children = item.getChildren(controller, getContext());
+		Collections.sort(children, new BrowserItemComparator());
 		
 		if(children == null || children.size() == 0)
 			return false;
@@ -203,12 +203,12 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	}
 	
 	public String getItemUrl(int position) {
-		CodeMapBrowserItem item = getItem(position);
+		BrowserItem item = getItem(position);
 
 		int parentId = findParent(position);
 
 		if (parentId != -1) {
-			CodeMapBrowserItem parentItem = getItem(parentId);
+			BrowserItem parentItem = getItem(parentId);
 			String url = parentItem.name + ":" + item.name;
 			return url;
 		}

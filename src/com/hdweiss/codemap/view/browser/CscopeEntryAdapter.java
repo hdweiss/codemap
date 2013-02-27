@@ -8,9 +8,9 @@ import android.widget.TextView;
 
 import com.hdweiss.codemap.data.CscopeEntry;
 
-public class CodeMapCscopeEntryAdapter extends ArrayAdapter<CscopeEntry> {
+public class CscopeEntryAdapter extends ArrayAdapter<CscopeEntry> {
 
-	public CodeMapCscopeEntryAdapter(Context context) {
+	public CscopeEntryAdapter(Context context) {
 		super(context, android.R.layout.simple_list_item_1);
 	}
 
