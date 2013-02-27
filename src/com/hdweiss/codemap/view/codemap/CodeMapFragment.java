@@ -45,7 +45,6 @@ public class CodeMapFragment extends Fragment implements
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		prefs.registerOnSharedPreferenceChangeListener(this);
-		
 		return view;
 	}
 

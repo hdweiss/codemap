@@ -22,7 +22,6 @@ public class CodeMapActivity extends Activity {
         setContentView(R.layout.codemap);
         
         String projectName = getIntent().getStringExtra(PROJECT_NAME);
-        
         controller = CodeMapApp.get(this).getProjectController(projectName);
     }
 
