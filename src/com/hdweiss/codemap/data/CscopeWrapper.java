@@ -185,7 +185,7 @@ public class CscopeWrapper {
 			String fileName) throws IllegalArgumentException {
 		ArrayList<CscopeEntry> entries = new ArrayList<CscopeEntry>();
 		
-		final String options = "-k -L -1 '" + functionName + "'";
+		final String options = "-C -k -L -1 '" + functionName + "'";
 		String output;
 		if (TextUtils.isEmpty(fileName))
 			output = cscope.runCommand(project, options);
