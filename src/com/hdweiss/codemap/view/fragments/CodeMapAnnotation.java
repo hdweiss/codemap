@@ -1,11 +1,10 @@
 package com.hdweiss.codemap.view.fragments;
 
-import com.hdweiss.codemap.util.CodeMapPoint;
-
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.widget.EditText;
+
+import com.hdweiss.codemap.util.CodeMapPoint;
 
 public class CodeMapAnnotation extends CodeMapItem {
 
@@ -19,12 +18,12 @@ public class CodeMapAnnotation extends CodeMapItem {
 		super(context, null, "Annotation");
 		
 		this.editText = new EditText(getContext());
-		this.editText.setBackgroundColor(Color.YELLOW);
 		this.editText.setMaxWidth(300);
 		setContentView(editText);
 		
 		init(contents);
 		setPosition(point);
+		setupForAnnotation();
 	}
 	
 	public void init(String contents) {

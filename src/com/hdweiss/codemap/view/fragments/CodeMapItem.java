@@ -140,4 +140,8 @@ public abstract class CodeMapItem extends LinearLayout {
 	public void setFontSize(int fontSize) {
 		// Do nothing
 	}
+	
+	public void setupForAnnotation() {
+		containerView.setBackgroundResource(R.drawable.fragment_bg_annotation);
+	}
 }

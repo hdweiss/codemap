@@ -46,6 +46,7 @@ public class CodeMapController extends ProjectController {
 			setState(state);
 		} catch (IOException e) {
 			e.printStackTrace();
+			addAnnotationView("Welcome to CodeMap!\nYou can start browsing your project by using the explorer on the right.");
 		}
     }
 	
