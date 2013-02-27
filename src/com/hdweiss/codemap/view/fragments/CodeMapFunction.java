@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
+import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.SpanUtils;
 import com.hdweiss.codemap.util.Utils;
@@ -20,6 +21,8 @@ public class CodeMapFunction extends CodeMapItem {
 	private TextView sourceView;
 	
 	private float yOffset = 0;
+
+	private View scrollView;
 	
 	public CodeMapFunction(Context context, AttributeSet attrs) {
 		this(context, new CodeMapPoint(0, 0), "", new SpannableString(""));
@@ -29,9 +32,10 @@ public class CodeMapFunction extends CodeMapItem {
 			SpannableString content) {
 		super(context, null, name);
 				
-		sourceView = new TextView(getContext());
+		scrollView = inflate(context, R.layout.codemap_function, null);
+		sourceView = (TextView) scrollView.findViewById(R.id.codemap_function);
 		sourceView.setTextSize(Utils.getSourceFontsize(getContext()));
-		setContentView(sourceView);
+		setContentView(scrollView);
 		
 		init(name, content);
 		setPosition(point);
