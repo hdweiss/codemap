@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
@@ -212,13 +215,33 @@ public class Utils {
 	
 	public static int getSourceFontsize(Context context) {
 		try {
-			int fontSize = Integer.parseInt(PreferenceManager.getDefaultSharedPreferences(
-					context).getString("sourceFontSize", "15"));
+			int fontSize = Integer.parseInt(PreferenceManager
+					.getDefaultSharedPreferences(context).getString(
+							"sourceFontSize", "15"));
 
 			if (fontSize > 6)
 				return fontSize;
 		} catch (NumberFormatException e) {
 		}
 
-		return DEFAULT_FONTSIZE;	}
+		return DEFAULT_FONTSIZE;
+	}
+	
+	public static boolean isNetworkOnline(Context context) {
+		ConnectivityManager conMan = (ConnectivityManager) context
+				.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+		State mobile = conMan.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState();
+		State wifi = conMan.getNetworkInfo(ConnectivityManager.TYPE_WIFI).getState();
+		
+		if (mobile == NetworkInfo.State.CONNECTED) {
+		  	return true;
+		} 
+		if (wifi == NetworkInfo.State.CONNECTED) {
+		   return true;
+		}
+		
+		return false;
+
+	}
 }

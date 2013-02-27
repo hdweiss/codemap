@@ -84,7 +84,10 @@ public class ProjectController {
 				jgit.update(this);
 			} catch (IOException e) {
 				e.printStackTrace();
-			}			
+			} catch (IllegalStateException e) {
+				Toast.makeText(context, "Error: " + e.getLocalizedMessage(),
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 		else {
 			buildIndex();

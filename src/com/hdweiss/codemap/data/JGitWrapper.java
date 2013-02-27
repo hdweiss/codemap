@@ -33,7 +33,10 @@ public class JGitWrapper {
 		git = new Git(localRepo);
 	}
 	
-	public void update(ProjectController controller) {
+	public void update(ProjectController controller) throws IllegalStateException {
+		if (Utils.isNetworkOnline(context) == false)
+			throw new IllegalStateException("Network is not available");
+		
 		this.controller = controller;
 		File sourceRepo = new File(project.getSourcePath(context));
 		
