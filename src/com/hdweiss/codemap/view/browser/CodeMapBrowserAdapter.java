@@ -29,7 +29,12 @@ public class CodeMapBrowserAdapter extends ArrayAdapter<CodeMapBrowserItem> {
 	public void init() {
 		clear();
 		
-		List<String> filelist = Arrays.asList(projectDirectory.list());
+		String[] fileList = projectDirectory.list();
+		
+		if (fileList == null)
+			return;
+		
+		List<String> filelist = Arrays.asList(fileList);
 		Collections.sort(filelist);
 		
 		for(String name: filelist)

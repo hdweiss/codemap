@@ -70,6 +70,7 @@ public class ProjectWizard extends DialogFragment {
 		final String url = urlView.getText().toString();
 		
 		Project project = new Project(name);
+		final String oldUrl = project.getUrl();
 		project.setUrl(url);
 		
 		try {
@@ -82,14 +83,18 @@ public class ProjectWizard extends DialogFragment {
 		
 		CodeMapApp.get(getActivity()).removeProjectController(name);
 		
+		ProjectBrowser browser = (ProjectBrowser) getActivity();
+		browser.refresh();
+		
+		if (url.equals(oldUrl) == false)
+			ProjectBrowser.updateProject(name, getActivity());
+		
 		return project;
 	}
 	
 	private OnClickListener okClick = new OnClickListener() {
 		public void onClick(View v) {
 			saveProject();
-			ProjectBrowser browser = (ProjectBrowser) getActivity();
-			browser.refresh();
 			dismiss();
 		}
 	};

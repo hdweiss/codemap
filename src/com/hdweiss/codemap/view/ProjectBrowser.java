@@ -3,6 +3,7 @@ package com.hdweiss.codemap.view;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -90,7 +91,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 			break;
 		
 		case R.id.projects_update:
-			updateProject(projectName);
+			updateProject(projectName, this);
 			break;
 			
 		case R.id.projects_edit:
@@ -109,8 +110,8 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 		refresh();
 	}
 	
-	private void updateProject(String name) {
-		ProjectController controller = CodeMapApp.get(this).getProjectController(name);
+	public static void updateProject(String name, Activity activity) {
+		ProjectController controller = CodeMapApp.get(activity).getProjectController(name);
 		controller.updateProject();
 	}
 	
@@ -171,6 +172,9 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 			String projectName = intent.getStringExtra(SYNC_NAME);
 			int position = ((ProjectAdapter)listView.getAdapter()).getItemPosition(projectName);
 			ProjectItemView itemView = (ProjectItemView) listView.getChildAt(position);
+			
+			if (itemView == null)
+				return;
 
 			if(syncStart) {
 				itemView.beginUpdate();
