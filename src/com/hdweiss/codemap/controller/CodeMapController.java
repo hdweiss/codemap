@@ -165,7 +165,7 @@ public class CodeMapController extends ProjectController {
 		float offset = yOffset + parent.getContentViewYOffset();
 
 		CodeMapPoint position = new CodeMapPoint();
-		position.x = parent.getX() + parent.getWidth() + 30;
+		position.x = parent.getX() + parent.getWidth() + 15;
 		position.y = parent.getY() + offset;
 		
 		CodeMapFunction item = instantiateFunctionFragment(functionName,

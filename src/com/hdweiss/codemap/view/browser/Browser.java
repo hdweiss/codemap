@@ -112,7 +112,7 @@ public class Browser extends LinearLayout implements OnItemClickListener,
 		}
 
 		public void onFailure() {
-			Toast.makeText(getContext(), "Error finding entries",
+			Toast.makeText(getContext(), "No entries found",
 					Toast.LENGTH_SHORT).show();
 		}
 	};
