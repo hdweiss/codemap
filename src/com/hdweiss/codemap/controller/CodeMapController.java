@@ -1,6 +1,5 @@
 package com.hdweiss.codemap.controller;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -41,13 +40,13 @@ public class CodeMapController extends ProjectController {
 	 
 	
     public void loadCodeMapState() {
-    	try {
-			CodeMapState state = CodeMapState.readState(project.getName(), context);
-			setState(state);
-		} catch (IOException e) {
-			e.printStackTrace();
-			addAnnotationView("Welcome to CodeMap!\nYou can start browsing your project by using the explorer on the right.");
-		}
+//    	try {
+//			CodeMapState state = CodeMapState.readState(project.getName(), context);
+//			setState(state);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//			addAnnotationView("Welcome to CodeMap!\nYou can start browsing your project by using the explorer on the right.");
+//		}
     }
 	
     @SuppressWarnings("unchecked")
@@ -65,11 +64,11 @@ public class CodeMapController extends ProjectController {
     
     
     public void saveCodeMapState() {
-    	try {
-			codeMapView.getState().writeState(context);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+//    	try {
+//			codeMapView.getState().writeState(context);
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
     }
     
     

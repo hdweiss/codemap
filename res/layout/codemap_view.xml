@@ -34,4 +34,31 @@
             android:background="@drawable/codebrowser_bg" />
     </SlidingDrawer>
 
+    <SlidingDrawer
+        android:id="@+id/workspace_drawer"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="bottom"
+        android:content="@+id/workspace_browser"
+        android:handle="@+id/workspace_handle"
+        android:orientation="horizontal"
+        android:rotation="180" >
+
+        <ImageView
+            android:id="@+id/workspace_handle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:drawable/ic_menu_share"
+            android:paddingRight="5dp" />
+
+        <com.hdweiss.codemap.view.workspace.WorkspaceBrowser
+            android:id="@+id/workspace_browser"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/codebrowser_bg"
+            android:rotation="180" />
+    </SlidingDrawer>
+
 </RelativeLayout>

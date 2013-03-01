@@ -1,7 +1,9 @@
 package com.hdweiss.codemap.data;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,7 +16,7 @@ import com.hdweiss.codemap.util.Utils;
 public class CodeMapState implements Serializable {
 	private static final long serialVersionUID = 3L;
 	
-	public String projectName;
+	public String workspaceName;
 
 	public ArrayList<SerializableItem> items = new ArrayList<SerializableItem>();
 	public ArrayList<SerializableLink> links = new ArrayList<SerializableLink>();
@@ -24,22 +26,21 @@ public class CodeMapState implements Serializable {
 	public float zoom = 1;
 
 
-	public CodeMapState(String projectName) {
-		this.projectName = projectName;
+	public CodeMapState(String workspaceName) {
+		this.workspaceName = workspaceName;
 	}
 	
-	public void writeState(Context context) throws IOException {
+	public void writeState(Project project, Context context) throws IOException {
 		byte[] serializeObject = Utils.serializeObject(this);
 		
-		FileOutputStream fos = context.openFileOutput(getFilename(projectName),
-				Context.MODE_PRIVATE);
+		FileOutputStream fos = new FileOutputStream(getStateFile(project, workspaceName, context));
 		fos.write(serializeObject);
 		fos.close();
 	}
 
-	public static CodeMapState readState(String name, Context context)
+	public static CodeMapState readState(Project project, String workspace, Context context)
 			throws IOException {
-		FileInputStream fis = context.openFileInput(getFilename(name));
+		FileInputStream fis = new FileInputStream(getStateFile(project, workspace, context));
 		byte[] serializedObject = new byte[fis.available()];
 		fis.read(serializedObject);
 		fis.close();
@@ -48,15 +49,32 @@ public class CodeMapState implements Serializable {
 		return result;
 	}
 
-	private static String getFilename(String projectName) {
-		return projectName + ".state";
+	private static File getStateFile(Project project, String workspace, Context context)
+			throws FileNotFoundException {
+		return new File(getStateFilePath(project, workspace, context));
 	}
 	
-	private static String getFilePath(String projectName, Context context) {
-		return context.getFilesDir().getAbsolutePath() + File.separatorChar + getFilename(projectName);
+	private static String getStateFilePath (Project project, String workspace, Context context) {
+		File directory = project.getProjectDirectory(context);
+		return directory.getAbsolutePath() + File.separator + workspace + ".state";
 	}
 
 	public static void deleteState(String projectName, Context context) {
-		new File(getFilePath(projectName, context)).delete();
+		File directory = Project.getProjectDirectory(projectName, context);
+		
+		File[] toBeDeleted = directory.listFiles(new FileFilter() {
+			public boolean accept(File theFile) {
+				if (theFile.isFile()) {
+					return theFile.getName().endsWith(".state");
+				}
+				return false;
+			}
+		});
+
+		for (File deletableFile : toBeDeleted) {
+			deletableFile.delete();
+		}
 	}
+	
+	
 }
