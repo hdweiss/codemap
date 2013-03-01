@@ -3,11 +3,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <fragment
-        android:id="@+id/codeMapFragment"
-        android:name="com.hdweiss.codemap.view.codemap.CodeMapFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
 </LinearLayout>
