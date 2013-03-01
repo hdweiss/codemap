@@ -73,7 +73,7 @@ public class CodeMapActivity extends Activity {
 			return true;
 
 		case R.id.menu_addtab:
-			addCodeMapFragment("workspace");
+			addCodeMapFragment();
 			return true;
 			
 		case R.id.menu_closetab:
@@ -85,7 +85,8 @@ public class CodeMapActivity extends Activity {
 		}
 	}
     
-	public void addCodeMapFragment(String name) {
+	public void addCodeMapFragment() {
+		final String name = "Workspace " + getActionBar().getTabCount();
 		ActionBar bar = getActionBar();
 		bar.addTab(bar
 				.newTab()

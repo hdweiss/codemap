@@ -1,6 +1,39 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-</LinearLayout>
+    <SlidingDrawer
+        android:id="@+id/drawer"
+        android:layout_width="400dp"
+        android:layout_height="1000dp"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:layout_gravity="bottom"
+        android:content="@+id/codemap_browser"
+        android:handle="@+id/handle"
+        android:orientation="horizontal"
+        android:rotation="180" >
+
+        <ImageView
+            android:id="@+id/handle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@android:drawable/ic_menu_share"
+            android:paddingRight="5dp" />
+
+        <com.hdweiss.codemap.view.browser.Browser
+            android:id="@+id/codemap_browser"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:background="@drawable/codebrowser_bg"
+            android:rotation="180" />
+    </SlidingDrawer>
+
+    <LinearLayout
+        android:id="@+id/codemap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </LinearLayout>
+
+</RelativeLayout>

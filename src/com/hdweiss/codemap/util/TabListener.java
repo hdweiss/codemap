@@ -1,5 +1,7 @@
 package com.hdweiss.codemap.util;
 
+import com.hdweiss.codemap.R;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -39,15 +41,15 @@ public class TabListener<T extends Fragment> implements ActionBar.TabListener {
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
         if (mFragment == null) {
             mFragment = Fragment.instantiate(mActivity, mClass.getName(), mArgs);
-            ft.add(android.R.id.content, mFragment, mTag);
+            ft.add(R.id.codemap_content, mFragment, mTag);
         } else {
-            ft.attach(mFragment);
+            ft.show(mFragment);
         }
     }
 
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
         if (mFragment != null) {
-            ft.detach(mFragment);
+            ft.hide(mFragment);
         }
     }
 
