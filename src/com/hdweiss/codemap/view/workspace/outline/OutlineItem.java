@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
-import com.hdweiss.codemap.controller.ProjectController;
+import com.hdweiss.codemap.data.ProjectController;
 
 public class OutlineItem {
 	public enum TYPE {DIRECTORY, FILE, SYMBOL};

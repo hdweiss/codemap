@@ -8,8 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.data.CodeMapApp;
+import com.hdweiss.codemap.data.ProjectController;
 
 public class ProjectAdapter extends BaseAdapter {
 

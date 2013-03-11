@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.data.CscopeEntry;
+import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.workspace.FindDeclarationTask.FindDeclarationCallback;

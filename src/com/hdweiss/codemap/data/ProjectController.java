@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.controller;
+package com.hdweiss.codemap.data;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,11 +10,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.hdweiss.codemap.data.Cscope;
-import com.hdweiss.codemap.data.CscopeEntry;
-import com.hdweiss.codemap.data.CscopeWrapper;
-import com.hdweiss.codemap.data.JGitWrapper;
-import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.util.SyntaxHighlighter;
 
 public class ProjectController {

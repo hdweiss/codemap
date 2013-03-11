@@ -6,7 +6,6 @@ import java.util.UUID;
 import android.content.Context;
 import android.text.SpannableString;
 
-import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.workspace.fragments.CodeMapAnnotation;
 import com.hdweiss.codemap.view.workspace.fragments.CodeMapFunction;
