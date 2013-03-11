@@ -8,23 +8,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.data.CodeMapApp;
-import com.hdweiss.codemap.util.TabListener;
-import com.hdweiss.codemap.view.workspace.WorkspaceController;
 import com.hdweiss.codemap.view.workspace.WorkspaceFragment;
 
 public class CodeMapActivity extends Activity {
 	public final static String PROJECT_NAME = "projectName";
 	
-    private WorkspaceController controller;
+	private String projectName;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.codemap);
         
-        String projectName = getIntent().getStringExtra(PROJECT_NAME);
-        controller = CodeMapApp.get(this).getProjectController(projectName);
+        this.projectName = getIntent().getStringExtra(PROJECT_NAME);
         
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
@@ -60,11 +56,6 @@ public class CodeMapActivity extends Activity {
 		return super.onPrepareOptionsMenu(menu);
 	}
 
-
-	public WorkspaceController getController() {
-    	return this.controller;
-    }
-
 	@Override
 	public boolean onMenuItemSelected(int featureId, MenuItem item) {
 		switch (item.getItemId()) {
@@ -87,13 +78,16 @@ public class CodeMapActivity extends Activity {
     
 	public void addWorkspaceFragment() {
 		final String name = "Workspace " + getActionBar().getTabCount();
+		Bundle bundle = new Bundle();
+		bundle.putString(WorkspaceFragment.WORKSPACE_NAME, name);
+		bundle.putString(WorkspaceFragment.PROJECT_NAME, this.projectName);
 		ActionBar bar = getActionBar();
 		bar.addTab(bar
 				.newTab()
 				.setText(name)
 				.setTabListener(
-						new TabListener<WorkspaceFragment>(this, name,
-								WorkspaceFragment.class)));
+						new CodeMapTabListener<WorkspaceFragment>(this, name,
+								WorkspaceFragment.class, bundle)));
 	}
 	
 	public void closeTab() {

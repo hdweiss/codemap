@@ -18,11 +18,12 @@ import android.view.ViewGroup;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
-import com.hdweiss.codemap.view.CodeMapActivity;
 import com.hdweiss.codemap.view.workspace.outline.OutlineBrowser;
 
 public class WorkspaceFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
+	public static final String WORKSPACE_NAME = "workspace_name";
+	public static final String PROJECT_NAME = "project_name";
 	private static final String ZOOM = "zoom";
 	private static final String SCROLL_X = "scrollX";
 	private static final String SCROLL_Y = "scrollY";
@@ -37,25 +38,28 @@ public class WorkspaceFragment extends Fragment implements
 		super.onCreateView(inflater, container, savedInstanceState);
 
 		setHasOptionsMenu(true);
-		
+				
 		View view = inflater.inflate(R.layout.workspace, container, false);
 		codeMapView = (WorkspaceView) view.findViewById(R.id.codemap);
 		codeMapBrowser = (OutlineBrowser) view.findViewById(R.id.codemap_browser);
+
+		init();
 		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());
 		prefs.registerOnSharedPreferenceChangeListener(this);
-		return view;
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
 
 		if(savedInstanceState != null)
 			restoreInstanceState(savedInstanceState);
 		
-		this.controller = ((CodeMapActivity) getActivity()).getController();
+		return view;
+	}
+	
+	private void init() {
+		String projectName = getArguments().getString(PROJECT_NAME);
+		String workspaceName = getArguments().getString(WORKSPACE_NAME);
+		
+		this.controller = new WorkspaceController(projectName, getActivity());
 		codeMapBrowser.setController(controller);
 		controller.setView(codeMapView);
 	}

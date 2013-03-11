@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.util;
+package com.hdweiss.codemap.view;
 
 import com.hdweiss.codemap.R;
 
@@ -10,18 +10,18 @@ import android.app.ActionBar.Tab;
 import android.os.Bundle;
 import android.widget.Toast;
 
-public class TabListener<T extends Fragment> implements ActionBar.TabListener {
+public class CodeMapTabListener<T extends Fragment> implements ActionBar.TabListener {
     private final Activity mActivity;
     private final String mTag;
     private final Class<T> mClass;
     private final Bundle mArgs;
     private Fragment mFragment;
 
-    public TabListener(Activity activity, String tag, Class<T> clz) {
+    public CodeMapTabListener(Activity activity, String tag, Class<T> clz) {
         this(activity, tag, clz, null);
     }
 
-    public TabListener(Activity activity, String tag, Class<T> clz, Bundle args) {
+    public CodeMapTabListener(Activity activity, String tag, Class<T> clz, Bundle args) {
         mActivity = activity;
         mTag = tag;
         mClass = clz;
