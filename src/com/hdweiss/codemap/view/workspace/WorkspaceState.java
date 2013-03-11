@@ -61,6 +61,23 @@ public class WorkspaceState implements Serializable {
 		File directory = project.getProjectDirectory(context);
 		return directory.getAbsolutePath() + File.separator + workspace + ".state";
 	}
+	
+	public static ArrayList<String> getWorkspaceStateList(WorkspaceController controller, Context context) {
+		ArrayList<String> result = new ArrayList<String>();
+				
+		String[] fileList = controller.project.getProjectDirectory(context)
+				.list();
+		
+		for(String filename: fileList) {
+			if(filename.endsWith(".state")) {
+				String projectName = filename.substring(0, filename.length()
+						- ".state".length());
+				result.add(projectName);
+			}
+		}
+
+		return result;
+	}	
 
 	public static void deleteState(String projectName, Context context) {
 		File directory = Project.getProjectDirectory(projectName, context);

@@ -10,11 +10,13 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.view.workspace.WorkspaceController;
 
 public class WorkspaceBrowser extends LinearLayout implements OnChildClickListener, OnGroupClickListener {
 
 	private ExpandableListView listView;
 	private WorkspaceBrowserAdapter adapter;
+	private WorkspaceController controller;
 
 	public WorkspaceBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -23,13 +25,16 @@ public class WorkspaceBrowser extends LinearLayout implements OnChildClickListen
 		this.listView = (ExpandableListView) findViewById(R.id.workspace_list);
 		this.listView.setOnGroupClickListener(this);
 		this.listView.setOnChildClickListener(this);
-		
+	}
+	
+	public void setController(WorkspaceController controller) {
+		this.controller = controller;
 		init();
 	}
 	
-	private void init() {
-		this.adapter = new WorkspaceBrowserAdapter(getContext());
-		this.listView.setAdapter(adapter);
+	public void init() {
+		this.adapter = new WorkspaceBrowserAdapter(getContext(), controller);
+		listView.setAdapter(adapter);
 	}
 
 	

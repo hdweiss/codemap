@@ -16,7 +16,7 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_gravity="bottom"
-        android:content="@+id/codemap_browser"
+        android:content="@+id/outline_browser"
         android:handle="@+id/handle"
         android:orientation="horizontal" >
 
@@ -28,7 +28,7 @@
             android:paddingRight="5dp" />
 
         <com.hdweiss.codemap.view.workspace.outline.OutlineBrowser
-            android:id="@+id/codemap_browser"
+            android:id="@+id/outline_browser"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:background="@drawable/codebrowser_bg" />

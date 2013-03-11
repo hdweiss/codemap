@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
+import com.hdweiss.codemap.view.workspace.browser.WorkspaceBrowser;
 import com.hdweiss.codemap.view.workspace.outline.OutlineBrowser;
 
 public class WorkspaceFragment extends Fragment implements
@@ -28,9 +29,10 @@ public class WorkspaceFragment extends Fragment implements
 	private static final String SCROLL_X = "scrollX";
 	private static final String SCROLL_Y = "scrollY";
 	
-	private WorkspaceView codeMapView;
-	private OutlineBrowser codeMapBrowser;
 	private WorkspaceController controller;
+	private WorkspaceView codeMapView;
+	private OutlineBrowser outlineBrowser;
+	private WorkspaceBrowser workspaceBrowser;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -41,7 +43,8 @@ public class WorkspaceFragment extends Fragment implements
 				
 		View view = inflater.inflate(R.layout.workspace, container, false);
 		codeMapView = (WorkspaceView) view.findViewById(R.id.codemap);
-		codeMapBrowser = (OutlineBrowser) view.findViewById(R.id.codemap_browser);
+		outlineBrowser = (OutlineBrowser) view.findViewById(R.id.outline_browser);
+		workspaceBrowser = (WorkspaceBrowser) view.findViewById(R.id.workspace_browser);
 
 		init();
 		
@@ -60,8 +63,10 @@ public class WorkspaceFragment extends Fragment implements
 		String workspaceName = getArguments().getString(WORKSPACE_NAME);
 		
 		this.controller = new WorkspaceController(projectName, workspaceName, getActivity());
-		codeMapBrowser.setController(controller);
 		controller.setView(codeMapView);
+
+		outlineBrowser.setController(controller);
+		workspaceBrowser.setController(controller);
 	}
 	
 	public void restoreInstanceState(Bundle savedInstanceState) {
@@ -134,7 +139,7 @@ public class WorkspaceFragment extends Fragment implements
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context c, Intent i) {
-			codeMapBrowser.refresh();
+			outlineBrowser.refresh();
 		}
 	};
 	
