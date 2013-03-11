@@ -2,13 +2,11 @@ package com.hdweiss.codemap.view.project;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.data.ProjectController;
 
 public class ProjectAdapter extends BaseAdapter {
@@ -41,7 +39,7 @@ public class ProjectAdapter extends BaseAdapter {
 		}
 		
 		final String projectName = data.get(position);
-		ProjectController controller = CodeMapApp.get((Activity)context).getProjectController(projectName);
+		ProjectController controller = new ProjectController(projectName, context);
 		
 		view.setName(controller.project.getName());
 		view.setUrl(controller.project.getUrl());

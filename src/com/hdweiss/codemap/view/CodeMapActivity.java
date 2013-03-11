@@ -96,7 +96,7 @@ public class CodeMapActivity extends Activity {
 		
 		if (tabIndex < 0)
 			return;
-		
+				
 		bar.removeTabAt(tabIndex);
 	}
 }

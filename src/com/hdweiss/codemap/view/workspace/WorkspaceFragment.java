@@ -59,7 +59,7 @@ public class WorkspaceFragment extends Fragment implements
 		String projectName = getArguments().getString(PROJECT_NAME);
 		String workspaceName = getArguments().getString(WORKSPACE_NAME);
 		
-		this.controller = new WorkspaceController(projectName, getActivity());
+		this.controller = new WorkspaceController(projectName, workspaceName, getActivity());
 		codeMapBrowser.setController(controller);
 		controller.setView(codeMapView);
 	}

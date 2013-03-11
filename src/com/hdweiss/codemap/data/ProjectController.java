@@ -23,24 +23,29 @@ public class ProjectController {
 	
 	public ProjectController(String name, Context context) {
 		this.context = context;
-		loadProject(name);
+		this.project = loadProject(name);
 		this.cscope = new Cscope(context);
 		this.cscopeWrapper = new CscopeWrapper(cscope, project, context);
 	}
 
+	// TODO Integrate checks for project name
+	public boolean isNameValid(String projectName) {
+		if (TextUtils.isEmpty(projectName))
+			return false;
+		else
+			return true;
+	}
 	
-	public void loadProject(String name) {
+	public Project loadProject(String name) {
 		if(TextUtils.isEmpty(name))
 			throw new IllegalArgumentException("Invalid project name");
 		
 		try {
-			this.project = Project.readProject(name, context);
+			return Project.readProject(name, context);
 		} catch (IOException e) {
 			Log.e("CodeMap", e.getLocalizedMessage());
-		}
-		
-		if(this.project == null)
-			this.project = new Project(name);
+			return new Project(name);
+		}		
 	}
 	
 	public static ArrayList<String> getProjectsList(Context context) {

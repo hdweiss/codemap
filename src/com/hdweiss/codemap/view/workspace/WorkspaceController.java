@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.view.workspace;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -24,10 +25,12 @@ import com.hdweiss.codemap.view.workspace.outline.OutlineItem;
 
 public class WorkspaceController extends ProjectController {
 
+	private String workspaceName;
 	private WorkspaceView codeMapView;
 
-	public WorkspaceController(String projectName, Context context) {
+	public WorkspaceController(String projectName, String workspaceName, Context context) {
 		super(projectName, context);
+		this.workspaceName = workspaceName;
 	}
 	
 	public void setView(WorkspaceView codeMapView) {
@@ -38,13 +41,13 @@ public class WorkspaceController extends ProjectController {
 	 
 	
     public void loadCodeMapState() {
-//    	try {
-//			CodeMapState state = CodeMapState.readState(project.getName(), context);
-//			setState(state);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//			addAnnotationView("Welcome to CodeMap!\nYou can start browsing your project by using the explorer on the right.");
-//		}
+    	try {
+			WorkspaceState state = WorkspaceState.readState(project, workspaceName, context);
+			setState(state);
+		} catch (IOException e) {
+			e.printStackTrace();
+			addAnnotationView("Welcome to CodeMap!\nYou can start browsing your project by using the explorer on the right.");
+		}
     }
 	
     @SuppressWarnings("unchecked")
@@ -62,11 +65,11 @@ public class WorkspaceController extends ProjectController {
     
     
     public void saveCodeMapState() {
-//    	try {
-//			codeMapView.getState().writeState(context);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+    	try {
+			codeMapView.getState().writeState(project, context);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
     }
     
     

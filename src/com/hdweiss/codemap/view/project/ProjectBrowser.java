@@ -21,7 +21,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.data.Project;
 import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.view.CodeMapActivity;
@@ -111,7 +110,7 @@ public class ProjectBrowser extends FragmentActivity implements OnItemClickListe
 	}
 	
 	public static void updateProject(String name, Activity activity) {
-		ProjectController controller = CodeMapApp.get(activity).getProjectController(name);
+		ProjectController controller = new ProjectController(name, activity);
 		controller.updateProject();
 	}
 	
