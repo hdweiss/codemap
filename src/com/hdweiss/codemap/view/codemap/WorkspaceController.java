@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.controller;
+package com.hdweiss.codemap.view.codemap;
 
 import java.util.ArrayList;
 
@@ -11,28 +11,29 @@ import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
+import com.hdweiss.codemap.controller.CodeMapStateLoader;
+import com.hdweiss.codemap.controller.FindDeclarationTask;
+import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.controller.FindDeclarationTask.FindDeclarationCallback;
-import com.hdweiss.codemap.data.CodeMapState;
+import com.hdweiss.codemap.data.WorkspaceState;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.browser.BrowserItem;
-import com.hdweiss.codemap.view.codemap.CodeMapFragment;
-import com.hdweiss.codemap.view.codemap.CodeMapView;
 import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
 import com.hdweiss.codemap.view.fragments.CodeMapFunction;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 import com.hdweiss.codemap.view.fragments.CodeMapLink;
 
-public class CodeMapController extends ProjectController {
+public class WorkspaceController extends ProjectController {
 
-	private CodeMapView codeMapView;
+	private WorkspaceView codeMapView;
 
-	public CodeMapController(String projectName, Context context) {
+	public WorkspaceController(String projectName, Context context) {
 		super(projectName, context);
 	}
 	
-	public void setView(CodeMapView codeMapView) {
+	public void setView(WorkspaceView codeMapView) {
 		this.codeMapView = codeMapView;
 		this.codeMapView.setController(this);
 		loadCodeMapState();
@@ -50,7 +51,7 @@ public class CodeMapController extends ProjectController {
     }
 	
     @SuppressWarnings("unchecked")
-	private void setState(CodeMapState state) {
+	private void setState(WorkspaceState state) {
 		if(state == null)
 			return;
 		
@@ -108,7 +109,7 @@ public class CodeMapController extends ProjectController {
 	
 	
 	public void updateCodeBrowser() {
-		Intent intent = new Intent(CodeMapFragment.INTENT_REFRESH);
+		Intent intent = new Intent(WorkspaceFragment.INTENT_REFRESH);
 		context.sendBroadcast(intent);
 	}
 	

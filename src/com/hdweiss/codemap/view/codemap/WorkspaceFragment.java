@@ -16,20 +16,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.browser.Browser;
 
-public class CodeMapFragment extends Fragment implements
+public class WorkspaceFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
 	private static final String ZOOM = "zoom";
 	private static final String SCROLL_X = "scrollX";
 	private static final String SCROLL_Y = "scrollY";
 	
-	private CodeMapView codeMapView;
+	private WorkspaceView codeMapView;
 	private Browser codeMapBrowser;
-	private CodeMapController controller;
+	private WorkspaceController controller;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,8 +37,8 @@ public class CodeMapFragment extends Fragment implements
 
 		setHasOptionsMenu(true);
 		
-		View view = inflater.inflate(R.layout.codemap_view, container, false);
-		codeMapView = (CodeMapView) view.findViewById(R.id.codemap);
+		View view = inflater.inflate(R.layout.workspace, container, false);
+		codeMapView = (WorkspaceView) view.findViewById(R.id.codemap);
 		codeMapBrowser = (Browser) view.findViewById(R.id.codemap_browser);
 		
 		SharedPreferences prefs = PreferenceManager

@@ -7,23 +7,24 @@ import java.util.UUID;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
-import com.hdweiss.codemap.data.CodeMapState;
+import com.hdweiss.codemap.data.WorkspaceState;
 import com.hdweiss.codemap.data.SerializableItem;
 import com.hdweiss.codemap.data.SerializableLink;
-import com.hdweiss.codemap.view.codemap.CodeMapView;
+import com.hdweiss.codemap.view.codemap.WorkspaceController;
+import com.hdweiss.codemap.view.codemap.WorkspaceView;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 import com.hdweiss.codemap.view.fragments.CodeMapLink;
 
 public class CodeMapStateLoader extends AsyncTask<ArrayList<SerializableItem>, CodeMapItem, Long> {
 	
-	private CodeMapState state;
-	private CodeMapView codeMapView;
-	private CodeMapController controller;
+	private WorkspaceState state;
+	private WorkspaceView codeMapView;
+	private WorkspaceController controller;
 
 	private ProgressDialog dialog;
 	private HashMap<UUID, CodeMapItem> codeMapItems = new HashMap<UUID, CodeMapItem>();
 	
-	public CodeMapStateLoader(CodeMapState state, CodeMapView codeMapView, CodeMapController controller) {
+	public CodeMapStateLoader(WorkspaceState state, WorkspaceView codeMapView, WorkspaceController controller) {
 		this.state = state;
 		this.codeMapView = codeMapView;
 		this.controller = controller;
@@ -71,7 +72,7 @@ public class CodeMapStateLoader extends AsyncTask<ArrayList<SerializableItem>, C
 		return itemView;
 	}
 	
-	private void loadLinksState(CodeMapState state) {
+	private void loadLinksState(WorkspaceState state) {
 		for (SerializableLink link : state.links) {
 			CodeMapItem parent = codeMapItems.get(link.parent);
 			CodeMapItem child = codeMapItems.get(link.child);

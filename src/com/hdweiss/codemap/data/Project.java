@@ -116,6 +116,6 @@ public class Project implements Serializable {
 		
 		CodeMapApp.get((Activity) context).removeProjectController(name);
 		
-		CodeMapState.deleteState(name, context);
+		WorkspaceState.deleteState(name, context);
 	}
 }

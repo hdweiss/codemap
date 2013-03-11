@@ -10,17 +10,17 @@ import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 
-public class CodeMapListeners {
+public class WorkspaceViewListeners {
 	
 	public static class CodeMapGestureListener implements OnGestureListener {
-		private CodeMapView codeMapView;
+		private WorkspaceView codeMapView;
 		private Scroller scroller;
 		
 		private CodeMapItem selectedDrawable = null;
 		private float dragYoffset = 0;
 		private float dragXoffset = 0;
 		
-		public CodeMapGestureListener(CodeMapView codeMapView, Scroller scroller) {
+		public CodeMapGestureListener(WorkspaceView codeMapView, Scroller scroller) {
 			this.codeMapView = codeMapView;
 			this.scroller = scroller;
 		}
@@ -84,10 +84,10 @@ public class CodeMapListeners {
 	
 	public static class CodeMapScaleListener implements OnScaleGestureListener {
 		
-		private CodeMapView codeMapView;
+		private WorkspaceView codeMapView;
 		private float initialZoom = 1;
 
-		public CodeMapScaleListener(CodeMapView codeMapView) {
+		public CodeMapScaleListener(WorkspaceView codeMapView) {
 			this.codeMapView = codeMapView;
 		}
 		

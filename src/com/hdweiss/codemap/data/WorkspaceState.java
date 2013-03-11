@@ -13,7 +13,7 @@ import android.content.Context;
 
 import com.hdweiss.codemap.util.Utils;
 
-public class CodeMapState implements Serializable {
+public class WorkspaceState implements Serializable {
 	private static final long serialVersionUID = 3L;
 	
 	public String workspaceName;
@@ -26,7 +26,7 @@ public class CodeMapState implements Serializable {
 	public float zoom = 1;
 
 
-	public CodeMapState(String workspaceName) {
+	public WorkspaceState(String workspaceName) {
 		this.workspaceName = workspaceName;
 	}
 	
@@ -38,20 +38,20 @@ public class CodeMapState implements Serializable {
 		fos.close();
 	}
 
-	public static CodeMapState readState(Project project, String workspace, Context context)
+	public static WorkspaceState readState(Project project, String workspaceName, Context context)
 			throws IOException {
-		FileInputStream fis = new FileInputStream(getStateFile(project, workspace, context));
+		FileInputStream fis = new FileInputStream(getStateFile(project, workspaceName, context));
 		byte[] serializedObject = new byte[fis.available()];
 		fis.read(serializedObject);
 		fis.close();
 
-		CodeMapState result = (CodeMapState) Utils.deserializeObject(serializedObject);
+		WorkspaceState result = (WorkspaceState) Utils.deserializeObject(serializedObject);
 		return result;
 	}
 
-	private static File getStateFile(Project project, String workspace, Context context)
+	private static File getStateFile(Project project, String workspaceName, Context context)
 			throws FileNotFoundException {
-		return new File(getStateFilePath(project, workspace, context));
+		return new File(getStateFilePath(project, workspaceName, context));
 	}
 	
 	private static String getStateFilePath (Project project, String workspace, Context context) {

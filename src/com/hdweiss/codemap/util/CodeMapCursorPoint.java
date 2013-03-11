@@ -1,6 +1,6 @@
 package com.hdweiss.codemap.util;
 
-import com.hdweiss.codemap.view.codemap.CodeMapView;
+import com.hdweiss.codemap.view.codemap.WorkspaceView;
 
 import android.graphics.PointF;
 
@@ -17,7 +17,7 @@ public class CodeMapCursorPoint extends PointF {
 		super(x, y);
 	}
 	
-	public CodeMapPoint getCodeMapPoint(CodeMapView codeMapView) {
+	public CodeMapPoint getCodeMapPoint(WorkspaceView codeMapView) {
 		CodeMapPoint transformedPoint = new CodeMapPoint();
 		transformedPoint.x = (x + codeMapView.getScrollX()) / codeMapView.getScaleFactor();
 		transformedPoint.y = (y + codeMapView.getScrollY()) / codeMapView.getScaleFactor();

@@ -11,20 +11,19 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.controller.CollisionManager;
-import com.hdweiss.codemap.data.CodeMapState;
+import com.hdweiss.codemap.data.WorkspaceState;
 import com.hdweiss.codemap.data.SerializableItem;
 import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.ZoomableAbsoluteLayout;
-import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapGestureListener;
-import com.hdweiss.codemap.view.codemap.CodeMapListeners.CodeMapScaleListener;
+import com.hdweiss.codemap.view.codemap.WorkspaceViewListeners.CodeMapGestureListener;
+import com.hdweiss.codemap.view.codemap.WorkspaceViewListeners.CodeMapScaleListener;
 import com.hdweiss.codemap.view.fragments.CodeMapItem;
 import com.hdweiss.codemap.view.fragments.CodeMapLink;
 
-public class CodeMapView extends ZoomableAbsoluteLayout {
+public class WorkspaceView extends ZoomableAbsoluteLayout {
 
 	private GestureDetector gestureDetector;
 	private ScaleGestureDetector scaleDetector;
@@ -32,9 +31,9 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	
 	private ArrayList<CodeMapItem> items = new ArrayList<CodeMapItem>();
 	private ArrayList<CodeMapLink> links = new ArrayList<CodeMapLink>();
-	private CodeMapController controller;
+	private WorkspaceController controller;
 
-	public CodeMapView(Context context, AttributeSet attrs) {
+	public WorkspaceView(Context context, AttributeSet attrs) {
 		super(context, attrs);	
 		
         this.scroller = new Scroller(getContext());
@@ -141,16 +140,16 @@ public class CodeMapView extends ZoomableAbsoluteLayout {
 	}
 
 
-	public void setController(CodeMapController controller) {
+	public void setController(WorkspaceController controller) {
 		this.controller = controller;
 	}
 	
-	public CodeMapController getController() {
+	public WorkspaceController getController() {
 		return this.controller;
 	}
 	
-	public CodeMapState getState() {
-		CodeMapState state = new CodeMapState(controller.project.getName());
+	public WorkspaceState getState() {
+		WorkspaceState state = new WorkspaceState(controller.project.getName());
 		
 		for(CodeMapItem item: items)
 			state.items.add(new SerializableItem(item));

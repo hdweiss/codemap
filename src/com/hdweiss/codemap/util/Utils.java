@@ -28,7 +28,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-import com.hdweiss.codemap.view.ProjectBrowser.SynchServiceReceiver;
+import com.hdweiss.codemap.view.project.ProjectBrowser.SynchServiceReceiver;
 
 public class Utils {
 

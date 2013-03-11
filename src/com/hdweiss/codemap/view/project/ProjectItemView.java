@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view;
+package com.hdweiss.codemap.view.project;
 
 import android.content.Context;
 import android.widget.LinearLayout;

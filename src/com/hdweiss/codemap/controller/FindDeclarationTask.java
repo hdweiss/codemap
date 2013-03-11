@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.hdweiss.codemap.data.CscopeEntry;
+import com.hdweiss.codemap.view.codemap.WorkspaceController;
 
 public class FindDeclarationTask extends AsyncTask<Object, Object, Object>
 {
@@ -16,14 +17,14 @@ public class FindDeclarationTask extends AsyncTask<Object, Object, Object>
 	private Context context;
 	private FindDeclarationCallback callback;
 	private String url;
-	private CodeMapController controller;
+	private WorkspaceController controller;
 
 	private ArrayList<CscopeEntry> entries;
 
 
 	
 	public FindDeclarationTask(String url, FindDeclarationCallback callback,
-			CodeMapController controller, Context context) {
+			WorkspaceController controller, Context context) {
 		this.url = url;
 		this.callback = callback;
 		this.controller = controller;

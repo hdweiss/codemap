@@ -11,15 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.hdweiss.codemap.controller.CodeMapController;
+import com.hdweiss.codemap.view.codemap.WorkspaceController;
 
 public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 
 	private ArrayList<Boolean> expanded = new ArrayList<Boolean>();
-	private CodeMapController controller;
+	private WorkspaceController controller;
 	private File projectDirectory;
 	
-	public BrowserAdapter(Context context, CodeMapController controller) {
+	public BrowserAdapter(Context context, WorkspaceController controller) {
 		super(context, android.R.layout.simple_list_item_1);
 		this.controller = controller;
 		this.projectDirectory = controller.project.getSourceDirectory(getContext());

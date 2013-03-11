@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
 
-import com.hdweiss.codemap.view.codemap.CodeMapView;
+import com.hdweiss.codemap.view.codemap.WorkspaceView;
 
 public class ZoomableLinearLayout extends LinearLayout {
 
@@ -16,7 +16,7 @@ public class ZoomableLinearLayout extends LinearLayout {
 	}
 
 	public float getScaleFactor() {
-		return ((CodeMapView) getParent()).getScaleFactor();
+		return ((WorkspaceView) getParent()).getScaleFactor();
 	}
 	
 

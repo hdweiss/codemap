@@ -19,17 +19,17 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.controller.FindDeclarationTask;
 import com.hdweiss.codemap.controller.FindDeclarationTask.FindDeclarationCallback;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.view.browser.BrowserItem.TYPE;
+import com.hdweiss.codemap.view.codemap.WorkspaceController;
 
 public class Browser extends LinearLayout implements OnItemClickListener,
 		android.widget.AdapterView.OnItemLongClickListener {
 
 	private BrowserAdapter adapter;
-	private CodeMapController controller;
+	private WorkspaceController controller;
 	private ListView browserListView;
 	private EditText searchbarView;
 	private ImageButton cancelButton;
@@ -66,7 +66,7 @@ public class Browser extends LinearLayout implements OnItemClickListener,
 		showDeclarations();
 	}
 	
-	public void setController(CodeMapController controller) {
+	public void setController(WorkspaceController controller) {
 		this.controller = controller;
 		this.adapter = new BrowserAdapter(getContext(), controller);
 		browserListView.setAdapter(adapter);

@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view;
+package com.hdweiss.codemap.view.project;
 
 import java.io.IOException;
 import java.util.ArrayList;

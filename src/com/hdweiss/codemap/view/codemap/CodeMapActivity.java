@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.controller.CodeMapController;
 import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.util.TabListener;
 import com.hdweiss.codemap.view.Preferences;
@@ -16,7 +15,7 @@ import com.hdweiss.codemap.view.Preferences;
 public class CodeMapActivity extends Activity {
 	public final static String PROJECT_NAME = "projectName";
 	
-    private CodeMapController controller;
+    private WorkspaceController controller;
 
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +60,7 @@ public class CodeMapActivity extends Activity {
 	}
 
 
-	public CodeMapController getController() {
+	public WorkspaceController getController() {
     	return this.controller;
     }
 
@@ -73,7 +72,7 @@ public class CodeMapActivity extends Activity {
 			return true;
 
 		case R.id.menu_addtab:
-			addCodeMapFragment();
+			addWorkspaceFragment();
 			return true;
 			
 		case R.id.menu_closetab:
@@ -85,15 +84,15 @@ public class CodeMapActivity extends Activity {
 		}
 	}
     
-	public void addCodeMapFragment() {
+	public void addWorkspaceFragment() {
 		final String name = "Workspace " + getActionBar().getTabCount();
 		ActionBar bar = getActionBar();
 		bar.addTab(bar
 				.newTab()
 				.setText(name)
 				.setTabListener(
-						new TabListener<CodeMapFragment>(this, name,
-								CodeMapFragment.class)));
+						new TabListener<WorkspaceFragment>(this, name,
+								WorkspaceFragment.class)));
 	}
 	
 	public void closeTab() {

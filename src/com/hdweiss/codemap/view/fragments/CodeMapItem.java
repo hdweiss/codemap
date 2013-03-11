@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
-import com.hdweiss.codemap.view.codemap.CodeMapView;
+import com.hdweiss.codemap.view.codemap.WorkspaceView;
 
 public abstract class CodeMapItem extends LinearLayout {
 	public UUID id = UUID.randomUUID();
@@ -24,7 +24,7 @@ public abstract class CodeMapItem extends LinearLayout {
 	private LinearLayout containerView;
 	
 	private View contentView;
-	protected CodeMapView codeMapView;
+	protected WorkspaceView codeMapView;
 	
 	private boolean moveItem = false;
 	
@@ -49,7 +49,7 @@ public abstract class CodeMapItem extends LinearLayout {
 	}
 
 	
-	public void setCodeMapView(CodeMapView codeMapView) {
+	public void setCodeMapView(WorkspaceView codeMapView) {
 		this.codeMapView = codeMapView;
 	}
 	

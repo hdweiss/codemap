@@ -2,7 +2,7 @@ package com.hdweiss.codemap.data;
 
 import java.util.HashMap;
 
-import com.hdweiss.codemap.controller.CodeMapController;
+import com.hdweiss.codemap.view.codemap.WorkspaceController;
 
 import android.app.Activity;
 import android.app.Application;
@@ -10,15 +10,15 @@ import android.text.TextUtils;
 
 public class CodeMapApp extends Application {
 
-	private HashMap<String, CodeMapController> controllers = new HashMap<String, CodeMapController>();
+	private HashMap<String, WorkspaceController> controllers = new HashMap<String, WorkspaceController>();
 	
-	public CodeMapController getProjectController(String projectName) {
+	public WorkspaceController getProjectController(String projectName) {
 		checkProjectName(projectName);
 		
-		CodeMapController controller = controllers.get(projectName);
+		WorkspaceController controller = controllers.get(projectName);
 		
 		if(controller == null) {
-			controller = new CodeMapController(projectName, this);
+			controller = new WorkspaceController(projectName, this);
 			controllers.put(projectName, controller);
 		}
 		

@@ -20,7 +20,7 @@
         <activity android:name=".view.codemap.CodeMapActivity" >
         </activity>
         <activity
-            android:name=".view.ProjectBrowser"
+            android:name=".view.project.ProjectBrowser"
             android:label="@string/title_activity_main"
             android:windowSoftInputMode="stateHidden" >
             <intent-filter>
