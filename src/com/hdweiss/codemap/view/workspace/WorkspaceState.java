@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.data;
+package com.hdweiss.codemap.view.workspace;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 import android.content.Context;
 
+import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.SerializableItem;
+import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.Utils;
 
 public class WorkspaceState implements Serializable {

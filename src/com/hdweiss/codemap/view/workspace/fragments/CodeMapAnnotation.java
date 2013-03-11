@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.fragments;
+package com.hdweiss.codemap.view.workspace.fragments;
 
 import android.content.Context;
 import android.util.AttributeSet;

@@ -13,6 +13,7 @@ import android.content.Context;
 import android.text.TextUtils;
 
 import com.hdweiss.codemap.util.Utils;
+import com.hdweiss.codemap.view.workspace.WorkspaceState;
 
 public class Project implements Serializable {
 

@@ -8,10 +8,10 @@ import android.text.SpannableString;
 
 import com.hdweiss.codemap.controller.ProjectController;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
-import com.hdweiss.codemap.view.fragments.CodeMapFunction;
-import com.hdweiss.codemap.view.fragments.CodeMapImage;
-import com.hdweiss.codemap.view.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapAnnotation;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapFunction;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapImage;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
 
 public class SerializableItem implements Serializable {
 	private static final long serialVersionUID = 2L;

@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.controller;
+package com.hdweiss.codemap.view.workspace;
 
 import java.util.ArrayList;
 
@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.hdweiss.codemap.data.CscopeEntry;
-import com.hdweiss.codemap.view.codemap.WorkspaceController;
 
 public class FindDeclarationTask extends AsyncTask<Object, Object, Object>
 {

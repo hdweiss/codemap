@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.browser;
+package com.hdweiss.codemap.view.workspace.outline;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,21 +7,21 @@ import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.R.color;
-import com.hdweiss.codemap.view.browser.BrowserItem.TYPE;
+import com.hdweiss.codemap.view.workspace.outline.OutlineItem.TYPE;
 
-public class BrowserItemView extends LinearLayout {
+public class OutlineItemView extends LinearLayout {
 
 	private TextView textView;
 	private TextView declarationView;
 	
-	public BrowserItemView(Context context) {
+	public OutlineItemView(Context context) {
 		super(context);
-		LayoutInflater.from(context).inflate(R.layout.browser_item, this);
+		LayoutInflater.from(context).inflate(R.layout.outline_item, this);
 		this.textView = (TextView) findViewById(R.id.browser_item);
 		this.declarationView = (TextView) findViewById(R.id.browser_declare);
 	}
 
-	public void setItem(BrowserItem item) {
+	public void setItem(OutlineItem item) {
 		String text = item.name;
 		if(item.type == TYPE.FILE) {
 			if(text.lastIndexOf("/") >= 0)

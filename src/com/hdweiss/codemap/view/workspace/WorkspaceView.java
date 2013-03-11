@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.workspace;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,17 +11,15 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.widget.Scroller;
 
-import com.hdweiss.codemap.controller.CollisionManager;
-import com.hdweiss.codemap.data.WorkspaceState;
 import com.hdweiss.codemap.data.SerializableItem;
 import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.ZoomableAbsoluteLayout;
-import com.hdweiss.codemap.view.codemap.WorkspaceViewListeners.CodeMapGestureListener;
-import com.hdweiss.codemap.view.codemap.WorkspaceViewListeners.CodeMapScaleListener;
-import com.hdweiss.codemap.view.fragments.CodeMapItem;
-import com.hdweiss.codemap.view.fragments.CodeMapLink;
+import com.hdweiss.codemap.view.workspace.WorkspaceViewListeners.CodeMapGestureListener;
+import com.hdweiss.codemap.view.workspace.WorkspaceViewListeners.CodeMapScaleListener;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapLink;
 
 public class WorkspaceView extends ZoomableAbsoluteLayout {
 

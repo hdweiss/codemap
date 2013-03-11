@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.workspace;
 
 import android.app.Fragment;
 import android.content.BroadcastReceiver;
@@ -18,7 +18,8 @@ import android.view.ViewGroup;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
-import com.hdweiss.codemap.view.browser.Browser;
+import com.hdweiss.codemap.view.CodeMapActivity;
+import com.hdweiss.codemap.view.workspace.outline.OutlineBrowser;
 
 public class WorkspaceFragment extends Fragment implements
 		SharedPreferences.OnSharedPreferenceChangeListener {
@@ -27,7 +28,7 @@ public class WorkspaceFragment extends Fragment implements
 	private static final String SCROLL_Y = "scrollY";
 	
 	private WorkspaceView codeMapView;
-	private Browser codeMapBrowser;
+	private OutlineBrowser codeMapBrowser;
 	private WorkspaceController controller;
 	
 	@Override
@@ -39,7 +40,7 @@ public class WorkspaceFragment extends Fragment implements
 		
 		View view = inflater.inflate(R.layout.workspace, container, false);
 		codeMapView = (WorkspaceView) view.findViewById(R.id.codemap);
-		codeMapBrowser = (Browser) view.findViewById(R.id.codemap_browser);
+		codeMapBrowser = (OutlineBrowser) view.findViewById(R.id.codemap_browser);
 		
 		SharedPreferences prefs = PreferenceManager
 				.getDefaultSharedPreferences(getActivity());

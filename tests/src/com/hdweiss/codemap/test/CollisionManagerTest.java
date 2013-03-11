@@ -4,7 +4,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.test.AndroidTestCase;
 
-import com.hdweiss.codemap.controller.CollisionManager;
+import com.hdweiss.codemap.view.workspace.CollisionManager;
 
 public class CollisionManagerTest extends AndroidTestCase {
 

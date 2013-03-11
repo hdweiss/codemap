@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.browser;
+package com.hdweiss.codemap.view.workspace.outline;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -7,7 +7,7 @@ import android.content.Context;
 
 import com.hdweiss.codemap.controller.ProjectController;
 
-public class BrowserItem {
+public class OutlineItem {
 	public enum TYPE {DIRECTORY, FILE, SYMBOL};
 	
 	public String name = "";
@@ -16,14 +16,14 @@ public class BrowserItem {
 	
 	public int declarationCycle = 0;
 	
-	public BrowserItem(String name, int level, TYPE type) {
+	public OutlineItem(String name, int level, TYPE type) {
 		this.name = name;
 		this.level = level;
 		this.type = type;
 	}
 	
-	public ArrayList<BrowserItem> getChildren(ProjectController controller, Context context) {
-		ArrayList<BrowserItem> items = new ArrayList<BrowserItem>();
+	public ArrayList<OutlineItem> getChildren(ProjectController controller, Context context) {
+		ArrayList<OutlineItem> items = new ArrayList<OutlineItem>();
 
 		if (this.type == TYPE.SYMBOL)
 			return items;
@@ -33,12 +33,12 @@ public class BrowserItem {
 		
 		if(file.isDirectory()) {
 			for (String filename: file.list())
-				items.add(new BrowserItem(this.name + File.separator + filename, this.level + 1, TYPE.FILE));
+				items.add(new OutlineItem(this.name + File.separator + filename, this.level + 1, TYPE.FILE));
 		} else {
 			ArrayList<String> declarations = controller.getDeclarations(this.name);
 			
 			for(String declaration: declarations)
-				items.add(new BrowserItem(declaration, this.level + 1, TYPE.SYMBOL));
+				items.add(new OutlineItem(declaration, this.level + 1, TYPE.SYMBOL));
 		}
 		
 		return items;

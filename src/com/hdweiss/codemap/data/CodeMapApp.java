@@ -2,7 +2,7 @@ package com.hdweiss.codemap.data;
 
 import java.util.HashMap;
 
-import com.hdweiss.codemap.view.codemap.WorkspaceController;
+import com.hdweiss.codemap.view.workspace.WorkspaceController;
 
 import android.app.Activity;
 import android.app.Application;

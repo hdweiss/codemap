@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.workspace;
 
 import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
@@ -8,7 +8,7 @@ import android.widget.Scroller;
 
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.view.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
 
 public class WorkspaceViewListeners {
 	

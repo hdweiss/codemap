@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.fragments;
+package com.hdweiss.codemap.view.workspace.fragments;
 
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;

@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.controller;
+package com.hdweiss.codemap.view.workspace;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
@@ -8,7 +8,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 
-import com.hdweiss.codemap.view.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
 
 public class CollisionManager {
 

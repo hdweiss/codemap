@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -10,7 +10,8 @@ import android.view.MenuItem;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.util.TabListener;
-import com.hdweiss.codemap.view.Preferences;
+import com.hdweiss.codemap.view.workspace.WorkspaceController;
+import com.hdweiss.codemap.view.workspace.WorkspaceFragment;
 
 public class CodeMapActivity extends Activity {
 	public final static String PROJECT_NAME = "projectName";

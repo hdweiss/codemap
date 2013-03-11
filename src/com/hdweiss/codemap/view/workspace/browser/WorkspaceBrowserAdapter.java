@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.workspace;
+package com.hdweiss.codemap.view.workspace.browser;
 
 import com.hdweiss.codemap.R;
 
@@ -9,11 +9,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
-public class WorkspaceAdapter extends BaseExpandableListAdapter {
+public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
 
-	public WorkspaceAdapter(Context context) {
+	public WorkspaceBrowserAdapter(Context context) {
 		super();
 		this.context = context;
 	}

@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.browser;
+package com.hdweiss.codemap.view.workspace.outline;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,15 +11,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 
-import com.hdweiss.codemap.view.codemap.WorkspaceController;
+import com.hdweiss.codemap.view.workspace.WorkspaceController;
 
-public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
+public class OutlineAdapter extends ArrayAdapter<OutlineItem> {
 
 	private ArrayList<Boolean> expanded = new ArrayList<Boolean>();
 	private WorkspaceController controller;
 	private File projectDirectory;
 	
-	public BrowserAdapter(Context context, WorkspaceController controller) {
+	public OutlineAdapter(Context context, WorkspaceController controller) {
 		super(context, android.R.layout.simple_list_item_1);
 		this.controller = controller;
 		this.projectDirectory = controller.project.getSourceDirectory(getContext());
@@ -38,7 +38,7 @@ public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 		Collections.sort(filelist);
 		
 		for(String name: filelist)
-			add(new BrowserItem(name, 0, BrowserItem.TYPE.FILE));
+			add(new OutlineItem(name, 0, OutlineItem.TYPE.FILE));
 				
 		notifyDataSetInvalidated();
 	}
@@ -93,12 +93,12 @@ public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {				
-		BrowserItemView listItem = (BrowserItemView) convertView;
+		OutlineItemView listItem = (OutlineItemView) convertView;
 		
 		if (convertView == null)
-			listItem = new BrowserItemView(getContext());
+			listItem = new OutlineItemView(getContext());
 
-		BrowserItem item = getItem(position);
+		OutlineItem item = getItem(position);
 		listItem.setItem(item);
 
 		File file = new File(projectDirectory.getAbsolutePath() + File.separator + item.name);
@@ -116,26 +116,26 @@ public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 	}
 
 	@Override
-	public void add(BrowserItem item) {
+	public void add(OutlineItem item) {
 		super.add(item);
 		this.expanded.add(false);
 	}
 
 	@Override
-	public void insert(BrowserItem item, int index) {
+	public void insert(OutlineItem item, int index) {
 		super.insert(item, index);
 		this.expanded.add(index, false);
 	}
 
-	public void insertAll(ArrayList<BrowserItem> nodes, int position) {
+	public void insertAll(ArrayList<OutlineItem> nodes, int position) {
 		Collections.reverse(nodes);
-		for(BrowserItem node: nodes)
+		for(OutlineItem node: nodes)
 			insert(node, position);
 		notifyDataSetInvalidated();
 	}
 
 	@Override
-	public void remove(BrowserItem node) {
+	public void remove(OutlineItem node) {
 		int position = getPosition(node);
 		this.expanded.remove(position);
 		super.remove(node);
@@ -158,7 +158,7 @@ public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 			return expand(position);
 	}
 
-	public boolean collapse(BrowserItem node, int position) {
+	public boolean collapse(OutlineItem node, int position) {
 		int activePos = position + 1;
 		while(activePos < this.expanded.size()) {
 			if(getItem(activePos).level <= node.level)
@@ -171,9 +171,9 @@ public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 	}
 
 	public boolean expand(int position) {
-		BrowserItem item = getItem(position);
-		ArrayList<BrowserItem> children = item.getChildren(controller, getContext());
-		Collections.sort(children, new BrowserItemComparator());
+		OutlineItem item = getItem(position);
+		ArrayList<OutlineItem> children = item.getChildren(controller, getContext());
+		Collections.sort(children, new OutlineItemComparator());
 		
 		if(children == null || children.size() == 0)
 			return false;
@@ -203,12 +203,12 @@ public class BrowserAdapter extends ArrayAdapter<BrowserItem> {
 	}
 	
 	public String getItemUrl(int position) {
-		BrowserItem item = getItem(position);
+		OutlineItem item = getItem(position);
 
 		int parentId = findParent(position);
 
 		if (parentId != -1) {
-			BrowserItem parentItem = getItem(parentId);
+			OutlineItem parentItem = getItem(parentId);
 			String url = parentItem.name + ":" + item.name;
 			return url;
 		}

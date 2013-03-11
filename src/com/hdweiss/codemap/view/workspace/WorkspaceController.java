@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.codemap;
+package com.hdweiss.codemap.view.workspace;
 
 import java.util.ArrayList;
 
@@ -11,19 +11,16 @@ import android.view.MenuItem;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
-import com.hdweiss.codemap.controller.CodeMapStateLoader;
-import com.hdweiss.codemap.controller.FindDeclarationTask;
 import com.hdweiss.codemap.controller.ProjectController;
-import com.hdweiss.codemap.controller.FindDeclarationTask.FindDeclarationCallback;
-import com.hdweiss.codemap.data.WorkspaceState;
 import com.hdweiss.codemap.data.CscopeEntry;
 import com.hdweiss.codemap.util.CodeMapCursorPoint;
 import com.hdweiss.codemap.util.CodeMapPoint;
-import com.hdweiss.codemap.view.browser.BrowserItem;
-import com.hdweiss.codemap.view.fragments.CodeMapAnnotation;
-import com.hdweiss.codemap.view.fragments.CodeMapFunction;
-import com.hdweiss.codemap.view.fragments.CodeMapItem;
-import com.hdweiss.codemap.view.fragments.CodeMapLink;
+import com.hdweiss.codemap.view.workspace.FindDeclarationTask.FindDeclarationCallback;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapAnnotation;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapFunction;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapLink;
+import com.hdweiss.codemap.view.workspace.outline.OutlineItem;
 
 public class WorkspaceController extends ProjectController {
 
@@ -55,7 +52,7 @@ public class WorkspaceController extends ProjectController {
 		if(state == null)
 			return;
 		
-		CodeMapStateLoader loadState = new CodeMapStateLoader(state, codeMapView, this);
+		WorkspaceStateLoader loadState = new WorkspaceStateLoader(state, codeMapView, this);
 		loadState.execute(state.items);
 		
 		codeMapView.setScrollX(state.scrollX);
@@ -116,7 +113,7 @@ public class WorkspaceController extends ProjectController {
 	
 	private static final int YScrollOffset = 200;
 	private static final int XScrollOffset = 200;
-	public void symbolClicked(String url, BrowserItem item) {
+	public void symbolClicked(String url, OutlineItem item) {
 		ArrayList<CodeMapItem> declarations = codeMapView.getDeclarations(url);
 
 		if (declarations.size() > 0) {

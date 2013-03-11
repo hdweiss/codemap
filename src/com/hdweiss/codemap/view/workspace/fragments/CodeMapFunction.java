@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.fragments;
+package com.hdweiss.codemap.view.workspace.fragments;
 
 import android.content.Context;
 import android.text.Spannable;
@@ -14,7 +14,7 @@ import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.SpanUtils;
 import com.hdweiss.codemap.util.Utils;
-import com.hdweiss.codemap.view.fragments.FunctionLinkSpan.FunctionLinkSpanConverter;
+import com.hdweiss.codemap.view.workspace.fragments.FunctionLinkSpan.FunctionLinkSpanConverter;
 
 public class CodeMapFunction extends CodeMapItem {
 

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
 
-import com.hdweiss.codemap.view.codemap.WorkspaceView;
+import com.hdweiss.codemap.view.workspace.WorkspaceView;
 
 public class ZoomableLinearLayout extends LinearLayout {
 

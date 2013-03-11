@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.workspace;
+package com.hdweiss.codemap.view.workspace.browser;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -14,7 +14,7 @@ import com.hdweiss.codemap.R;
 public class WorkspaceBrowser extends LinearLayout implements OnChildClickListener, OnGroupClickListener {
 
 	private ExpandableListView listView;
-	private WorkspaceAdapter adapter;
+	private WorkspaceBrowserAdapter adapter;
 
 	public WorkspaceBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -28,7 +28,7 @@ public class WorkspaceBrowser extends LinearLayout implements OnChildClickListen
 	}
 	
 	private void init() {
-		this.adapter = new WorkspaceAdapter(getContext());
+		this.adapter = new WorkspaceBrowserAdapter(getContext());
 		this.listView.setAdapter(adapter);
 	}
 

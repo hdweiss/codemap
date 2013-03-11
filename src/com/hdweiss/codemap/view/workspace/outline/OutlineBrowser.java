@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.browser;
+package com.hdweiss.codemap.view.workspace.outline;
 
 import java.util.ArrayList;
 
@@ -19,25 +19,25 @@ import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
 import com.hdweiss.codemap.R;
-import com.hdweiss.codemap.controller.FindDeclarationTask;
-import com.hdweiss.codemap.controller.FindDeclarationTask.FindDeclarationCallback;
 import com.hdweiss.codemap.data.CscopeEntry;
-import com.hdweiss.codemap.view.browser.BrowserItem.TYPE;
-import com.hdweiss.codemap.view.codemap.WorkspaceController;
+import com.hdweiss.codemap.view.workspace.FindDeclarationTask;
+import com.hdweiss.codemap.view.workspace.WorkspaceController;
+import com.hdweiss.codemap.view.workspace.FindDeclarationTask.FindDeclarationCallback;
+import com.hdweiss.codemap.view.workspace.outline.OutlineItem.TYPE;
 
-public class Browser extends LinearLayout implements OnItemClickListener,
+public class OutlineBrowser extends LinearLayout implements OnItemClickListener,
 		android.widget.AdapterView.OnItemLongClickListener {
 
-	private BrowserAdapter adapter;
+	private OutlineAdapter adapter;
 	private WorkspaceController controller;
 	private ListView browserListView;
 	private EditText searchbarView;
 	private ImageButton cancelButton;
 
-	public Browser(Context context, AttributeSet attrs) {
+	public OutlineBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
-		LayoutInflater.from(getContext()).inflate(R.layout.browser, this);
+		LayoutInflater.from(getContext()).inflate(R.layout.outline, this);
 		
 		this.browserListView = (ListView) findViewById(R.id.browser_list);
 		this.searchbarView = (EditText) findViewById(R.id.browser_search_input);
@@ -68,7 +68,7 @@ public class Browser extends LinearLayout implements OnItemClickListener,
 	
 	public void setController(WorkspaceController controller) {
 		this.controller = controller;
-		this.adapter = new BrowserAdapter(getContext(), controller);
+		this.adapter = new OutlineAdapter(getContext(), controller);
 		browserListView.setAdapter(adapter);
 	}
 
@@ -119,7 +119,7 @@ public class Browser extends LinearLayout implements OnItemClickListener,
 
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		BrowserItem item = adapter.getItem(position);
+		OutlineItem item = adapter.getItem(position);
 		
 		if(item.type == TYPE.FILE) {
 			controller.addFileView(item.name);
@@ -137,8 +137,8 @@ public class Browser extends LinearLayout implements OnItemClickListener,
 		boolean changed = adapter.collapseExpand(position);
 
 		if(changed == false) {
-			BrowserItem item = adapter.getItem(position);
-			if(item.type == BrowserItem.TYPE.SYMBOL) {
+			OutlineItem item = adapter.getItem(position);
+			if(item.type == OutlineItem.TYPE.SYMBOL) {
 				final String url = adapter.getItemUrl(position);
 				controller.symbolClicked(url, item);
 			}

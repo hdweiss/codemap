@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.fragments;
+package com.hdweiss.codemap.view.workspace.fragments;
 
 import java.util.UUID;
 
@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
-import com.hdweiss.codemap.view.codemap.WorkspaceView;
+import com.hdweiss.codemap.view.workspace.WorkspaceView;
 
 public abstract class CodeMapItem extends LinearLayout {
 	public UUID id = UUID.randomUUID();

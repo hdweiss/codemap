@@ -3,7 +3,7 @@ package com.hdweiss.codemap.data;
 import java.io.Serializable;
 import java.util.UUID;
 
-import com.hdweiss.codemap.view.fragments.CodeMapLink;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapLink;
 
 public class SerializableLink implements Serializable {
 	private static final long serialVersionUID = 1L;

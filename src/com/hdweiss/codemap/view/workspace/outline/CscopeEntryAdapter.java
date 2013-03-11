@@ -1,4 +1,4 @@
-package com.hdweiss.codemap.view.browser;
+package com.hdweiss.codemap.view.workspace.outline;
 
 import android.content.Context;
 import android.view.View;
