@@ -5,6 +5,7 @@ import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -119,8 +120,11 @@ public class CodeMapActivity extends Activity {
 		CodeMapApp app = (CodeMapApp) getApplication();
 		WorkspaceController controller = app.getController(projectName, workspaceName);
 		
-		if (controller != null)
+		Log.d("CodeMap", "navigateToTab()");
+		if (controller != null) {
+			Log.d("CodeMap", "navigateToTab(): symbol clicked");
 			controller.symbolClicked(url, null);
+		}
 	}
 	
 	private int findTabIndex(String tabName) {
