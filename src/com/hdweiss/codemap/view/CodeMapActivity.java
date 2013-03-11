@@ -87,7 +87,7 @@ public class CodeMapActivity extends Activity {
 				.setText(name)
 				.setTabListener(
 						new CodeMapTabListener<WorkspaceFragment>(this, name,
-								WorkspaceFragment.class, bundle)));
+								WorkspaceFragment.class, bundle)), true);
 	}
 	
 	public void closeTab() {

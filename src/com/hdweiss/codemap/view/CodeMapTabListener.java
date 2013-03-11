@@ -1,14 +1,13 @@
 package com.hdweiss.codemap.view;
 
-import com.hdweiss.codemap.R;
-
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.app.ActionBar.Tab;
 import android.os.Bundle;
-import android.widget.Toast;
+
+import com.hdweiss.codemap.R;
 
 public class CodeMapTabListener<T extends Fragment> implements ActionBar.TabListener {
     private final Activity mActivity;
@@ -54,6 +53,5 @@ public class CodeMapTabListener<T extends Fragment> implements ActionBar.TabList
     }
 
     public void onTabReselected(Tab tab, FragmentTransaction ft) {
-        Toast.makeText(mActivity, "Reselected!", Toast.LENGTH_SHORT).show();
     }
 }

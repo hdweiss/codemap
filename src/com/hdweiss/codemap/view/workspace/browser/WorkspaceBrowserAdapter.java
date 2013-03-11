@@ -1,6 +1,8 @@
 package com.hdweiss.codemap.view.workspace.browser;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -19,7 +21,8 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 	private WorkspaceController controller;
 
 	private ArrayList<String> workspaceStateList;
-
+	private HashMap<String, WorkspaceState> workspaceStates = new HashMap<String, WorkspaceState>();
+	
 	public WorkspaceBrowserAdapter(Context context, WorkspaceController controller) {
 		super();
 		this.context = context;
@@ -32,9 +35,27 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 				controller, context);
 	}
 	
-	public Object getChild(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
-		return null;
+	private WorkspaceState getState(String workspaceName) {
+		WorkspaceState state = workspaceStates.get(workspaceName);
+		if (state == null ) {
+			try {
+				state = WorkspaceState.readState(controller.project, workspaceName, context);
+				workspaceStates.put(workspaceName, state);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return state;
+	}
+	
+	public String getChild(int groupPosition, int childPosition) {
+		String workspaceName = this.workspaceStateList.get(groupPosition);
+		WorkspaceState state = getState(workspaceName);
+		
+		if (state != null)
+			return state.items.get(childPosition).url;
+
+		return "";
 	}
 
 	public long getChildId(int groupPosition, int childPosition) {
@@ -50,18 +71,25 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 			view = inflater.inflate(R.layout.workspace_child, parent, false);
 		}
 		
+		String child = getChild(groupPosition, childPosition);
+		
 		TextView textView = (TextView) view
 				.findViewById(R.id.workspace_item_text);
-		textView.setText("Child");
+		textView.setText("  " + child);
 		
 		return view;
 	}
 
 	public int getChildrenCount(int groupPosition) {
-		// TODO Auto-generated method stub
-		return 1;
+		WorkspaceState state = getState(getGroup(groupPosition));
+		
+		if (state != null)
+			return state.items.size();
+		else
+			return 0;
 	}
 
+	
 	public String getGroup(int groupPosition) {
 		return this.workspaceStateList.get(groupPosition);
 	}
@@ -99,5 +127,4 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
 		return true;
 	}
-
 }

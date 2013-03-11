@@ -17,7 +17,7 @@ import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.Utils;
 
 public class WorkspaceState implements Serializable {
-	private static final long serialVersionUID = 3L;
+	private static final long serialVersionUID = 4L;
 	
 	public String workspaceName;
 

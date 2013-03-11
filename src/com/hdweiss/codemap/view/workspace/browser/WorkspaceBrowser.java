@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.view.workspace.WorkspaceController;
+import com.hdweiss.codemap.view.workspace.outline.OutlineItem;
 
 public class WorkspaceBrowser extends LinearLayout implements OnChildClickListener, OnGroupClickListener {
 
@@ -40,13 +41,16 @@ public class WorkspaceBrowser extends LinearLayout implements OnChildClickListen
 	
 	public boolean onGroupClick(ExpandableListView parent, View v,
 			int groupPosition, long id) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public boolean onChildClick(ExpandableListView parent, View v,
 			int groupPosition, int childPosition, long id) {
-		// TODO Auto-generated method stub
+		String workspaceName = adapter.getGroup(groupPosition);
+		String url = adapter.getChild(groupPosition, childPosition);
+		
+		OutlineItem item = new OutlineItem(url, 0, OutlineItem.TYPE.SYMBOL);
+		controller.symbolClicked(url, item);
 		return false;
 	}
 }
