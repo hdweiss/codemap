@@ -147,7 +147,7 @@ public class WorkspaceView extends ZoomableAbsoluteLayout {
 	}
 	
 	public WorkspaceState getState() {
-		WorkspaceState state = new WorkspaceState(controller.project.getName());
+		WorkspaceState state = new WorkspaceState(controller.getWorkspaceName());
 		
 		for(CodeMapItem item: items)
 			state.items.add(new SerializableItem(item));

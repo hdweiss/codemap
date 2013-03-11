@@ -38,6 +38,10 @@ public class WorkspaceController extends ProjectController {
 		this.codeMapView.setController(this);
 		loadCodeMapState();
 	}
+	
+	public String getWorkspaceName() {
+		return this.workspaceName;
+	}
 	 
 	
     public void loadCodeMapState() {
