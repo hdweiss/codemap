@@ -124,8 +124,11 @@ public class WorkspaceController extends ProjectController {
 		ArrayList<CodeMapItem> declarations = codeMapView.getDeclarations(url);
 
 		if (declarations.size() > 0) {
-			int index = item.declarationCycle % declarations.size();
-			item.declarationCycle++;
+			int index = 0;
+			if (item != null) {
+				index = item.declarationCycle % declarations.size();
+				item.declarationCycle++;
+			}
 			CodeMapItem codeMapItem = declarations.get(index);
 			float x = codeMapItem.getX() - XScrollOffset;
 			float y = codeMapItem.getY() - YScrollOffset;

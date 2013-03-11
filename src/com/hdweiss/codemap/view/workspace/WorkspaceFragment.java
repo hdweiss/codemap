@@ -16,8 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.CodeMapApp;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
+import com.hdweiss.codemap.view.CodeMapActivity;
 import com.hdweiss.codemap.view.workspace.browser.WorkspaceBrowser;
 import com.hdweiss.codemap.view.workspace.outline.OutlineBrowser;
 
@@ -64,9 +66,11 @@ public class WorkspaceFragment extends Fragment implements
 		
 		this.controller = new WorkspaceController(projectName, workspaceName, getActivity());
 		controller.setView(codeMapView);
+		((CodeMapApp) getActivity().getApplication()).addController(
+				projectName, controller);
 
 		outlineBrowser.setController(controller);
-		workspaceBrowser.setController(controller);
+		workspaceBrowser.setController(controller, (CodeMapActivity) getActivity());
 	}
 	
 	public void restoreInstanceState(Bundle savedInstanceState) {

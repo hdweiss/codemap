@@ -1,6 +1,7 @@
 package com.hdweiss.codemap.view;
 
 import android.app.ActionBar;
+import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,6 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.CodeMapApp;
+import com.hdweiss.codemap.view.workspace.WorkspaceController;
 import com.hdweiss.codemap.view.workspace.WorkspaceFragment;
 
 public class CodeMapActivity extends Activity {
@@ -78,6 +81,10 @@ public class CodeMapActivity extends Activity {
     
 	public void addWorkspaceFragment() {
 		final String name = "Workspace " + getActionBar().getTabCount();
+		addWorkspaceFragment(name);
+	}
+	
+	public void addWorkspaceFragment(String name) {
 		Bundle bundle = new Bundle();
 		bundle.putString(WorkspaceFragment.WORKSPACE_NAME, name);
 		bundle.putString(WorkspaceFragment.PROJECT_NAME, this.projectName);
@@ -98,5 +105,34 @@ public class CodeMapActivity extends Activity {
 			return;
 				
 		bar.removeTabAt(tabIndex);
+	}
+	
+	public void navigateToTab(String workspaceName, String url) {
+		try {
+			int index = findTabIndex(workspaceName);
+			ActionBar bar = getActionBar();
+			bar.setSelectedNavigationItem(index);
+		} catch (IllegalArgumentException e) {
+			addWorkspaceFragment(workspaceName);
+		}
+		
+		CodeMapApp app = (CodeMapApp) getApplication();
+		WorkspaceController controller = app.getController(projectName, workspaceName);
+		
+		if (controller != null)
+			controller.symbolClicked(url, null);
+	}
+	
+	private int findTabIndex(String tabName) {
+		ActionBar bar = getActionBar();
+
+		for (int i = 0; i < bar.getTabCount(); i++) {
+			Tab tab = bar.getTabAt(i);
+			
+			if (tabName.equals(tab.getText()))
+				return i;
+		}
+		
+		throw new IllegalArgumentException("Could not find tab with name " + tabName);
 	}
 }

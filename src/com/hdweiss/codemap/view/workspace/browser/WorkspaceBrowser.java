@@ -1,5 +1,6 @@
 package com.hdweiss.codemap.view.workspace.browser;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -10,14 +11,15 @@ import android.widget.ExpandableListView.OnGroupClickListener;
 import android.widget.LinearLayout;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.view.CodeMapActivity;
 import com.hdweiss.codemap.view.workspace.WorkspaceController;
-import com.hdweiss.codemap.view.workspace.outline.OutlineItem;
 
 public class WorkspaceBrowser extends LinearLayout implements OnChildClickListener, OnGroupClickListener {
 
 	private ExpandableListView listView;
 	private WorkspaceBrowserAdapter adapter;
 	private WorkspaceController controller;
+	private CodeMapActivity activity;
 
 	public WorkspaceBrowser(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -28,8 +30,9 @@ public class WorkspaceBrowser extends LinearLayout implements OnChildClickListen
 		this.listView.setOnChildClickListener(this);
 	}
 	
-	public void setController(WorkspaceController controller) {
+	public void setController(WorkspaceController controller, CodeMapActivity activity) {
 		this.controller = controller;
+		this.activity = activity;
 		init();
 	}
 	
@@ -48,9 +51,8 @@ public class WorkspaceBrowser extends LinearLayout implements OnChildClickListen
 			int groupPosition, int childPosition, long id) {
 		String workspaceName = adapter.getGroup(groupPosition);
 		String url = adapter.getChild(groupPosition, childPosition);
-		
-		OutlineItem item = new OutlineItem(url, 0, OutlineItem.TYPE.SYMBOL);
-		controller.symbolClicked(url, item);
+				
+		activity.navigateToTab(workspaceName, url);
 		return false;
 	}
 }
