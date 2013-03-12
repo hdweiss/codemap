@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +16,7 @@ import android.view.MenuItem;
 
 import com.hdweiss.codemap.R;
 import com.hdweiss.codemap.data.CodeMapApp;
+import com.hdweiss.codemap.util.ObjectSerializer;
 import com.hdweiss.codemap.view.workspace.WorkspaceController;
 import com.hdweiss.codemap.view.workspace.WorkspaceFragment;
 
@@ -40,22 +44,62 @@ public class CodeMapActivity extends Activity {
         	
         	int index = savedInstanceState.getInt("tab", 0);
         	bar.setSelectedNavigationItem(index);
-        }
+        } else
+        	restoreState();
 	}
-
-    @Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-        outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
-        
+	
+	private void restoreState() {
+		SharedPreferences prefs = getSharedPreferences(projectName, Context.MODE_PRIVATE);
+		try {
+			@SuppressWarnings("unchecked")
+			ArrayList<String> tabs = (ArrayList<String>) ObjectSerializer
+					.deserialize(prefs.getString("tabs",
+							ObjectSerializer.serialize(new ArrayList<String>())));
+			
+			for (String tab: tabs)
+				addWorkspaceFragment(tab);
+			
+			int index = prefs.getInt("tab", 0);
+			getActionBar().setSelectedNavigationItem(index);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void saveState() {
+        SharedPreferences prefs = getSharedPreferences(projectName, Context.MODE_PRIVATE);
+        Editor editor = prefs.edit();
+        try {
+            editor.putString("tabs", ObjectSerializer.serialize(getTabs()));
+            editor.putInt("tab", getActionBar().getSelectedNavigationIndex());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        editor.commit();
+	}
+	
+	private ArrayList<String> getTabs() {
         final ActionBar bar = getActionBar();
         ArrayList<String> tabs = new ArrayList<String>();
         for (int i = 0; i < bar.getTabCount(); i++) {
         	Tab tab = bar.getTabAt(i);
         	tabs.add(tab.getText().toString());
         }
-        
-        outState.putStringArrayList("tabs", tabs);
+        return tabs;
+	}
+
+    @Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+        outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+        outState.putStringArrayList("tabs", getTabs());
+	}
+
+    
+	@Override
+	protected void onDestroy() {
+		saveState();
+		super.onDestroy();
 	}
 
 	@Override
