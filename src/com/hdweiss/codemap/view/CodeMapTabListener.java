@@ -25,30 +25,26 @@ public class CodeMapTabListener<T extends Fragment> implements ActionBar.TabList
         mTag = tag;
         mClass = clz;
         mArgs = args;
-
-        // Check to see if we already have a fragment for this tab, probably
-        // from a previously saved state.  If so, deactivate it, because our
-        // initial state is that a tab isn't shown.
-        mFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
-        if (mFragment != null && !mFragment.isDetached()) {
-            FragmentTransaction ft = mActivity.getFragmentManager().beginTransaction();
-            ft.detach(mFragment);
-            ft.commit();
-        }
     }
 
     public void onTabSelected(Tab tab, FragmentTransaction ft) {
-        if (mFragment == null) {
+        Fragment currentFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
+        
+        if (currentFragment == null) {
             mFragment = Fragment.instantiate(mActivity, mClass.getName(), mArgs);
             ft.add(R.id.codemap_content, mFragment, mTag);
         } else {
-            ft.show(mFragment);
+            ft.show(currentFragment);
         }
     }
 
     public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-        if (mFragment != null) {
-            ft.hide(mFragment);
+        Fragment currentFragment = mActivity.getFragmentManager().findFragmentByTag(mTag);
+
+        if (currentFragment != null) {
+        	ft.hide(currentFragment);
+        } else if (mFragment != null) {
+        	ft.hide(mFragment);
         }
     }
 

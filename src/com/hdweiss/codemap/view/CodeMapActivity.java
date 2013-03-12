@@ -1,5 +1,7 @@
 package com.hdweiss.codemap.view;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
@@ -31,15 +33,29 @@ public class CodeMapActivity extends Activity {
         bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
 		
         if (savedInstanceState != null) {
-            bar.setSelectedNavigationItem(savedInstanceState.getInt("tab", 0));
+        	ArrayList<String> tabs = savedInstanceState.getStringArrayList("tabs");
+        	
+        	for (String tabName: tabs)
+        		addWorkspaceFragment(tabName);
+        	
+        	int index = savedInstanceState.getInt("tab", 0);
+        	bar.setSelectedNavigationItem(index);
         }
 	}
-	
 
     @Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
         outState.putInt("tab", getActionBar().getSelectedNavigationIndex());
+        
+        final ActionBar bar = getActionBar();
+        ArrayList<String> tabs = new ArrayList<String>();
+        for (int i = 0; i < bar.getTabCount(); i++) {
+        	Tab tab = bar.getTabAt(i);
+        	tabs.add(tab.getText().toString());
+        }
+        
+        outState.putStringArrayList("tabs", tabs);
 	}
 
 	@Override
