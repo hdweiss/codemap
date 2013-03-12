@@ -117,6 +117,12 @@ public class WorkspaceController extends ProjectController {
 		context.sendBroadcast(intent);
 	}
 	
+	public void updateWorkspaceBrowser() {
+		Intent intent = new Intent(WorkspaceFragment.INTENT_REFRESH);
+		intent.putExtra("action", "workspace");
+		context.sendBroadcast(intent);
+	}
+	
 	
 	private static final int YScrollOffset = 200;
 	private static final int XScrollOffset = 200;

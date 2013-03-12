@@ -66,8 +66,7 @@ public class WorkspaceFragment extends Fragment implements
 		
 		this.controller = new WorkspaceController(projectName, workspaceName, getActivity());
 		controller.setView(codeMapView);
-		((CodeMapApp) getActivity().getApplication()).addController(
-				projectName, controller);
+		((CodeMapApp) getActivity().getApplication()).addController(controller);
 
 		outlineBrowser.setController(controller);
 		workspaceBrowser.setController(controller, (CodeMapActivity) getActivity());
@@ -143,7 +142,12 @@ public class WorkspaceFragment extends Fragment implements
 	private BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context c, Intent i) {
-			outlineBrowser.refresh();
+			String action = i.getStringExtra("action");
+			
+			if (action == null)
+				outlineBrowser.refresh();
+			else if (action.equals("workspace"))
+				workspaceBrowser.refresh();
 		}
 	};
 	

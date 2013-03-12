@@ -88,6 +88,7 @@ public class WorkspaceView extends ZoomableAbsoluteLayout {
 		items.add(item);
 		item.setCodeMapView(this);
 		controller.updateCodeBrowser();
+		controller.updateWorkspaceBrowser();
 	}
 
 	public void addMapLink(CodeMapLink link) {
@@ -110,6 +111,7 @@ public class WorkspaceView extends ZoomableAbsoluteLayout {
 		}
 
 		controller.updateCodeBrowser();
+		controller.updateWorkspaceBrowser();
 	}
 	
 	public void clear() {

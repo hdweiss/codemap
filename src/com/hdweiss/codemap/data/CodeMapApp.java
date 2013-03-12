@@ -17,9 +17,9 @@ public class CodeMapApp extends Application {
 		return controller;
 	}
 	
-	public void addController(String projectName, WorkspaceController controller) {
-		HashMap<String,WorkspaceController> projectControllers = getProjectControllers(projectName);
-		projectControllers.put(projectName, controller);
+	public void addController(WorkspaceController controller) {
+		HashMap<String,WorkspaceController> projectControllers = getProjectControllers(controller.project.getName());
+		projectControllers.put(controller.getWorkspaceName(), controller);
 	}
 	
 	private HashMap<String, WorkspaceController> getProjectControllers(String projectName) {

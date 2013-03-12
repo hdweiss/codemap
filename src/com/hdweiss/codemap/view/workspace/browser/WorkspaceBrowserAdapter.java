@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 	private ProjectController projectController;
 
 	private ArrayList<String> workspaceStateList;
-	private HashMap<String, ArrayList<ICodeMapItem>> workspaceUrlsMap = new HashMap<String, ArrayList<ICodeMapItem>>();
+	private HashMap<String, ArrayList<ICodeMapItem>> workspaceUrlsMap;
 	
 	public WorkspaceBrowserAdapter(Context context, ProjectController controller) {
 		super();
@@ -35,14 +36,26 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 		init();
 	}
 	
+	public void refresh() {
+		init();
+	}
+	
+	public void refresh(String workspaceName) {
+		this.workspaceUrlsMap.remove(workspaceName);
+		this.workspaceUrlsMap.put(workspaceName, getWorkspaceUrls(workspaceName));
+		notifyDataSetInvalidated();
+	}
+	
 	private void init() {
 		this.workspaceStateList = WorkspaceState.getWorkspaceStateList(
 				projectController, context);
 		
+		workspaceUrlsMap = new HashMap<String, ArrayList<ICodeMapItem>>();
 		for (String workspaceName: workspaceStateList) {
 			ArrayList<ICodeMapItem> workspaceUrls = getWorkspaceUrls(workspaceName);
 			this.workspaceUrlsMap.put(workspaceName, workspaceUrls);
 		}
+		notifyDataSetInvalidated();
 	}
 	
 	private ArrayList<ICodeMapItem> getWorkspaceUrls(String workspaceName) {
@@ -54,9 +67,11 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 				.getApplicationContext()).getController(projectName,
 				workspaceName);
 		if (controller != null) {
+			Log.d("CodeMap", "- Controller found for " + workspaceName);
 			for (CodeMapItem item: controller.codeMapView.items)
 				result.add(item);
 		} else {
+			Log.d("CodeMap", "! No controller found for " + workspaceName);
 			try {
 				WorkspaceState state = WorkspaceState.readState(
 						projectController.project, workspaceName, context);

@@ -54,4 +54,8 @@ public class WorkspaceBrowser extends LinearLayout implements OnChildClickListen
 		activity.navigateToTab(workspaceName, url);
 		return false;
 	}
+	
+	public void refresh() {
+		adapter.refresh();
+	}
 }
