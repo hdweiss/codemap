@@ -109,7 +109,7 @@ public class WorkspaceFragment extends Fragment implements
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		super.onCreateOptionsMenu(menu, inflater);
-		inflater.inflate(R.menu.codemap, menu);
+		inflater.inflate(R.menu.workspace, menu);
 	}
 
 	@Override
@@ -122,6 +122,10 @@ public class WorkspaceFragment extends Fragment implements
 			
 		case R.id.codemap_resetZoom:
 			codeMapView.setScaleFactor(1, new CodeMapPoint(0,0));
+			return true;
+			
+		case R.id.workspace_delete:
+			workspaceBrowser.handleLongClick(item);
 			return true;
 			
 		default:

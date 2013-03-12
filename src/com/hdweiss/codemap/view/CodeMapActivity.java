@@ -60,7 +60,7 @@ public class CodeMapActivity extends Activity {
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.codemap, menu);
         return true;
     }
 	

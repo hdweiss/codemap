@@ -1,17 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <item
-        android:id="@+id/codemap_clear"
-        android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom"
-        android:title="Clear">
-    </item>
+        android:id="@+id/menu_addtab"
+        android:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_add"
+        android:title="@string/menu_addtab"/>
+    
+        <item
+        android:id="@+id/menu_closetab"
+        android:showAsAction="always"
+        android:icon="@android:drawable/ic_menu_close_clear_cancel"
+        android:title="@string/menu_closetab"/>
     <item
-        android:id="@+id/codemap_resetZoom"
-        android:icon="@android:drawable/ic_menu_zoom"
-        android:showAsAction="ifRoom"
-        android:title="Reset Zoom">
-    </item>
+        android:id="@+id/menu_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/menu_settings"/>
 
 </menu>

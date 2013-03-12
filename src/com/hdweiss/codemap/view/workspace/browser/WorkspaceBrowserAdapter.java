@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,11 +66,9 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 				.getApplicationContext()).getController(projectName,
 				workspaceName);
 		if (controller != null) {
-			Log.d("CodeMap", "- Controller found for " + workspaceName);
 			for (CodeMapItem item: controller.codeMapView.items)
 				result.add(item);
 		} else {
-			Log.d("CodeMap", "! No controller found for " + workspaceName);
 			try {
 				WorkspaceState state = WorkspaceState.readState(
 						projectController.project, workspaceName, context);
