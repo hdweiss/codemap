@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
+import android.widget.ExpandableListView;
 import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
@@ -136,6 +137,7 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 		if (convertView == null) {
 			LayoutInflater inflater = LayoutInflater.from(context);
 			view = inflater.inflate(R.layout.workspace_group, parent, false);
+			((ExpandableListView) parent).expandGroup(groupPosition);
 		}
 		
 		String groupText = getGroup(groupPosition);

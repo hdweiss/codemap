@@ -36,7 +36,7 @@
 
     <SlidingDrawer
         android:id="@+id/workspace_drawer"
-        android:layout_width="400dp"
+        android:layout_width="350dp"
         android:layout_height="1000dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
