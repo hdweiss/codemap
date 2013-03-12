@@ -12,50 +12,68 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.CodeMapApp;
+import com.hdweiss.codemap.data.ICodeMapItem;
+import com.hdweiss.codemap.data.ProjectController;
+import com.hdweiss.codemap.data.SerializableItem;
 import com.hdweiss.codemap.view.workspace.WorkspaceController;
 import com.hdweiss.codemap.view.workspace.WorkspaceState;
+import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
 
 public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 
 	private Context context;
-	private WorkspaceController controller;
+	private ProjectController projectController;
 
 	private ArrayList<String> workspaceStateList;
-	private HashMap<String, WorkspaceState> workspaceStates = new HashMap<String, WorkspaceState>();
+	private HashMap<String, ArrayList<ICodeMapItem>> workspaceUrlsMap = new HashMap<String, ArrayList<ICodeMapItem>>();
 	
-	public WorkspaceBrowserAdapter(Context context, WorkspaceController controller) {
+	public WorkspaceBrowserAdapter(Context context, ProjectController controller) {
 		super();
 		this.context = context;
-		this.controller = controller;
+		this.projectController = controller;
 		init();
 	}
 	
 	private void init() {
 		this.workspaceStateList = WorkspaceState.getWorkspaceStateList(
-				controller, context);
+				projectController, context);
+		
+		for (String workspaceName: workspaceStateList) {
+			ArrayList<ICodeMapItem> workspaceUrls = getWorkspaceUrls(workspaceName);
+			this.workspaceUrlsMap.put(workspaceName, workspaceUrls);
+		}
 	}
 	
-	private WorkspaceState getState(String workspaceName) {
-		WorkspaceState state = workspaceStates.get(workspaceName);
-		if (state == null ) {
+	private ArrayList<ICodeMapItem> getWorkspaceUrls(String workspaceName) {
+		ArrayList<ICodeMapItem> result = new ArrayList<ICodeMapItem>();
+
+		final String projectName = projectController.project.getName();
+		
+		WorkspaceController controller = ((CodeMapApp) context
+				.getApplicationContext()).getController(projectName,
+				workspaceName);
+		if (controller != null) {
+			for (CodeMapItem item: controller.codeMapView.items)
+				result.add(item);
+		} else {
 			try {
-				state = WorkspaceState.readState(controller.project, workspaceName, context);
-				workspaceStates.put(workspaceName, state);
+				WorkspaceState state = WorkspaceState.readState(
+						projectController.project, workspaceName, context);
+				for (SerializableItem item: state.items)
+					result.add(item);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		return state;
+		
+		return result;
 	}
 	
 	public String getChild(int groupPosition, int childPosition) {
 		String workspaceName = this.workspaceStateList.get(groupPosition);
-		WorkspaceState state = getState(workspaceName);
-		
-		if (state != null)
-			return state.items.get(childPosition).url;
-
-		return "";
+		ArrayList<ICodeMapItem> urls = this.workspaceUrlsMap.get(workspaceName);
+		return urls.get(childPosition).getUrl();
 	}
 
 	public long getChildId(int groupPosition, int childPosition) {
@@ -81,12 +99,9 @@ public class WorkspaceBrowserAdapter extends BaseExpandableListAdapter {
 	}
 
 	public int getChildrenCount(int groupPosition) {
-		WorkspaceState state = getState(getGroup(groupPosition));
-		
-		if (state != null)
-			return state.items.size();
-		else
-			return 0;
+		String workspaceName = getGroup(groupPosition);
+		ArrayList<ICodeMapItem> urls = this.workspaceUrlsMap.get(workspaceName);
+		return urls.size();
 	}
 
 	

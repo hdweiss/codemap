@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import android.content.Context;
 
 import com.hdweiss.codemap.data.Project;
+import com.hdweiss.codemap.data.ProjectController;
 import com.hdweiss.codemap.data.SerializableItem;
 import com.hdweiss.codemap.data.SerializableLink;
 import com.hdweiss.codemap.util.Utils;
@@ -62,7 +63,7 @@ public class WorkspaceState implements Serializable {
 		return directory.getAbsolutePath() + File.separator + workspace + ".state";
 	}
 	
-	public static ArrayList<String> getWorkspaceStateList(WorkspaceController controller, Context context) {
+	public static ArrayList<String> getWorkspaceStateList(ProjectController controller, Context context) {
 		ArrayList<String> result = new ArrayList<String>();
 				
 		String[] fileList = controller.project.getProjectDirectory(context)

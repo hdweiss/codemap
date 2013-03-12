@@ -12,11 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.hdweiss.codemap.R;
+import com.hdweiss.codemap.data.ICodeMapItem;
 import com.hdweiss.codemap.util.CodeMapPoint;
 import com.hdweiss.codemap.util.Utils;
 import com.hdweiss.codemap.view.workspace.WorkspaceView;
 
-public abstract class CodeMapItem extends LinearLayout {
+public abstract class CodeMapItem extends LinearLayout implements ICodeMapItem {
 	public UUID id = UUID.randomUUID();
 
 	public TextView titleView;

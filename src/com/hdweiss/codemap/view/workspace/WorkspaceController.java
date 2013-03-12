@@ -26,7 +26,7 @@ import com.hdweiss.codemap.view.workspace.outline.OutlineItem;
 public class WorkspaceController extends ProjectController {
 
 	private String workspaceName;
-	private WorkspaceView codeMapView;
+	public WorkspaceView codeMapView;
 
 	public WorkspaceController(String projectName, String workspaceName, Context context) {
 		super(projectName, context);

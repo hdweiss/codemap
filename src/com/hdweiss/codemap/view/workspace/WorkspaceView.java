@@ -27,7 +27,7 @@ public class WorkspaceView extends ZoomableAbsoluteLayout {
 	private ScaleGestureDetector scaleDetector;
 	private Scroller scroller;
 	
-	private ArrayList<CodeMapItem> items = new ArrayList<CodeMapItem>();
+	public ArrayList<CodeMapItem> items = new ArrayList<CodeMapItem>();
 	private ArrayList<CodeMapLink> links = new ArrayList<CodeMapLink>();
 	private WorkspaceController controller;
 

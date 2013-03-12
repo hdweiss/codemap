@@ -12,7 +12,7 @@ import com.hdweiss.codemap.view.workspace.fragments.CodeMapFunction;
 import com.hdweiss.codemap.view.workspace.fragments.CodeMapImage;
 import com.hdweiss.codemap.view.workspace.fragments.CodeMapItem;
 
-public class SerializableItem implements Serializable {
+public class SerializableItem implements Serializable, ICodeMapItem {
 	private static final long serialVersionUID = 2L;
 	
 	public UUID id;
@@ -75,5 +75,9 @@ public class SerializableItem implements Serializable {
 	
 	public String toString() {
 		return this.url + " @ " + point.x + ":" + point.y;
+	}
+
+	public String getUrl() {
+		return url;
 	}
 }
