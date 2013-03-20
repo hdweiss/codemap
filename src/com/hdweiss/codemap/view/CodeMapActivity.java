@@ -63,6 +63,7 @@ public class CodeMapActivity extends Activity {
 			getActionBar().setSelectedNavigationItem(index);
 		} catch (Exception e) {
 			e.printStackTrace();
+			addWorkspaceFragment();
 		}
 	}
 	
