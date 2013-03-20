@@ -4,13 +4,13 @@
     <item
         android:id="@+id/codemap_clear"
         android:icon="@android:drawable/ic_menu_delete"
-        android:showAsAction="ifRoom"
-        android:title="Clear">
+        android:showAsAction="never"
+        android:title="Clear Workspace">
     </item>
     <item
         android:id="@+id/codemap_resetZoom"
         android:icon="@android:drawable/ic_menu_zoom"
-        android:showAsAction="ifRoom"
+        android:showAsAction="never"
         android:title="Reset Zoom">
     </item>
 
