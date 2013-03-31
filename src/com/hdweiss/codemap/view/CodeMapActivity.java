@@ -26,7 +26,7 @@ public class CodeMapActivity extends Activity {
 	private String projectName;
 
 	@Override
-    public void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.codemap);
         
@@ -34,8 +34,8 @@ public class CodeMapActivity extends Activity {
         
         final ActionBar bar = getActionBar();
         bar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-        bar.setDisplayOptions(0, ActionBar.DISPLAY_SHOW_TITLE);
-		
+        bar.setTitle(this.projectName);
+                
         if (savedInstanceState != null) {
         	ArrayList<String> tabs = savedInstanceState.getStringArrayList("tabs");
         	
